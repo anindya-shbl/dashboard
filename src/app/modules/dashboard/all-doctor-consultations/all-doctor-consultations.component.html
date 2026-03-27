@@ -1,0 +1,79 @@
+<div class="p-3">
+    <div class="mb-3">
+        <app-route-path></app-route-path>
+    </div>
+    <!-- <div class="fs-7 fw-7 mb-3">My Orders</div> -->
+    <div class="commonHeadertitleSec">
+        <div class="custNameSec">
+            <strong>My Appointment Bookings</strong>
+        </div>
+    </div>
+
+    <div *ngIf="!isloading && appointMentList.length > 0">
+        <ng-container *ngFor="let dts of appointMentList">
+            <div class="border rounded mb-3 bx-shdw">
+                <div class="hesdSec">
+                    <div class="leftSec">
+                        <div class="">
+                            <div class="text-head">Appointment Date</div>
+                            <div class="text-inf">{{dts.AppointmentDate | date : 'dd MMM yyyy'}}</div>
+                        </div>
+                        <div class="">
+                            <div class="text-head">Time</div>
+                            <div class="text-inf"></div>
+                        </div>
+                        <div class="">
+                            <div class="text-head">Booking For</div>
+                            <div class="text-inf">{{dts.PatientName}}</div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="text-head">Booking No</div>
+                        <div class="fw-7">{{dts.BookingNo}}</div>
+                    </div>
+                </div>
+                <div class="dtlsSec">
+                    <div class="pe-3 w-100">
+                        <div class="mb-3">
+                            <span *ngIf="dts.BookingStatusId ==9 || dts.BookingStatusId ==6" class="status text-danger">{{dts.BookingStatus}}</span>
+                            <span *ngIf="dts.BookingStatusId ==1 || dts.BookingStatusId ==3 || dts.BookingStatusId ==7" class="status text-primary">{{dts.BookingStatus}}</span>
+                            <span *ngIf="dts.BookingStatusId ==4 || dts.BookingStatusId ==5" class="status text-success">{{dts.BookingStatus}}</span>
+                        </div>
+                        <div class="mb-2">
+                            <span class="me-2">Dr</span>
+                            <span>{{dts.DoctorName}}</span>
+                        </div>
+                    </div>
+
+                    <div class="text-end">
+                        <div class="lab-btns hvr" (click)="viewBookingDetails(dts)">View Consultation Details</div>
+                        <div class="clr"></div>
+                        <ng-container *ngIf="dts.ModeOfConsultation == 'V'">
+                            <div *ngIf="dts.BookingStatusId ==3 || dts.BookingStatusId ==7" class="lab-btns hvr bg-primary text-white" (click)="joinVideocall(dts)">Join Video Call</div>
+                            <div *ngIf="dts.BookingStatusId !=3 &&  dts.BookingStatusId !=7" class="lab-btns bg-secondary-subtle">Join Video Call</div>
+                            <div class="clr"></div>
+                        </ng-container>
+                        <div *ngIf="dts.BookingStatusId ==4 || dts.BookingStatusId ==5" class="lab-btns hvr" (click)="rateConsult(dts)">Rate Consultation</div>
+                        <div class="clr"></div>
+                    </div>
+                </div>
+
+            </div>
+        </ng-container>
+
+        <div *ngIf="appointMentList.length >= 10" >
+                <div *ngIf="!loadMoreBtn" class="load-more-btn" (click)="loadMore()">Load More ...</div>
+                <div *ngIf="loadMoreBtn" class="load-more-btn">No More Result</div>
+        </div>
+
+    </div>
+
+    <ng-container *ngIf="!isloading && appointMentList.length == 0">
+        <div class="notfoundbox mt-3">
+            <ng-container >
+                <!-- <i class="fa fa-frown-o mb-3" style="font-size:48px; color:#4775d1"></i> -->
+                <div class="fw-5">No Record Found...</div>
+            </ng-container>
+        </div>
+    </ng-container>
+</div>

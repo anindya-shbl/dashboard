@@ -1,0 +1,34 @@
+<div class="bg-white p-3">
+
+    <div class="mb-2"><app-route-path></app-route-path></div>
+    <div class="commonHeadertitleSec">
+        <div class="custNameSec">
+            <strong>Delete Account</strong>
+        </div>
+    </div>
+ 
+        <div class="p-3 border rounded-2 bx-shdw">
+            <!-- <div class="fs-6 fw-5">Delete Account</div> -->
+            <div style="min-height: 100px; color: #667085;">
+                <div class="fs-5 mt-2 mb-2">Deleting your account will remove all your information from our database.</div>
+                <div class="fs-5 mb-2">This cannot be undone.</div>
+            </div>
+            <div class="mb-3">
+                <form [formGroup]="cnfForm" (ngSubmit)="deleteAccount()">
+                    <div class="mb-2">To confirm type "DELETE"</div>
+                    <div class="d-flex w-100">
+                        <input type="text" class="form-control" id="cnfirm" formControlName="cnfirm" maxlength="6" style="max-width: 360px; line-height: 32px">
+                        <div *ngIf="submitted && f['cnfirm'].errors" class="error-text">
+                            <div *ngIf="f['cnfirm'].errors['required']">* Please input text</div>
+                        </div>
+                        <div *ngIf="f['cnfirm'].value == 'DELETE' || f['cnfirm'].value == 'delete'" class="ms-3">
+                            <button class="btn btn-danger" type="submit" style="min-width: 328px;">
+                               <span style="line-height: 32px">Delete Account</span>
+                            </button>            
+                        </div>
+                        <div *ngIf="respMsg != ''" class="fs-5 fw-5 mb-3 text-danger">{{respMsg}}</div>
+                    </div>
+                </form>
+            </div>
+        </div>
+</div>

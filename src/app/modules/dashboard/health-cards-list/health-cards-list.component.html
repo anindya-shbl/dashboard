@@ -1,0 +1,48 @@
+<div class="p-3">
+    <div class="mb-3">
+        <app-route-path></app-route-path>
+    </div>
+    <div class="commonHeadertitleSec">
+        <div class="custNameSec">
+            <strong>Added Health Cards ({{cardList.length}})</strong>
+        </div>
+        <div class="text-primary hvr fw-5" routerLink="/customers/dashboard/CFH_Redemptions">View Transactions</div>
+    </div>
+
+    <div *ngIf="!isloading && cardList.length > 0" class="p-3">
+        <ng-container *ngFor="let card of cardList">
+            <div class="border rounded mb-3 bx-shdw p-3" [ngClass]="card.CardStatus == 1 ? 'border-success-subtle': 'border-danger-subtle'">
+                <div class="d-flex w-100 mb-3 crdbtm-dashed pb-3" >
+                    <div class="icon-card me-3" [ngClass]="card.CardStatus == 1 ? 'bg-success': 'bg-danger'"><i class="fa-regular fa-credit-card"></i></div>
+                    <div class="">
+                        <div class="mb-1 fw-6 fs-6">{{card.HealthCardCode}}</div>
+                        <div class="d-flex align-items-center w-100 fs-3">
+                            <div class="text-secondary">Added: <span class="fw-5">{{card.CreatedDate | date: 'dd MMM, yyyy'}}</span></div>
+                            <div class="fs-3 px-2 text-secondary">|</div>
+                            <div *ngIf="card.CardStatus == 1" class="text-secondary">Expires: <span class="fw-5">{{card.ExpiryDate | date: 'dd MMM, yyyy'}}</span></div>
+                            <div *ngIf="card.CardStatus == 0" class="text-danger">Expired: <span class="fw-5">{{card.ExpiryDate | date: 'dd MMM, yyyy'}}</span></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="d-flex justify-content-between w-100">
+                    <div>
+                        <div class="mb-1 text-secondary" >Current Balance: </div>
+                        <div class="fs-20 fw-7" >{{card.RemainingBalance | currency: 'INR'}}</div>
+                    </div>
+                    <div *ngIf="card.CardStatus == 1" class="icon-pill text-success bg-success-subtle">{{card.Status.StatusMas}}</div>
+                    <div *ngIf="card.CardStatus == 0" class="icon-pill text-danger bg-danger-subtle">{{card.Status.StatusMas}}</div>
+                </div>
+            </div>
+        </ng-container>
+        <div *ngIf="loadMoreBtn" class="load-more-btn" (click)="loadMore()">Load More ...</div>
+    </div>
+
+     <ng-container *ngIf="!isloading && cardList.length == 0">
+        <div class="notfoundbox mt-3">
+            <ng-container >
+                <!-- <i class="fa fa-frown-o mb-3" style="font-size:48px; color:#4775d1"></i> -->
+                <div class="fw-5">No Record Found...</div>
+            </ng-container>
+        </div>
+    </ng-container>
+</div>

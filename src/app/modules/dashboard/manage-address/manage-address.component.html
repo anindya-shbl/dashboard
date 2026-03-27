@@ -1,0 +1,250 @@
+<div class="commonngwhite">
+
+    <div class="p-3 pb-1 mb-1"><app-route-path></app-route-path></div>
+
+    <div class="commonHeadertitleSec border-bottom p-3 pt-0 mt-0 mb-0" style="display: flex; align-items: center; justify-content: space-between;">
+        <div class="custNameSec">
+            <strong>Manage Address</strong>
+        </div>
+        <button class="btnSubmitOutline" type="button"  (click)="addNewAddress()">Add New Address</button>
+    </div>
+
+
+    <div class="p-3 w-100  bg-white">
+        
+        
+        <div>
+            <div class="fs-6 fw-6 mb-3">Saved Address ({{addressList.length}})</div>
+            <div *ngIf="!isloading && addressList.length > 0" class="grid-view">
+                <ng-container *ngFor="let adr of addressList">
+                    <div class="border rounded bx-shdw">
+                        <!-- <div class="bg-opacity-10 fw-6 fs-6 p-3"
+                            [ngClass]="adr.IsPrimary == 1? 'bg-xxx': 'bg-yyy' ">{{adr.NickName}}</div> -->
+                        <div class="p-3">
+                            <div class="d-flex mb-2" style="align-items: center; justify-content: space-between;">
+                            <div class="d-flex" style="column-gap: 8px;">
+                                <span *ngIf="adr.AddressType == 'H'"  style="color: #344054; font-size: 16px; font-weight: 600; line-height: 24px; ">Home</span>
+                                <span *ngIf="adr.AddressType == 'O'"  style="color: #344054; font-size: 16px; font-weight: 600; line-height: 24px; ">Office</span>
+                                <span *ngIf="adr.AddressType == 'T'"  style="color: #344054; font-size: 16px; font-weight: 600; line-height: 24px; ">Others</span>
+                                <!-- <span *ngIf="adr.IsPrimary == 1" style="font-size: 12px; background-color: #ECFDF3; color: #027A48; padding: 4px 6px; border-radius: 6px; font-weight: 600; font-size: 12px;">Primary Address</span> -->
+                            </div>
+
+                            <div style="display: flex; column-gap: 10px;">
+                                <!-- <button *ngIf="adr.IsPrimary != 1" type="button" class="btnSubmitLink" (click)="setPrimaryAddress(adr.AddressId)">Set as Primary</button> -->
+                                <button type="button" class="btnsubmit btnSubmitLink" (click)="setEditModal(adr)" title="Edit"><i class=" icon-edit"></i></button>
+                                <button type="button" class="btnsubmit btnRemovetLink delete" data-bs-toggle="modal" data-bs-target="#deleteModal" (click)="setDeleteModal(adr)" title="Remove"><i class="icon-delete"></i></button>
+                            </div>
+                        </div>
+
+                            <!-- <div class="d-flex mb-2">
+                                <span style="min-width: 80px;">Address</span>
+                                <span class="fw-5">: &nbsp;{{adr.Addline}}</span>
+                            </div>
+                            <div class="d-flex mb-2">
+                                <span style="min-width: 80px;">City</span>
+                                <span class="fw-5">: &nbsp;{{adr.City}}</span>
+                            </div>
+                            <div class="d-flex mb-2">
+                                <span style="min-width: 80px;">State</span>
+                                <span class="fw-5">: &nbsp;{{adr.StateName}}</span>
+                            </div>
+                            <div class="d-flex mb-2">
+                                <span style="min-width: 80px;">PinCode</span>
+                                <span class="fw-5">: &nbsp;{{adr.PinCode}}</span>
+                            </div>
+                            <div class="d-flex mb-2">
+                                <span style="min-width: 80px;">Mobile</span>
+                                <span class="fw-5">: &nbsp;{{adr.CustContactNo}}</span>
+                            </div> -->
+                            <div style="display: flex; flex-direction: column; row-gap: 8px;  color: #667085;font-size: 14px; font-weight: 400; line-height: 24px;">
+                                <div style="word-break: break-all; display: flex; gap:5px;"><i class="icon-lab_location_1"></i> <span>{{adr.Addline}}, {{adr.City}} ({{adr.StateName}}), {{adr.PinCode}}</span></div>
+                                
+                                
+                                   <div style="flex-direction: column; display: flex;">
+                                    <span class="bg-default fw-5"><i class="icon-user-dnavita"></i> {{adr.NickName}}</span>
+                                    <span><i class="icon-phone"></i> {{adr.CustContactNo}}</span>
+                                </div>
+                                    </div>
+
+                            <!-- <div>
+                                {{adr.City}}, {{adr.StateName}} - {{adr.PinCode}}</div>
+                            
+                            <div class="mb-3">{{adr.CustContactNo}}</div> -->
+
+                            
+                        </div>
+                    </div>
+                </ng-container>
+            </div>
+            <ng-container *ngIf="!isloading && addressList.length == 0">
+                <div class="notfoundbox mt-3">
+                    <ng-container>
+                        <!-- <i class="fa fa-frown-o mb-3" style="font-size:48px; color:#4775d1"></i> -->
+                        <div class="fw-5">No Record Found...</div>
+                    </ng-container>
+                </div>
+            </ng-container>
+        </div>
+    </div>
+</div>
+
+<button #AddressModal data-bs-toggle="modal" data-bs-target="#AddressModal" class="d-none"></button>
+<div class="modal fade" id="AddressModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+    aria-labelledby="AddressModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h6 *ngIf="actionType == 'ADD'" class="modal-title mb-0" id="AddressModalLabel">Add New Address</h6>
+                <h6 *ngIf="actionType == 'EDIT'" class="modal-title mb-0" id="AddressModalLabel">Edit Address</h6>
+                <!-- <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" (click)="onReset()"></button> -->
+            </div>
+            <div class="modal-body">
+                <form class="address-form" [formGroup]="AddressForm" (ngSubmit)="onSubmit()">
+                    <div class="ac-grid mb-2">
+                        <div class="mb-3">
+                            <label for="ContactPerson" class="form-label">Contact Person<span class="text-danger">
+                                    *</span></label>
+                            <input type="text" class="form-control" id="ContactPerson" formControlName="ContactPerson" (keypress)="alphaOnly($event)">
+                            <div *ngIf="submitted && f['ContactPerson'].errors" class="error-text">
+                                <div *ngIf="f['ContactPerson'].errors['required']">* Contact Person is required</div>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="MobileNo" class="form-label">Mobile No<span class="text-danger">
+                                    *</span></label>
+                            <input type="phone" class="form-control" id="MobileNo" maxlength="10" formControlName="MobileNo"
+                                pattern="[5-9]{1}[0-9]{9}" (keypress)="numCheck($event)">
+                            <div *ngIf="submitted && f['MobileNo'].errors" class="error-text">
+                                <div *ngIf="f['MobileNo'].errors['required']">* Mobile No Required</div>
+                            </div>
+                            <div *ngIf="submitted && f['MobileNo'].errors" class="error-text">
+                                <div *ngIf="f['MobileNo'].errors['pattern']">*Invalid mobile no</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="ac-grid mb-2">
+                        <div class="mb-3">
+                            <label for="Addressline" class="form-label">Address <span class="text-danger">
+                                    *</span></label>
+                            <textarea type="text" rows="3" class="form-control" id="Addressline"
+                                formControlName="Addressline"></textarea>
+                            <div *ngIf="submitted && f['Addressline'].errors" class="error-text">
+                                <div *ngIf="f['Addressline'].errors['required']">* Address is required</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="ac-grid mb-2">
+                        <div class="mb-3">
+                            <label for="Landmark" class="form-label">Land Mark </label>
+                            <input type="text" class="form-control" id="Landmark" formControlName="Landmark">
+                            <!-- <div *ngIf="submitted && f['Landmark'].errors" class="error-text">
+                                <div *ngIf="f['Landmark'].errors['required']">* Land Mark is required</div>
+                            </div> -->
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="Pincode" class="form-label">Pincode <span class="text-danger"> *</span></label>
+                            <input type="text" class="form-control" id="Pincode" maxlength="6" pattern="[1-9]{1}[0-9]{5}" formControlName="Pincode"
+                                (keyup)="checkServiceArea()" (keypress)="numCheck($event)">
+                            <div *ngIf="submitted && f['Pincode'].errors" class="error-text">
+                                <div *ngIf="f['Pincode'].errors['required']">* Pincode is required</div>
+                            </div>
+                            <div *ngIf="submitted && f['Pincode'].errors" class="error-text">
+                                <div *ngIf="f['Pincode'].errors['pattern']">*Invalid Pincode</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div *ngIf="state_city != ''" class="ac-grid mb-3 px-2">
+                        <ng-container *ngIf="!serviceAreaMsg">
+                            <div>State : <Span class="fw-6 px-1">{{state_city.StateName}}</Span></div>
+                            <div>City : <span class="fw-6 px-1">{{state_city.CityName}}</span></div>
+                        </ng-container>
+                        <ng-container *ngIf="serviceAreaMsg">
+                            <div class="fw-6 fs-6 text-danger">**{{state_city}}</div>
+                        </ng-container>
+                    </div>
+
+                    <div class="px-2 mb-2">
+                        <div class="mb-3">Address Type</div>
+                        <div class="d-flex mb-3">
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" formControlName="AddressType" value="H"
+                                    (change)="setValue($event)">
+                                <div class="form-check-label fw-5">Home</div>
+                            </div>
+                            <div class="form-check mx-4">
+                                <input class="form-check-input" type="radio" formControlName="AddressType" value="O"
+                                    (change)="setValue($event)">
+                                <div class="form-check-label fw-5">Work</div>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" formControlName="AddressType" value="T"
+                                    (change)="setValue($event)">
+                                <div class="form-check-label fw-5">Other</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- <div *ngIf="f['AddressType'].value == 'T'" class="mb-3">
+                    <label for="AddressName" class="form-label">Address Name <span class="text-danger"> *</span></label>
+                    <input type="text" class="form-control" id="AddressName" formControlName="AddressName" [required]="f['AddressType'].value == 'T'">
+                    <div *ngIf="submitted && f['AddressName'].errors" class="error-text">
+                        <div *ngIf="f['AddressName'].errors['required']">* Address name is required</div>
+                    </div>
+                </div> -->
+
+
+                    <div class="row">
+                        <div class="btnSec">
+                            <button class="btnCancel" #closebutton type="button" data-bs-dismiss="modal" aria-label="Close" (click)="onReset()"  style="min-width: 140px;">Cancel</button>
+                            <button type="submit" class="btnSubmit" style="min-width: 140px;" [disabled]="serviceAreaMsg">
+                                <span *ngIf="actionType == 'ADD'">Add Address</span>
+                                <span *ngIf="actionType == 'EDIT'">Edit Address</span>
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="deleteModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+    aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h6 class="modal-title mb-0" id="deleteModalLabel">Delete Address</h6>
+                <!-- <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" (click)="onReset()"></button> -->
+            </div>
+            <div class="modal-body">
+                <div class="">Do you want to delete the address of <strong>{{selectedAddress.NickName}}?</strong></div>
+                <br>
+                <div class="btnSec">
+                    <button type="reset" class="btnCancel"
+                        data-bs-dismiss="modal">No</button>
+                    <button type="submit" class="btnSubmit" data-bs-dismiss="modal"
+                        (click)="removeAddress(selectedAddress.AddressId)">Yes</button>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<button #addrsRspModal data-bs-toggle="modal" data-bs-target="#addrsRspModal" class="d-none"></button>
+<div class="modal fade" id="addrsRspModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+    aria-labelledby="addrsRspModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="d-flex w-100 my-3 fw-5">{{respMsg}}</div>
+                <div class="btnSec">
+                    <button type="button" class="btnSubmit" data-bs-dismiss="modal"
+                        aria-label="Close">Ok</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

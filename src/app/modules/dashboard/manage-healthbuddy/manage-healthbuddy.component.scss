@@ -1,0 +1,29 @@
+.hb-Inc{
+    width: 240px;
+    background-color: #eff8ff;
+}
+
+.hb-img{
+    // min-width: 220px;
+    // padding: 10px;
+    margin-right: 1rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    img{
+        width: 180px;
+    }
+}
+
+.changeHB{
+    border: 1px solid #007dc9;
+    background-color: #007dc9;
+    padding: 10px;
+    color: #fff;
+    text-align: center;
+    cursor: pointer;
+}
+
+.hb-pad{
+    padding: 12px 16px;
+}

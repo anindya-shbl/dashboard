@@ -1,0 +1,17 @@
+<div class="px-3 pt-3">
+    <app-article-path></app-article-path>
+</div>
+<div class="p-3">
+    <div class="article-heading mb-4">Personalise Your Health Feed</div>
+    <div *ngIf="healthTopicList.length>0" class="trnd-grid mb-3">
+        <ng-container *ngFor="let category of healthTopicList">
+            <div class="cat-item" [style.background-color]="category.ColorCode">
+                <div class="cat-name" (click)="viewDetails(category)">{{category.CategoryName}}</div>
+                <div class="f-btn">
+                    <span *ngIf="!category.isFollowed" class="text-primary hvr" (click)="follow_Unfollow(category)">+ Follow</span>
+                    <span *ngIf="category.isFollowed" class="text-success hvr" (click)="follow_Unfollow(category)"><i class="fa-solid fa-check pe-1"></i> Following</span>
+                </div>
+            </div>
+        </ng-container>
+    </div>
+</div>

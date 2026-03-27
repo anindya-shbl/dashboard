@@ -1,0 +1,82 @@
+.buyagnImg {
+    // border: 1px solid #E4E7EC;
+    // border-radius: 6px;
+    padding-top: 4px;
+}
+
+img {
+    width: 60px;
+    height: 60px;
+}
+
+.ac-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(420px, 1fr));
+    grid-gap: 1rem;
+}
+
+.text-orange {
+    color: #e9640d;
+}
+.bg-success-light {
+    background-color: #effff0;
+}
+.pad-12 {
+    padding: 12px 15px;
+    color: #344054;
+}
+.border-bottom-shadow {
+    border-bottom: 7px solid #f2f4f7;
+    position: relative;
+    &::after {
+        content: '';
+        position: absolute;
+        left: -3px;
+        bottom: -7px;
+        width: 8px;
+        height: 7px;
+        background-color: #f2f4f7;
+        display: block;
+    }
+    &::before {
+        content: '';
+        position: absolute;
+        right: -3px;
+        bottom: -7px;
+        width: 8px;
+        height: 7px;
+        background-color: #f2f4f7;
+        display: block;
+    }
+}
+
+.border-bottom:last-child .border-bottom-shadow {
+    border-bottom: none;
+    &::after,  &::before {
+        display: none;
+    }
+}
+.bg-success-add {
+    background-color: #effff0;
+}
+.addbutton-color {
+    background-color: #fff;
+}
+.addbutton-disabled{
+    border: 1px solid #b3b4b5;
+    color: #796c6c;
+    box-shadow: none;
+    cursor: none;
+}
+.pointer {
+    cursor: pointer;
+} 
+
+.rxblock {
+    position: absolute;
+    top: -4px;
+    right: -4px;
+    z-index: 1;
+    color: #EC4A0A;
+    font-size: 12px;
+  }

@@ -1,0 +1,137 @@
+<div class="lab-body">
+    <div *ngIf="labTestDetails.length>0" class="p-3">
+        <div class="fs-2 pb-3">
+            <span><a class="text-decoration-none text-secondary" routerLink="/new">Home</a>&nbsp;>&nbsp;</span>
+             <span><a class="text-decoration-none text-secondary" routerLink="/newlab-test">Lab Test</a>&nbsp;>&nbsp;</span>
+            <span><a class="text-decoration-none text-secondary" routerLink='/newdiagnostic-test'>Diagnostic Tests</a>&nbsp;>&nbsp;</span>
+            <span class="">{{labTestDetails[0].ServiceName}}</span>
+        </div>
+
+        <!-- <div class="d-flex justify-content-between align-items-center p-3 bg-light rounded mb-3">
+            <div class="article-heading">{{labTestDetails[0].ServiceName}}</div>
+            <div class="ms-3 text-primary hvr" routerLink="/newdiagnostic-test">All Diagnostic Tests</div>
+        </div> -->
+        <div class="d-flex mb-3 ">
+            <div class="pckg-img rounded item-shadow me-4">
+                <!-- <img [src]="labTestDetails[0].PkgAppBannerImage" class="rounded item-shadow" alt=""> -->
+                <img src="https://asset.sastasundar.com/incom/sspl_website/images/test_image170x170.png" class=""
+                    alt="">
+            </div>
+            <div class="w-100">
+                <div class="fs-22 fw-6 mb-3">
+                    {{labTestDetails[0].ServiceName}}
+                </div>
+                <div class="mb-3 d-flex align-items-center">
+                    <!-- <span class="type-box">Test Price :</span> -->
+                    <span class="fw-7 fs-24"
+                        *ngIf="(labTestDetails[0].OfferFees > 0 && labTestDetails[0].Fees > labTestDetails[0].OfferFees) else showmrp">{{labTestDetails[0].OfferFees
+                        | currency: 'INR'}}</span>
+                    <ng-template #showmrp>
+                        <span class="fw-7 fs-24" *ngIf="labTestDetails[0].Fees > 0">{{labTestDetails[0].Fees | currency:
+                            'INR'}}</span>
+                    </ng-template>
+                    <span class="text-secondary text-decoration-line-through mx-2 fw-7 fs-20"
+                        *ngIf="labTestDetails[0].Fees > labTestDetails[0].OfferFees">{{labTestDetails[0].Fees |
+                        currency:
+                        'INR'}}</span>
+                    <span *ngIf="labTestDetails[0].DiscPercent > 0" class="fw-7 fs-20"
+                        style="color: #f46a12;">{{labTestDetails[0].DiscPercent}}% Off</span>
+                </div>
+
+                <div class="d-flex mb-3">
+                    <!-- <div class="type-box"></div> -->
+                    <div *ngIf="labTestDetails[0].IsAdded == false" class="action-btn  hvr btnS"
+                        (click)="addLabTest(labTestDetails[0])">
+                        <span class="fw-5 addbutton-color">BOOK NOW</span>
+                    </div>
+                    <div *ngIf="labTestDetails[0].IsAdded == true" class="action-btn action-add hvr btnS"
+                        (click)="deleteLabTest(labTestDetails[0])">
+                        <span class="fw-5 item-text">REMOVE</span>
+                    </div>
+                </div>
+                <div class="mb-3 d-flex">
+                    <span class="type-box">Sample Type :</span>
+                    <span class="fw-5"
+                        *ngIf="labTestDetails[0].SampleType ==null || labTestDetails[0].SampleType =='' || labTestDetails[0].SampleType ==undefined">NA</span>
+                    <span class="fw-5"
+                        *ngIf="labTestDetails[0].SampleType !=null && labTestDetails[0].SampleType !='' && labTestDetails[0].SampleType !=undefined">{{labTestDetails[0].SampleType}}</span>
+                </div>
+                <div class="mb-3 d-flex">
+                    <span class="type-box">Test Preparation :</span>
+                    <span class="fw-5"
+                        *ngIf="(labTestDetails[0].ServicePreparation != '' && labTestDetails[0].ServicePreparation != null && labTestDetails[0].ServicePreparation != undefined) else svrp">{{labTestDetails[0].ServicePreparation}}</span>
+                    <ng-template #svrp><span>NA</span></ng-template>
+                </div>
+                <div class="mb-3 d-flex">
+                    <span class="type-box">Online Report :</span>
+                    <span class="fw-5" *ngIf="labTestDetails[0].ReportPeriod == 0">Same day</span>
+                    <span class="fw-5" *ngIf="labTestDetails[0].ReportPeriod == 1">In 1 day</span>
+                    <span class="fw-5" *ngIf="labTestDetails[0].ReportPeriod > 1">In {{labTestDetails[0].ReportPeriod}}
+                        days</span>
+                </div>
+                <div class="mb-3 d-flex">
+                    <span class="type-box">Home Collection :</span>
+                    <span class="fw-5" *ngIf="labTestDetails[0].IsHomeCollectionAvailable == true">Available</span>
+                    <span class="fw-5" *ngIf="labTestDetails[0].IsHomeCollectionAvailable == false">Not Available</span>
+                </div>
+                
+
+            </div>
+        </div>
+
+
+        <div *ngIf="labTestDetails[0].TestRequiredFor != '' && labTestDetails[0].TestRequiredFor != null && labTestDetails[0].TestRequiredFor != undefined"
+            class="mb-4">
+            <div class="fs-20 fw-7 mb-3">Test required for</div>
+            <div class="Tincuded bg-light rounded">{{labTestDetails[0].TestRequiredFor}}</div>
+        </div>
+        <div *ngIf="labTestDetails[0].TestOrderedFor != '' && labTestDetails[0].TestOrderedFor != null && labTestDetails[0].TestOrderedFor != undefined"
+            class="mb-4">
+            <div class="fs-20 fw-7 mb-3">Test Ordered for</div>
+            <div class="Tincuded bg-light rounded">{{labTestDetails[0].TestOrderedFor}}</div>
+        </div>
+        <div *ngIf="labTestDetails[0].TestRecommended != '' && labTestDetails[0].TestRecommended != null && labTestDetails[0].TestRecommended != undefined"
+            class="mb-4">
+            <div class="fs-20 fw-7 mb-3">Test recommended for</div>
+            <div class="Tincuded bg-light rounded">{{labTestDetails[0].TestRecommended}}</div>
+        </div>
+
+
+        <div *ngIf="popularPackages.length>0">
+            <app-popular-packages [popularPackages]="popularPackages" [selectedPckg]="labTestDetails[0].ServiceId"
+                (changeDetails)="changePackage($event)"></app-popular-packages>
+        </div>
+
+        <div *ngIf="steps.length>0">
+            <app-home-collection-steps [stepsData]="steps"></app-home-collection-steps>
+        </div>
+    </div>
+
+</div>
+
+<div>
+    <app-download-app></app-download-app>
+</div>
+<div>
+    <app-sub-footer></app-sub-footer>
+</div>
+<div class="border-top">
+    <app-footer></app-footer>
+</div>
+
+
+<button #allTstDtlMdl data-bs-toggle="modal" data-bs-target="#allTstDtlMdl" class="d-none"></button>
+<div class="modal fade" id="allTstDtlMdl" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+    aria-labelledby="allTstDtlMdlLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-body" style="background-color: #f6fcff; border-radius: 8px;">
+                <div class="d-flex w-100 fw-5 text-danger p-3" style="min-height: 60px;">{{alertMsg}}</div>
+                <div class="d-flex justify-content-end p-3">
+                    <button type="button" class="action-btn action-add" data-bs-dismiss="modal"
+                        aria-label="Close">Ok</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

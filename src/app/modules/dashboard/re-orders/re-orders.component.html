@@ -1,0 +1,76 @@
+
+<div class="p-3 w-100 mxct me-1 bg-white">
+    <div class="mb-3"><app-route-path></app-route-path></div>
+    <div class="fs-7 fw-7 mb-3">Reorder products from previous order</div>
+    <div class="bg-primary bg-opacity-10 p-3 mb-3">
+        <div class="d-flex align-items-center">
+            <div for="Pincode" class="fw-5 text-nowrap">Search by Order ID</div>
+            <div class="px-3">
+                <input type="text" class="form-control" id="Pincode" [(ngModel)]="searchOrderId">
+            </div>
+            <div>
+                <button class="btn btn-outline-primary btn-sm" (click)="searchbyID()" [disabled]="searchOrderId==''" style="min-width: 120px;">Search</button>
+            </div>
+        </div>
+    </div>
+
+    <div *ngIf="!isloading && reorderItems.length > 0" class="grid-view">
+        <ng-container *ngFor="let dts of reorderItems">
+            <div class="border rounded bx-shdw w-100 mxct mb-3">
+                <div class="d-flex p-3">
+                    <div class="buyagnImg">
+                        <img *ngIf="dts.ProductImage != '' &&  dts.ProductImage != null" src="https://asset.sastasundar.com/incom/images/product/thumb/{{dts.ProductImage}}" alt="...">
+                        <img *ngIf="dts.ProductImage == '' ||  dts.ProductImage == null" src="https://asset.sastasundar.com/incom/images/product/thumb/default_product1460098847.jpg" alt="">
+                    </div>
+                    <div class="ps-3">
+                        <div class="fw-5 mb-1">{{dts.DisplayName}}</div>
+                        <div>
+                            <span class="fw-5 text-success" >{{dts.OfferPrice | currency : 'INR'}}</span>
+                            <ng-container *ngIf="dts.MRP > dts.OfferPrice">
+                                <span class="text-decoration-line-through">{{dts.MRP | currency : 'INR'}}</span>
+                                <span *ngIf="dts.DiscountPercent!= null">{{dts.DiscountPercent}}% off</span>
+                            </ng-container>
+                        </div>
+                        <div class="mb-3">Order Qty : {{dts.Quantity}}</div>
+                        <ng-container *ngIf="dts.IsShow == 'Y'">
+                            <div *ngIf="dts.addedQty == 0" class="action-btn action-add hvr" (click)=" addToCart(dts, dts.Quantity)">
+                               <span class="fs-3 fw-5 text-primary">ADD</span> 
+                            </div>
+                            <div *ngIf="dts.addedQty > 0" class="action-btn">
+                                <span class="item-action" (click)="cartAddMinus(dts.ProductId)">&#8722;</span>
+                                <span class="item-text">{{dts.addedQty}}</span>
+                                <span class="item-action" (click)="cartAddPlus(dts.ProductId)">&#43;</span>
+                            </div>
+                        </ng-container>
+
+                        <div *ngIf="dts.IsShow == 'N' && dts.PrescriptionOTC == 'P'" class="text-lite">Out of stock</div>
+                        <div *ngIf="dts.IsShow == 'N' && dts.PrescriptionOTC == 'O'" class="text-lite">Sold Out</div>
+                    </div>
+                </div>
+                <!-- <div *ngIf="dts.addedQty > 0" class="d-flex align-items-center fw-5 text-primary hvr" (click)=" addToCart(dts, dts.addedQty)">ADDED-{{dts.addedQty}}</div> -->
+            </div>            
+        </ng-container>
+    </div>
+    <ng-container *ngIf="!isloading && reorderItems.length == 0">
+        <div class="notfoundbox mt-3">
+            <ng-container >
+                <!-- <i class="fa fa-frown-o mb-3" style="font-size:48px; color:#4775d1"></i> -->
+                <div class="fw-5">No Record Found...</div>
+            </ng-container>
+        </div>
+    </ng-container>
+</div>
+
+<button #reorderModal data-bs-toggle="modal" data-bs-target="#reorderModal" class="d-none"></button>
+<div class="modal fade" id="reorderModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="reorderModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-body">            
+            <div class="d-flex w-100 my-3 fw-5">{{respMsg}}</div>
+            <div class="">
+                <button type="button" class="btn btn-outline-primary btn-sm px-3" data-bs-dismiss="modal" aria-label="Close">Ok</button>
+            </div>
+        </div>
+      </div>
+    </div>
+</div>

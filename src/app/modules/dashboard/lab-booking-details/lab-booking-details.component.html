@@ -1,0 +1,420 @@
+<div class="bg-white p-3 pb-0">
+    <app-route-path></app-route-path>
+</div>
+<ng-container *ngIf="!isloading && bookingDetails != '' ">
+    <div class="d-flex justify-content-between align-items-center w-100 p-3 border-bottom" style="color: #344054">
+        <div class="d-flex bg-white w-100" >
+            <div class="" style="max-width: 70px;">
+                <img src="https://asset.sastasundar.com/incom/sspl_website/images/booking-success-new.png" width="100%"  alt=""/>
+            </div>
+            <div #focusbtn class="ps-3">
+                <div class="fw-7 mb-2" style="font-size: 22px; line-height: 32px;">
+                    Booking Details ({{bookingDetails.BookingNo}})
+                </div>
+                <div class="fw-6 fs-6" style="line-height: 24px;">
+                    <span *ngIf="bookingDetails.BookingStatusId == 8 || bookingDetails.BookingStatusId == 9" class="text-danger">{{bookingDetails.BookingStatusDesc}}</span>
+                    <span *ngIf="bookingDetails.BookingStatusId == 7" class="text-success">{{bookingDetails.BookingStatusDesc}}</span>
+                    <span *ngIf="bookingDetails.BookingStatusId != 7 && bookingDetails.BookingStatusId != 8 && bookingDetails.BookingStatusId != 9" class="text-primary">{{bookingDetails.BookingStatusDesc}}</span>
+                </div>
+                <!-- <div class="fs-6">                    
+                    <span class="ps-1 fw-6 text-success">{{bookingDetails.DeliveryDate | date: 'dd MMM yyyy'}}</span>                    
+                </div> -->
+            </div>
+        </div>
+        <!-- <div *ngIf="bookingDetails.ReportFullPath != '' && bookingDetails.ReportFullPath != null" class="bg-white mrg-1">
+            <button  class="btnSubmit" type="button" style="min-width: 146px;" (click)="getTestReport(bookingDetails.ReportFullPath)">View Report</button>
+        </div> -->
+        <div *ngIf="bookingDetails.BookingStatusId == 7 && bookingDetails.ReportFileName != '' && bookingDetails.ReportFileName != null" class="bg-white mrg-1">
+            <button  class="btnSubmit" type="button" style="min-width: 270px;" (click)="getTestReport(bookingDetails.ReportFileName, bookingDetails.BookingNo)">Download Consolidated Report</button>
+        </div>
+        <div *ngIf="bookingDetails.IsCancellable == 'Y'">
+            <button  class="btnSubmit bg-danger" type="button" style="min-width: 270px;" data-bs-toggle="modal" data-bs-target="#canceldtsModal">Cancel Booking</button>
+        </div>
+    </div>
+    <div *ngIf="bookingDetails.IsHomeCollection == 1" class="p-3 border-bottom">
+        <div class="">
+            <div class="fs-7 fw-6 mb-3">Track Booking Status</div>
+            <div class="">
+                <app-track-lab-booking [trackOrder]="bookingDetails"></app-track-lab-booking>
+            </div>
+            <!-- <div class="text-primary text-end pb-2">
+                <span class="fw-5 hvr">View details tracking info</span>
+            </div> -->
+        </div>
+    </div>
+
+    <div *ngIf="bookingDetails.IsConsultation == true && bookingDetails.IsConsultationBooked == false" class="p-3 border-bottom bg-appoint">
+        <div class="row">
+            <div class="col-xl-7 col-xxl-8 mb-1">
+                <div class="mb-2 fw-6 fs-7">Free Report Review by Doctor</div>
+                <div class="fs-5">Get your reports reviewed by a doctor for expert advise</div>
+            </div>
+            <div class="col-xl-5 col-xxl-4 mt-2">
+                <button class="btnSubmit" type="button" style="min-width: 270px;" (click)="bookConsultation(bookingDetails.BookingNo)">Book Free Doctor Consultation</button>
+            </div>
+        </div>
+    </div>
+
+    <div *ngIf="bookingDetails.IsConsultationBooked == true && (bookingDetails.AppointmentDetails != undefined && bookingDetails.AppointmentDetails != null && bookingDetails.AppointmentDetails != '')" class="p-3 pb-1 border-bottom">
+        <div class="row">
+            <div class="col-xl-7 col-xxl-8 mb-3">
+                <div class="mb-3 fw-6 fs-7">
+                    <span *ngIf="bookingDetails.AppointmentDetails[0].BookingStatusId < 5">Your Report will be reviewed by</span>
+                    <span *ngIf="bookingDetails.AppointmentDetails[0].BookingStatusId == 5">Your Report was reviewed by</span>
+                    <span *ngIf="bookingDetails.AppointmentDetails[0].BookingStatusId > 5">Appointment details</span>
+                </div>
+                <div *ngIf="doctorDetails.length>0" class="d-flex">
+                    <div class="doc-img">
+                        <img *ngIf="doctorDetails[0].DoctorImage != '' && doctorDetails[0].DoctorImage != undefined && doctorDetails[0].DoctorImage != null" [src]="doctorDetails[0].DoctorImage" class="rounded" width="100%" alt="">
+                        <img *ngIf="doctorDetails[0].DoctorImage == '' || doctorDetails[0].DoctorImage == undefined || doctorDetails[0].DoctorImage == null" src="https://asset.sastasundar.com/incom/images/product/thumb/default_product1460098847.jpg" class="rounded" width="100%" alt="">
+                    </div>
+                    <div>
+                        <div class=" fs-6 fw-5 mb-1">{{doctorDetails[0].Salutation}} {{doctorDetails[0].FullName}}</div>
+                        <div *ngIf="doctorDetails[0].DoctorDegree != undefined" class="mb-1 text-secondary">{{doctorDetails[0].DoctorDegree}}</div>
+                        <div *ngIf="doctorDetails[0].SpecialityName != undefined" class="mb-1 text-secondary">{{doctorDetails[0].SpecialityName}}</div>                        
+                        <div *ngIf="doctorDetails[0].Language != undefined" class="mb-1 text-secondary">
+                            <span class="fw-6 me-3"><i class="fa-solid fa-language"></i></span>
+                            <span>{{doctorDetails[0].Language}}</span>
+                        </div>
+                        <div *ngIf="doctorDetails[0].ConsultationMsg != undefined" class="text-secondary">
+                            <span *ngIf="doctorDetails[0].DoctorExperience != undefined" class="me-2">Exp: {{doctorDetails[0].DoctorExperience}} Yrs,</span>
+                            <span *ngIf="doctorDetails[0].ConsultationMsg != undefined">{{doctorDetails[0].ConsultationMsg}}</span>                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-5 col-xxl-4 mb-3">
+                <div class="border rounded p-3 bx-shdw">
+                    <div class="mb-1 d-flex justify-content-between">
+                        <span>Consultation No. : </span>
+                        <span class="fw-5">{{bookingDetails.AppointmentDetails[0].BookingNo}}</span>
+                    </div>
+                    <div class="mb-1 d-flex justify-content-between">
+                        <span>Consultation On : </span>
+                        <span class="fw-5">{{bookingDetails.AppointmentDetails[0].AppointmentDate | date: 'dd MMM, y - EEEE'}}</span> 
+                    </div>
+                    <div class="mb-3 d-flex justify-content-between">
+                        <span>Consultation Slot : </span>
+                        <span class="fw-5">{{bookingDetails.AppointmentDetails[0].SlotStartTime | timeConverter}} - {{bookingDetails.AppointmentDetails[0].SlotEndTime | timeConverter}}</span>
+                    </div>
+                    <div class="mb-1 fw-5">
+                        <div *ngIf="bookingDetails.AppointmentDetails[0].BookingStatusId < 5" class="d-flex justify-content-between align-items-center">
+                            <span class="text-primary">{{bookingDetails.AppointmentDetails[0].BookingStatus}}</span>
+                            <!-- <span *ngIf="bookingDetails.AppointmentDetails[0].PatientTokenNo != null && bookingDetails.AppointmentDetails[0].PatientTokenNo != '' && bookingDetails.AppointmentDetails[0].PatientTokenNo != undefined">
+                                <button type="button" class="btn btn-sm btn-outline-primary" (click)="openRouteInNewTab(bookingDetails.AppointmentDetails[0])"><i class="fa-solid fa-video me-2"></i>Join</button>
+                            </span> -->
+                        </div>
+                        <!-- <span *ngIf="bookingDetails.AppointmentDetails[0].BookingStatusId < 5"  class="text-primary">{{bookingDetails.AppointmentDetails[0].BookingStatus}}</span> -->
+                        <span *ngIf="bookingDetails.AppointmentDetails[0].BookingStatusId == 5" class="text-success">{{bookingDetails.AppointmentDetails[0].BookingStatus}}</span>
+                        <span *ngIf="bookingDetails.AppointmentDetails[0].BookingStatusId > 5" class="text-danger">{{bookingDetails.AppointmentDetails[0].BookingStatus}}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="p-3 border-bottom">
+        <div class="row">
+            <div class="col-xl-7 col-xxl-8">
+                <div *ngIf="bookingDetails.BookingStatusId != 7" class="p-3 mb-3 bg-book">
+                    <div class="mb-1 fs-6 fw-7 text-success">
+                        <span *ngIf="bookingDetails.IsHomeCollection == 1">Home Collection on </span>
+                        <span *ngIf="bookingDetails.IsHomeCollection == 0">Visit Lab on </span>
+                        <span class="">{{bookingDetails.AppointmentDate | date : 'dd MMM yyyy'}}</span>
+                     </div>
+                    <div class="">
+                        <span>Collection Time : </span>
+                        <ng-container *ngIf="AppointmentSlot.length > 0" class="fw-5">
+                            <ng-container *ngFor="let slt of AppointmentSlot">
+                                <span class="">{{slt}}</span>
+                            </ng-container>
+                        </ng-container>
+                    </div>                 
+                </div>
+                <div *ngIf="bookingDetails.BookingStatusId == 7" class="">
+                    <div class="fs-6 fw-7 bg-book p-3 mb-3 text-success">
+                        Your health checkup report is ready
+                    </div>
+                    <!-- <div *ngIf="bookingDetails.ReportFileName != '' && bookingDetails.ReportFileName != null && bookingDetails.ReportFileName != undefined" class="mb-3">
+                        <button class="btnSubmit" type="button" style="min-width: 170px;" (click)="getTestReport(bookingDetails.ReportFileName, bookingDetails.BookingNo)">View Report</button>
+                    </div> -->
+                </div>
+                <div class="d-flex mb-2">
+                    <span class="cont-wdth">Patient Name : </span> 
+                    <span class="fw-5 fs-6">{{bookingDetails.PatientName}}</span>
+                </div>
+                <div *ngIf="bookingDetails.IsHomeCollection == 1" class="">
+                    <!-- <div class="fs-6 fw-6 mb-2">Sample Collection Address </div> -->
+                    <div *ngIf="bookingDetails.PatientMobileNo != null && bookingDetails.PatientMobileNo != ''" class="mb-1 d-flex">
+                        <span class="cont-wdth">Contact No. : </span>
+                        <span>{{bookingDetails.PatientMobileNo}}</span>
+                    </div>
+                    <div *ngIf="bookingDetails.PatientEmailId != null && bookingDetails.PatientEmailId != '' && bookingDetails.PatientEmailId != 'null'" class="mb-1 d-flex">
+                        <span class="cont-wdth">Email : </span>
+                        <span>{{bookingDetails.PatientEmailId}}</span>
+                    </div>
+                    <div *ngIf="bookingDetails.PatientAddline != null && bookingDetails.PatientAddline!= ''" class="d-flex mb-3">
+                        <span class="cont-wdth">Collection Address : </span>
+                        <span>
+                            <span>{{bookingDetails.PatientAddline}}, </span>
+                            <span *ngIf="bookingDetails.PatientLandmark != null && bookingDetails.PatientLandmark != ''">{{bookingDetails.PatientLandmark}}, </span>
+                            <span>{{bookingDetails.PatientCity}}, {{bookingDetails.PatientPinCode}}</span>
+                        </span>
+                    </div>
+                    <div *ngIf="bookingDetails.IsHomeCollection == 1" class="py-3">
+                        <div class="mb-3 fs-6 fw-6">Sample Collector Details</div>
+                        <div>
+                            <div class="d-flex">
+                                <div class="coll-img">
+                                    <!-- <img src="" width="100%" alt=""> -->
+                                     <i class="fa-solid fa-user"></i>
+                                </div>
+                                <div *ngIf="bookingDetails.PhleboId == null || bookingDetails.PhleboId == '' || bookingDetails.PhleboId == undefined">
+                                    <div class="mb-1">Assigning a sample collector</div>
+                                    <div class="mb-1">Details typically updated by 8PM before the day of collection</div>
+                                    <div class="text-danger">We will notify you over SMS as soon as sample collector is assigned</div>
+                                </div>
+                                <div *ngIf="bookingDetails.PhleboId != null && bookingDetails.PhleboId != '' && bookingDetails.PhleboId != undefined && phleboDetails.length>0" >
+                                    <div class="mb-2">{{phleboDetails[0].PhleboName}}</div>
+                                    <div class="mb-2">{{phleboDetails[0].MobileNo}}</div>
+                                    <div class="fs-3 text-secondary">Sample Collection on {{bookingDetails.AppointmentDate | date : 'EE, dd MMM yyyy'}}</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>                   
+                </div>
+
+                <div *ngIf="bookingDetails.IsHomeCollection == 0" class="">
+                    <!-- <div class="fs-6 fw-6 mb-2">Lab Details</div> -->
+                    <div class="pt-3 pb-1 mb-1 d-flex">
+                        <span class="cont-wdth">Lab Name : </span>
+                        <span class="fw-5 fs-5">{{bookingDetails.LabName}}</span>
+                    </div>
+                    <div class="mb-2 d-flex">
+                        <span class="cont-wdth">Contact No. : </span> 
+                        <span>{{bookingDetails.MobileNo}}</span>
+                    </div>
+                    <div class="mb-3 d-flex">
+                        <span class="cont-wdth">Lab Address : </span>
+                        <span>{{bookingDetails.LabAddLine1}}, {{bookingDetails.LabAddLine2}}, {{bookingDetails.LabAreaName}}, {{bookingDetails.LabPincode}}</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-xl-5 col-xxl-4">
+                <div class="fs-7 fw-6 pb-3">Booking Details</div>
+                <div class="border rounded p-3 bx-shdw">
+                    <div>
+                        <div class="d-flex justify-content-between mb-1">
+                            <div>Booking No. :</div>
+                            <div class="fw-5">{{bookingDetails.BookingNo}}</div>
+                        </div>
+                        <div class="d-flex justify-content-between mb-1">
+                            <div>Booking Date : </div>
+                            <div>{{bookingDetails.BookingDate | date : 'EE, dd MMM yyyy'}}</div>
+                        </div>
+                        <div class="d-flex justify-content-between mb-1">
+                            <div>Appointment Date : </div>
+                            <div class="fw-5">{{bookingDetails.AppointmentDate | date : 'EE, dd MMM yyyy'}}</div>
+                        </div> 
+                        <div class="d-flex justify-content-between mb-1">
+                            <div>Appointment Slot : </div>
+                            <div *ngIf="AppointmentSlot.length > 0" class="fw-5">
+                                <ng-container *ngFor="let slt of AppointmentSlot">
+                                    <div class="d-flex justify-content-end mb-1">{{slt}}</div>
+                                </ng-container>
+                            </div>
+                        </div>
+                        <div class="d-flex justify-content-between mb-1">
+                            <div >Booking Type : </div>
+                            <div *ngIf="bookingDetails.IsHomeCollection == 1" class="fw-5">Home Collection</div>
+                            <div *ngIf="bookingDetails.IsHomeCollection == 0" class="fw-5">Lab Visit</div>
+                        </div>
+                        <div class="d-flex justify-content-between mb-1">
+                            <div>Booking Amount : </div>
+                            <div>{{bookingDetails.InitialBookingAmount | currency : 'INR'}}</div>
+                        </div>
+                        <div *ngIf="bookingDetails.CollectionCharges >0" class="d-flex justify-content-between mb-1">
+                            <div>Home Collection Charges : </div>
+                            <div>{{bookingDetails.CollectionCharges | currency : 'INR'}}</div>
+                        </div>
+                        <div *ngIf="bookingDetails.HardCopyCharge != null && bookingDetails.HardCopyCharge != '' && bookingDetails.HardCopyCharge != undefined && bookingDetails.HardCopyCharge >0" class="d-flex justify-content-between mb-1">
+                            <div>Hard Copy Report Charges : </div>
+                            <div>{{bookingDetails.HardCopyCharge | currency : 'INR'}}</div>
+                        </div>
+                        <div *ngIf="bookingDetails.ConvenienceFees >0" class="d-flex justify-content-between mb-1">
+                            <div>Platform Fee : </div>
+                            <div>{{bookingDetails.ConvenienceFees | currency : 'INR'}}</div>
+                        </div>
+                        <div *ngIf="bookingDetails.Discount >0" class="d-flex justify-content-between mb-1 text-success">
+                            <div>Discount : </div>
+                            <div>{{bookingDetails.Discount | currency : 'INR'}}</div>
+                        </div>
+                        <div *ngIf="bookingDetails.PromoCode != null && bookingDetails.PromoCode != ''" class="d-flex justify-content-between mb-1">
+                            <div>PromoCode : </div>
+                            <div>{{bookingDetails.PromoCode}}</div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="d-flex justify-content-between mb-1 mt-3 fw-5">
+                            <div>Payable Amount : </div>
+                            <div class="fw-6 fs-6">{{bookingDetails.BookingAmount | currency : 'INR'}}</div>
+                        </div>
+                        <div *ngIf="bookingDetails.PayStatus != null && bookingDetails.PayStatus != '' && bookingDetails.PayStatus != undefined" class="d-flex justify-content-between mb-1">
+                            <div>Payment Status : </div>
+                            <div class="fw-6 fs-5">{{bookingDetails.PayStatus}}</div>
+                        </div>
+                        <div class="d-flex justify-content-between mb-1">
+                            <div>Payment Mode : </div>
+                            <div class="">{{bookingDetails.TypeofPayment}}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+    <div class="p-3 mb-2">
+        <div class="">
+            <div class="fs-7 fw-6 mb-3">Test Details</div>
+            <div class="ac-grid">
+                <ng-container *ngFor="let item of serviceItems">
+                    <div *ngIf="item.PkgServiceId == null" class="border rounded bx-shdw p-3">
+                        <!-- <div class="mb-2 fw-6 hvr" (click)="CommonService.getLabTestDetailsPageURL(item.ServiceId, item.ServiceName, item.IsPackage)">{{item.ServiceName}}</div> -->
+                        <div class="d-flex hvr" (click)="CommonService.getLabTestDetailsPageURL(item.PermalinkNew)">
+                            <div class="me-3 pt-2">
+                                <img src="https://asset.sastasundar.com/incom/sspl_website/images/labicon.png" alt="" width="40px">
+                            </div>
+                            <div class="w-100">
+                                <div class="mb-1 fw-6" >
+                                    {{item.ServiceName}}
+                                </div>
+                                <div class="light-text mb-1 fw-5">
+                                    {{item.ServicePreparation}}
+                                </div>
+                                <div class="d-flex">
+                                    <div *ngIf="(item.DiscountedFees > 0 && item.InitialFees > item.DiscountedFees) else showmrp">
+                                        <span class="fw-5 me-2">{{item.DiscountedFees | currency: 'INR'}}</span>
+                                        <span class="light-text pe-2 text-line-through fw-5" *ngIf="item.InitialFees > 0 && item.InitialFees > item.DiscountedFees">{{item.InitialFees | currency: 'INR'}}</span>
+                                    </div>                        
+                                    <ng-template #showmrp>
+                                        <div class="fw-5" *ngIf="item.InitialFees > 0">{{item.InitialFees | currency: 'INR'}}</div>
+                                    </ng-template>
+                                </div>
+                            </div>
+                            <!-- <div class="ms-1 p-2 text-secondary"><i class="fa-solid fa-download"></i></div> -->
+                        </div>
+                        <div *ngIf="item.IsPackage == 1" class="pt-2 text-primary fs-3 d-flex justify-content-between" >
+                            <span (click)="viewPackageDetails(item)" class="pe-3 hvr">Package Details</span>
+                            <span *ngIf="item.ReportFileName !=null && item.ReportFileName !='' && item.ReportFileName !=undefined" class="hvr" (click)="getTestReport(item.ReportFileName, bookingDetails.BookingNo)">Download Report</span>
+                        </div>
+                        <div *ngIf="item.IsPackage == 0 && item.ReportFileName !=null && item.ReportFileName !='' && item.ReportFileName !=undefined" class="pt-2 text-primary fs-3 d-flex justify-content-end">
+                            <span (click)="getTestReport(item.ReportFileName, bookingDetails.BookingNo)" class="hvr">Download Report</span>
+                        </div>
+                    </div>
+                </ng-container>
+            </div>
+        </div>
+    </div>
+</ng-container>
+
+<ng-container *ngIf="!isloading && bookingDetails == ''">
+    <div class="notfoundbox">
+        <ng-container >
+            <!-- <i class="fa fa-frown-o mb-3" style="font-size:48px; color:#4775d1"></i> -->
+            <div class="fw-5">Unable to process your request.</div>
+        </ng-container>
+    </div>
+</ng-container>
+
+
+
+<button #pckgDtls data-bs-toggle="modal" data-bs-target="#pckgDtlsModal" class="d-none"></button>
+<ng-container >
+    <div class="modal fade" id="pckgDtlsModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="pckgDtlsModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+          <div class="modal-content">
+            <div class="modal-header">
+              <div class="fw-6 fs-6 mb-0" id="pckgDtlsModalLabel">{{selectedPkg.ServiceName}}</div>
+              <!-- <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button> -->
+            </div>
+            <div *ngIf="packageDetails.length > 0" class="modal-body">
+                <div class="ac-grid mb-2">
+                    <ng-container *ngFor="let data of packageDetails">
+                        <!-- <div class="border rounded p-3 bx-shdw hvr" (click)="CommonService.getLabTestDetailsPageURL(data.ServiceId, data.ServiceName, data.IsPackage)"> -->
+                        <div class="border rounded p-3 bx-shdw" (click)="CommonService.getLabTestDetailsPageURL(data.PermalinkNew)">
+                            <div class="d-flex hvr">
+                                <div class="me-3">
+                                    <img src="https://asset.sastasundar.com/incom/sspl_website/images/labicon.png" alt="" width="40px">
+                                </div>
+                                <div class="w-100">
+                                    <div class="mb-1 fw-5">{{data.ServiceName}}</div>
+                                    <div class="light-text mb-1">{{data.ServicePreparation}}</div>
+                                </div>
+                            </div>
+                            <div *ngIf="data.ReportFileName !=null && data.ReportFileName !='' && data.ReportFileName !=undefined" class="pt-2 text-primary fs-3 d-flex justify-content-end">
+                                <span (click)="getTestReport(data.ReportFileName, bookingDetails.BookingNo)" class="hvr">Download Report</span>
+                            </div>
+                        </div>
+
+                    </ng-container>
+                </div>
+                <div class="btnSec">
+                    <button  type="button" class="btnCancel" data-bs-dismiss="modal" aria-label="Close" (click)="resetPkg()">Close</button>
+                </div>       
+            </div>
+          </div>
+        </div>
+    </div>
+</ng-container>
+
+
+<!-- <button #actionModal data-bs-toggle="modal" data-bs-target="#canceldtsModal" class="d-none"></button> -->
+<div class="modal fade" id="canceldtsModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="canceldtsModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+            <div class="fw-6 fs-6 mb-0" id="pckgDtlsModalLabel">
+                Are you sure you want to cancel Booking No. <span class="text-primary">{{bookingDetails.BookingNo}}</span> ?
+            </div>
+             
+        </div>
+        <div class="modal-body">            
+            <div class="d-flex align-items-center mb-1">
+            </div>
+            <div class="p-3 pt-0">
+                    <div class="mb-3" *ngIf="reschedule_categoryList.length > 0">
+                        <div class="mb-3 fw-5 fs-5">Please select your reason for cancel booking</div>
+                        <ng-container *ngFor="let rsn of reschedule_categoryList">
+                            <div class="d-flex mb-3" (click)="setReason(rsn)">
+                                <span *ngIf="selectedReason.RescheduleCategoryId == rsn.RescheduleCategoryId"><i class="fa-regular fa-circle-check text-primary" style="font-size: 18px; padding-top: 2px;"  aria-hidden="true"></i></span>
+                                <span *ngIf="selectedReason.RescheduleCategoryId != rsn.RescheduleCategoryId"><i class="fa-regular fa-circle" style="font-size: 18px; padding-top: 2px;" aria-hidden="true"></i></span>
+                                <span>&nbsp;&nbsp; {{rsn.RescheduleCategoryName}}</span>
+                            </div>
+                        </ng-container>
+                    </div>
+                    <div class="btnSec pt-3">
+                        <button #closeCancel class="btnCancel" type="button" data-bs-dismiss="modal" aria-label="Close" (click)="onReset()">Cancel</button>                        
+                        <button *ngIf="selectedReason != ''" type="button" class="btnSubmit" (click)="cancelbooking()">Submit</button>
+                    </div>
+            </div>
+        </div>
+      </div>
+    </div>
+</div>
+
+
+<button #respActBtn data-bs-toggle="modal" data-bs-target="#ActModal" class="d-none"></button>
+<div class="modal fade" id="ActModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="ActModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-body">            
+            <div class="d-flex w-100 my-3 fw-5">{{respMsg}}</div>
+            <div class="btnSec">
+                <button type="button" class="btnSubmit" data-bs-dismiss="modal" aria-label="Close" (click)="msgReset()">Ok</button>
+            </div>
+        </div>
+      </div>
+    </div>
+</div>

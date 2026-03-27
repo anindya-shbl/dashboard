@@ -1,0 +1,20 @@
+.item-shadow{
+    box-shadow: 0 1px 3px 2px #8c959f26;
+}
+
+.brnd-img{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+    min-height: 150px;
+    img{
+        width: 180px;
+    }
+}
+
+.brnd-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    grid-gap: 1rem;
+}

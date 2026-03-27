@@ -1,0 +1,349 @@
+<!-- <div><app-route-path></app-route-path></div> -->
+
+<div class="commonngwhite p-3" >
+
+    <div class="mb-3"><app-route-path></app-route-path></div>
+    <!-- <div class="fs-7 fw-7 mb-3">My Orders</div> -->
+    <div class="commonHeadertitleSec">
+        <div class="custNameSec">
+            <strong>My Orders</strong>
+        </div>
+    </div>
+
+    <!-- <nav class="ordTabSec d-none" aria-label="Page navigation">
+        <ul class="pagination mb-0">
+          <li class="page-item text-nowrap" (click)="getData('All-Orders')" [ngClass]="tabName == 'All-Orders' ? 'tab-active':''"><a class="page-link">All</a></li>
+          <li class="page-item text-nowrap" (click)="getData('In-Process')" [ngClass]="tabName == 'In-Process' ? 'tab-active':''"><a class="page-link">In Progress</a></li>
+          <li class="page-item text-nowrap" (click)="getData('Delivered')" [ngClass]="tabName == 'Delivered' ? 'tab-active':''"><a class="page-link">Delivered</a></li>
+          <li class="page-item text-nowrap" (click)="getData('Returned')" [ngClass]="tabName == 'Returned' ? 'tab-active':''"><a class="page-link">Returned</a></li>
+          <li class="page-item text-nowrap" (click)="getData('Cancelled')" [ngClass]="tabName == 'Cancelled' ? 'tab-active':''"><a class="page-link">Cancelled</a></li>
+        </ul>
+    </nav> -->
+
+    <div class="d-flex">
+        <div class=" w-100">
+
+
+
+            <div class="ordStatusSec" *ngIf="!isloading && allOrders.length > 0">
+                <div class="ordStatusSecLoop" *ngFor="let order of allOrders">
+                    <div class="ordHeadSec">
+                        
+                        <div class="headcon">
+                        <div class="leftSec">
+                            <div><span>Order Placed</span> <strong>{{order.OrderDate | date: 'dd MMM yyyy'}}</strong></div>
+                            <div><span>Total Amount</span> <strong>{{order.OrderBillAmount | currency : 'INR'}}</strong></div>
+                            <div><span>Order Item(s)</span> <strong>{{order.OrderItems.length}}</strong></div>
+                            <div *ngIf="order.PatientName != null">
+                                <span>Order For</span>
+                                <strong><h3>- {{order.PatientName}}</h3></strong>
+                            </div>
+                        </div>
+    
+                        <div class="rightSec"><span>Order ID</span> <strong>#{{order.OrderId}}</strong></div>
+                        </div>
+    
+                    </div>
+                    <div class="ordBodySec">
+                        
+                        <div class="left">
+                            <div class="status">
+                                <span *ngIf="order.OrderStatusId == 5" class="delivered">{{order.OrderStatusDesc}}</span>
+                                <span *ngIf="order.OrderStatusId == 8 || order.OrderStatusId == 9" class="cancelled">{{order.OrderStatusDesc}}</span>
+                                <span *ngIf="order.OrderStatusId != 5 && order.OrderStatusId != 8 && order.OrderStatusId != 9" class="shipped">{{order.OrderStatusDesc}}</span>
+                                
+                            </div>
+                            <!-- <div><span>Order Item(s)</span><strong> &nbsp; : {{order.OrderItems.length}}</strong></div> -->
+                            <div *ngIf="order.OrderStatusId != 8 && order.ScheduleDeliveryDate!='' && order.ScheduleDeliveryDate!=null" class="d-flex">
+                                <div *ngIf="order.OrderStatusId != 5" style="color: #6d6a6a;">Expected Delivery</div>
+                                <div *ngIf="order.OrderStatusId == 5" style="color: #6d6a6a;">Delivered On</div>
+                                <div class="fw-5"> &nbsp; : {{order.ScheduleDeliveryDate | date: 'dd MMM yyyy'}}</div>
+                            </div>
+                            
+                            <div class="mt-1" style="color: #344054;">
+                                <div class="mb-2 fs-3 fw-5 d-flex">
+                                    <div class="me-2 mt-2 d-flex align-items-start"><i class="fa-solid fa-circle" style="font-size: 4px;"></i></div>
+                                    <div>{{order.OrderItems[0].DisplayName}}</div>
+                                </div>
+                                <div *ngIf="order.OrderItems.length > 1" class="mb-2 fs-3 fw-5 d-flex">
+                                    <div class="me-2 mt-2 d-flex align-items-start"><i class="fa-solid fa-circle" style="font-size: 4px;"></i></div>
+                                    <div>{{order.OrderItems[1].DisplayName}}</div>
+                                </div>
+                            </div>
+                            <div *ngIf="order.OrderItems.length > 2" class="mb-2">+ &nbsp;{{order.OrderItems.length - 2}} more</div>
+    
+                        </div>
+                        <div class="right">
+                            <ul>
+                                <li *ngIf="order.IsReorder == 'Y'" (click)="getReOrders(order.OrderId)">Re Order</li>
+                                <!-- <li *ngIf="order.IsReorder == 'Y'" (click)="setReorder(order)">Re Order</li> -->
+                                <li (click)="viewOrderDetails(order.OrderId)">View Details</li>
+                                <li data-bs-toggle="modal" data-bs-target="#SRModal" (click)="ServiceRequest(order)">Raise Service Request</li>
+                                <li (click)="viewSRstatus(order.OrderId)">Service Request Status</li>
+                            </ul>
+                        </div>
+    
+                    </div>
+    
+                </div>
+                <div *ngIf="allOrders.length >= 10" class="load-more-btn"> 
+                    <!-- <div class="d-flex align-items-center justify-content-center"> -->
+                        <div *ngIf="!loadMoreBtn" (click)="loadMore()">Load More ...</div>
+                        <div *ngIf="loadMoreBtn" >No More Result</div>
+                    <!-- </div> -->
+                </div>
+            </div>
+    
+            
+    
+            <ng-container *ngIf="!isloading && allOrders.length == 0">
+                <div class="notfoundbox mt-3">
+                    <ng-container >
+                        <!-- <i class="fa fa-frown-o mb-3" style="font-size:48px; color:#4775d1"></i> -->
+                        <div class="fw-5">No Record Found...</div>
+                    </ng-container>
+                </div>
+            </ng-container>
+        </div>
+        
+        <!-- <div *ngIf="!isloading && allOrders.length > 0" class="mxct" >
+            <app-buy-again></app-buy-again>
+        </div> -->
+    </div>
+</div>
+
+
+<div class="modal fade" id="SRModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="SRModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h6 class="modal-title mb-0" id="SRModalLabel">Raise Service Request</h6>
+        </div>
+        <div class="modal-body">
+            <form class="address-form" [formGroup]="ServiceRequestForm" (ngSubmit)="onSubmit()">
+
+                <div class="mb-4">
+                    <label for="Category" class="form-label">Category <span class="text-danger"> *</span></label>
+                    <select id="Category" class="form-select" formControlName="Category" (change)="setSubCategory()">
+                        <option value = ''>Select Category</option>
+                        <ng-container *ngFor="let cat of serviceDetails">
+                            <option [value]="cat.CatId">{{cat.CatDesc}}</option>
+                        </ng-container>
+                    </select>
+                    <div *ngIf="submitted && f['Category'].errors" class="error-text">
+                        <div *ngIf="f['Category'].errors['required']">* Catagory is required</div>
+                    </div>
+                </div>
+
+                <ng-container *ngIf="f['Category'].value != ''">
+                    <div class="mb-4">
+                        <label for="SubCategory" class="form-label">Sub Category <span class="text-danger"> *</span></label>
+                        <select id="SubCategory" class="form-select" formControlName="SubCategory" (change)="setSrProducts()">
+                            <option value = ''>Select Sub category</option>
+                            <ng-container *ngFor="let sub of subCategoryList">
+                                <option [value]="sub.SubCatId">{{sub.SubCatDesc}}</option>
+                            </ng-container>
+                        </select>
+                        <div *ngIf="submitted && f['SubCategory'].errors" class="error-text">
+                            <div *ngIf="f['SubCategory'].errors['required']">* Sub category is required</div>
+                        </div>
+                    </div>
+
+                    <ng-container *ngIf="(f['Category'].value == 1) && (f['SubCategory'].value != '')">
+                        <div class="mb-4" *ngIf="f['SubCategory'].value != '2'">
+                            <div class="form-label">Product Image <span class="text-danger"> *</span></div>
+                            <div class="">
+                                <ng-container *ngIf="this.srImages == ''">
+                                    <div>
+                                        <input style="background-color: #EFF8FF;" class="form-control" #imageFile type='file' (change)="onSelectFile($event)" accept=".jpg, .jpeg">
+                                    </div>
+                                    
+                                </ng-container>
+                                <ng-container *ngIf="this.srImages != ''">
+                                    <div class="imglistblock">
+                                        <img [src]="preview" class="img-size"> <br/>
+                                    </div>
+                                    <div class="d-flex w-100" style="column-gap: 8px; margin: 8px 0;" *ngIf="attachedFile == ''">
+                                        <div>
+                                            <button class="btnSubmit1" type="button" (click)="uploadFile()">Upload</button>
+                                        </div>
+                                        <div>
+                                            <button class="btnCancel" type="button" (click)="changeFile()">Change</button>
+                                        </div>
+                                    </div>
+                                    <div class="text-success p-2 text-center" style="background-color: #ECFDF3;" *ngIf="attachedFile != ''"> File uploade</div>
+                                </ng-container>
+                            </div>
+                            <div *ngIf="this.imgError !=''" class="error-text py-2 text-center" style="background-color: #FEE4E2;">{{imgError}}</div>
+                        </div>
+
+                        
+                            <div class="mb-3">
+                                <div class="form-label">Products <span class="text-danger"> *</span></div>
+                                <ng-container *ngFor="let item of selectedOrder.OrderItems">
+                                    <div class="mb-2">
+                                        <div class="d-flex p-2 m-0 fw-5 justify-content-between align-items-center" style="background-color: #EFF8FF;">
+                                            <!-- <div class="col-1">
+                                                <input class="form-check-input" type="checkbox" value="" (click)="setSrProductList($event, f['SubCategory'], item.ProductId, Srty.value)" [checked]="item.selected">
+                                            </div> -->
+                                            <div class="">
+                                                <label>
+                                                <span class="me-2"><input class="form-check-input" type="checkbox" value="" (click)="setSrProductList($event, f['SubCategory'], item.ProductId, Srty.value)" [checked]="item.selected"></span>
+                                                <span>{{item.DisplayName}}</span>
+                                            </label>
+                                            </div>
+                                            <div class="">
+                                                <div class="d-flex align-items-center">
+                                                    
+                                                    <span class="pe-1" id="basic-addon1">QTY</span>
+                                                    <span>
+                                                        <input type="number" #Srty class="form-control" value="1" min="1" [max]="item.ItemQuantity" onkeydown="return false" (change)="updateSrcProductQty(item.ProductId, Srty.value)">
+                                                    </span>   
+                                                                                        
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div *ngIf="f['SubCategory'].value == 4" class="border p-2">
+                                            <div class="d-flex justify-content-between">
+                                                <ng-container *ngFor="let rsn of subSubCtgryList">
+                                                    <div class="form-check">
+                                                        <input class="form-check-input" type="checkbox" name="reason" [id]="item.ProductId" [value]="rsn.SubSubCategoryId" (change)="setReason($event, item.ProductId)" [disabled]="!item.selected" [checked]="rsn.SubSubCategoryId == item.sscId">
+                                                        <div class="form-check-label fw-5">{{rsn.SubSubCategoryTitle}}</div>
+                                                    </div>
+                                                </ng-container>
+                                            </div>
+                                        </div>
+                                        <ng-container *ngIf="f['SubCategory'].value == 4">
+                                            <div *ngIf="this.srSelectedProd.length > 0 && submitted && found" class="error-text py-2">{{respMsg}}</div>
+                                        </ng-container>
+                                        <ng-container>
+                                            <div *ngIf="this.srSelectedProd.length == 0 && submitted" class="error-text py-2">{{respMsg}}</div>
+                                        </ng-container>
+                                    </div>
+                                </ng-container>
+                            </div>
+                        
+                    </ng-container>
+                  
+                    <div class="ac-grid mb-2">
+                        <div class="mb-3">
+                            <label for="Comment" class="form-label">Comment <span class="text-danger"> *</span></label>
+                            <textarea type="text" rows="3" class="form-control" id="Comment" formControlName="Comment"></textarea>
+                            <div *ngIf="submitted && f['Comment'].errors" class="error-text">
+                                <div *ngIf="f['Comment'].errors['required']">*Comment is required</div>
+                            </div>
+                        </div>
+                    </div>
+                </ng-container>
+                
+
+                
+                    <div class="btnSec">
+                        <button class="btnCancel" #closebutton type="button" data-bs-dismiss="modal" aria-label="Close" (click)="onReset()">Cancel</button>                        
+                        <button type="submit" class="btnSubmit">Submit</button>
+                    </div>
+                
+            </form>
+        </div>
+      </div>
+    </div>
+</div>
+
+
+<button #allorderModal data-bs-toggle="modal" data-bs-target="#allorderModal" class="d-none"></button>
+<div class="modal fade" id="allorderModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="allorderModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-body">            
+            <div class="d-flex w-100 my-3 fw-5">{{respMsg}}</div>
+            <div class="btnSec">
+                <button type="button" class="btnSubmit" data-bs-dismiss="modal" aria-label="Close">Ok</button>
+            </div>
+        </div>
+      </div>
+    </div>
+</div>
+
+
+
+<button #ReOrderModal data-bs-toggle="modal" data-bs-target="#ReOrderModal" class="d-none"></button>
+<div class="modal fade" id="ReOrderModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="ReOrderModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title mb-0" id="ReOrderModalLabel">Re Order </h5>
+          </div>
+        <div class="modal-body">
+            
+            <div class="table-responsive">
+                <table class="table table align-middle table-bordered">
+                  <thead>
+                    <tr>
+                      <th scope="col">Select</th>
+                      <th scope="col">Product Name</th>
+                      <th scope="col">MRP</th>
+                      <th scope="col">Offer Price</th>
+                      <th scope="col">Ordered Qty</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <ng-container *ngFor="let dts of reorderItems">
+                      <tr>
+                        <td scope="col">                          
+                            <input class="form-check-input" type="checkbox" value="" (click)="checkuncheck(dts)" [checked]="dts.selected" />                          
+                        </td>
+                        <td>{{dts.DisplayName}}</td>
+                        <td>{{dts.MRP | currency : 'INR'}}</td>
+                        <td>{{dts.OfferPrice | currency : 'INR'}}</td>
+                        <td>
+                            <div class="action-btn">
+                                <span class="item-action" (click)="removeItem(dts)">&#8722;</span>
+                                <span class="item-text">{{dts.Quantity}}</span>
+                                <span class="item-action" (click)="addItem(dts)">&#43;</span>
+                            </div>
+                            <div *ngIf="dts.DosageRestriction != 0 && dts.DosageRestriction == dts.Quantity">
+                                max {{dts.DosageRestriction}} quantity allowed.
+                            </div>
+                        </td>                      
+                      </tr>
+                    </ng-container>
+                  </tbody>
+                </table>
+            </div>
+            <div class="btnSec">
+                <button type="button" class="btnCancel" data-bs-dismiss="modal" aria-label="Close" (click)="resetReorder_123()" >Cancel</button>
+                <button type="button" class="btnSubmit" (click)="checkoutCart_123()" [disabled]="reorderItems.length == 0">Continue</button>
+            </div>
+            
+            <!-- <div class="table-responsive">
+                <table class="table table align-middle table-bordered">
+                  <thead>
+                    <tr>
+                      <th scope="col">Select</th>
+                      <th scope="col">Product Name</th>
+                      <th scope="col">Ordered Qty</th>
+                     
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <ng-container *ngFor="let item of ReOrderList">
+                      <tr>
+                        <td scope="col">                          
+                            <input class="form-check-input" type="checkbox" value="" (click)="setfinalReorder($event, item)" [checked]="item.selected" />                          
+                        </td>
+                        <td>{{item.DisplayName}}</td>
+                        <td>{{item.ItemQuantity}}</td>                       
+                      </tr>
+                    </ng-container>
+                  </tbody>
+                </table>
+              </div>
+            <div class="">
+                <button type="button" class="btn btn-outline-danger btn-sm px-3" data-bs-dismiss="modal" aria-label="Close" (click)="resetReorder()" >Cancel</button>
+                <button type="button" class="btn btn-outline-primary btn-sm px-3" (click)="checkoutCart()" >Continue</button>
+                
+            </div> -->
+        </div>
+      </div>
+    </div>
+</div>

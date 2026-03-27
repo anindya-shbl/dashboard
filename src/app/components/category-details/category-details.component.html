@@ -1,0 +1,170 @@
+<ng-container>
+    <!-- <div>
+        <app-main-header></app-main-header>
+    </div>
+    <div>
+        <app-sub-header></app-sub-header>
+    </div> -->
+    <div class="lab-body">
+        <div class="d-flex p-3">
+            <div class="lft-pnl border item-shadow rounded me-3">
+                <div class="p-3 fw-6 fs-6">Filter By</div>
+                <div *ngIf="tabList.length>0" class="p-3 border-top">
+                    <!-- <div class="fw-6 mb-3">Category</div> -->
+                    <ng-container *ngFor="let tab of tabList">
+                        <div class="p-2 d-flex hvr" (click)="changeCategory(tab.ActionUrl)">
+                            <span class="me-2 pt-1" style="font-size: 10px;"><i
+                                    class="fa-solid fa-caret-right"></i></span>
+                            <span>{{tab.CategoryName}}</span>
+                        </div>
+                    </ng-container>
+                </div>
+                <div *ngIf="filterPanel.length>0">
+                    <div *ngIf="priceRange.length > 0" class="p-3 border-top">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <span class="fw-6">Price Range</span>
+                            <span class="fs-3 text-secondary hvr ms-2" *ngIf="selectedPrice.length>0" (click)="resetPriceFilter()">clear</span>
+                        </div>
+                        <div>
+                            <ng-container *ngFor="let range of priceRange">
+                                <div class="p-2 d-flex hvr" (click)="filterByRange(range)">
+                                    <span *ngIf="!range.selected"><i class="fa-regular fa-square"></i></span>
+                                    <span *ngIf="range.selected"><i class="fa-solid fa-square-check text-success"></i></span>
+                                    <span class="ms-2">{{range.label}}</span>
+                                </div>
+                            </ng-container>
+                        </div>
+                    </div>
+                    <div *ngIf="brands.length > 0" class="p-3 border-top">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <span class="fw-6">Brand</span>
+                            <span class="fs-3 text-secondary hvr ms-2" *ngIf="selectedMfg.length>0" (click)="resetMfgFilter()">clear</span>
+                        </div>
+                        <div class="sclr-div">
+                            <ng-container *ngFor="let brand of brands">
+                                <div class="p-2 d-flex hvr" (click)="filterByMfg(brand)">
+                                    <span *ngIf="!brand.selected"><i class="fa-regular fa-square"></i></span>
+                                    <span *ngIf="brand.selected"><i class="fa-solid fa-square-check text-success"></i></span>
+                                    <span class="ms-2">{{brand.key}}</span>
+                                </div>
+                            </ng-container>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="w-100">
+                
+                <div *ngIf="!isLoading" class="">
+                    <div *ngIf="categoryNow.length>0" class="article-heading p-3 d-flex justify-content-between bg-light mb-3">
+                        <div class="">{{categoryNow[0].CategoryName}}</div>
+                        <div>
+                            <select class="form-select form-select-sm" (change)="onSortChange($event)">
+                                <option *ngFor="let option of sortOptions; let i = index" [value]="i" [selected]="option === selectedSort">
+                                    {{ option.label }}
+                                </option>
+                            </select>
+                        </div>
+                    </div>
+                    <div *ngIf="searchList.length > 0" class="pckg-grid">
+                        <ng-container *ngFor="let item of searchList">
+                            <div class="border rounded position-relative item-shadow p-3">
+                                <div *ngIf="item.DiscountPercent > 0" class="discount">
+                                        {{item.DiscountPercent}}% &nbsp;Off
+                                </div>
+                                <div *ngIf="item.PrescriptionOTC == 'P'" class="rx-icon-rgt">&#8478;</div>
+                                <!-- <div class="hg-prd  hvr" (click)="CommonService.getProductDetailsPageURL(item.ProductId, item.DisplayName, item.PrescriptionOTC)"> -->
+                                <div class="hg-prd  hvr" (click)="viewProductDetails(item.EncodeProdId, item.DisplayName, item.PrescriptionOTC)">
+                                    
+                                    <div class="tst-img py-4">
+                                        
+                                        <ng-container *ngIf="item.ProductImage != '' && item.ProductImage != null">
+                                            <img src="https://asset.sastasundar.com/incom/images/product/thumb/{{item.ProductImage}}"
+                                                alt width="100%">
+                                        </ng-container>
+                                        <ng-container *ngIf="item.ProductImage == '' || item.ProductImage == null">
+                                            <img *ngIf="item.PrescriptionOTC == 'P' || item.PrescriptionOTC == 'M'"
+                                                src="https://asset.sastasundar.com/incom/images/product/thumb/Med.svg"
+                                                alt="" width="90px">
+                                            <img *ngIf="item.PrescriptionOTC == 'O'"
+                                                src="https://asset.sastasundar.com/incom/images/product/thumb/Household.svg"
+                                                alt="" width="90px">
+                                        </ng-container>
+                                    </div>
+                                    <div class="fs-5 fw-5 text-center line-clamp-2 mb-2">{{item.DisplayName}}</div>
+                                    <div class="text-secondary text-center line-clamp-1 mb-1">{{item.MfgGroup}}</div>
+
+                                </div>
+                                <div class="d-flex w-100 justify-content-between">
+                                    <div class="w-100 hvr">
+                                        <!-- <div class="fw-5 fs-5 mb-2 line-clamp-2">{{item.DisplayName}}</div> -->
+                                        
+                                        <ng-container *ngIf="item.IsOutOfStock == 'N'">
+                                            <!-- <div class="text-secondary mb-2">
+                                                    <span>Best Before: </span>
+                                                    <span>{{item.ExpiryDate | date: 'MMM yyyy'}}</span>
+                                                </div> -->
+                                            
+                                                <div class="me-2 fw-6 fs-6" *ngIf="item.OfferPrice > 0">
+                                                    {{item.OfferPrice | currency: 'INR'}}
+                                                </div>
+                                                <div class="me-2 text-decoration-line-through text-secondary"
+                                                    *ngIf="item.MRP > item.OfferPrice">
+                                                    {{item.MRP | currency: 'INR'}}
+                                                </div>
+                                                
+                                        </ng-container>
+                                        <ng-container *ngIf="item.IsOutOfStock == 'Y'">
+                                            <div class="text-secondary mb-1">Out Of Stock</div>
+                                        </ng-container>
+                                    </div>
+                                    <div class="ms-3">
+                                        <ng-container *ngIf="item.IsOutOfStock == 'N'">
+                                            <div *ngIf="item.addedQty == 0" class="action-btn  hvr"
+                                                (click)="addToCart(item, 1);">
+                                                <span class="action-btn addbutton-color">ADD</span>
+                                            </div>
+                                            <div *ngIf="item.addedQty > 0" class="action-btn action-add">
+                                                <span class="item-action" (click)="cartAddMinus(item)">&#8722;</span>
+                                                <span class="item-text">{{item.addedQty}}</span>
+                                                <span class="item-action" (click)="cartAddPlus(item)">&#43;</span>
+                                            </div>
+                                        </ng-container>
+
+                                        <ng-container *ngIf="item.IsOutOfStock == 'Y'">
+                                            <div class="notify-btn  hvr" (click)="requestNotify(item)">
+                                                <span class="fw-5">Notify</span>
+                                            </div>
+                                        </ng-container>
+                                    </div>
+                                </div>
+                            </div>
+                        </ng-container>
+                        <ng-container *ngIf="totalcount > searchList.length">
+                            <!-- <div class="hvr text-primary text-center fw-5 p-3 bg-primary-subtle" (click)="loadMore()">
+                                Load More...
+                            </div> -->
+                            <div class="rounded item-shadow p-3 d-flex justify-content-center align-items-center" style="min-height: 290px;">
+                                <div class="action-btn hvr btnS" style="width: 150px; height: 46px;" (click)="loadMore()">
+                                    <span class="fw-5 addbutton-color">LOAD MORE ...</span>
+                                </div>
+                            </div>
+                        </ng-container>
+                        
+                    </div>
+                    <div *ngIf="searchList.length == 0" class="d-flex justify-content-center p-3 w-100 mt-3">
+                        <div class="fs-5 fw-5 my-3">No record found</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div>
+        <app-download-app></app-download-app>
+    </div>
+    <div>
+        <app-sub-footer></app-sub-footer>
+    </div>
+    <div class="border-top">
+        <app-footer></app-footer>
+    </div>
+</ng-container>

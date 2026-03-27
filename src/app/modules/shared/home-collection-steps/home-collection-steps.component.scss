@@ -1,0 +1,21 @@
+.item-shadow {
+    box-shadow: 0 1px 3px 2px #8c959f26;
+}
+
+
+.img-box {
+    min-height: 154px;
+    max-width: 320px;
+}
+
+
+::ng-deep {
+    .ppckg {
+        .owl-carousel .owl-nav{
+            top: 30% !important;
+        };
+        .owl-prev, .owl-next {
+            margin: 7px !important; 
+        }
+    }
+}

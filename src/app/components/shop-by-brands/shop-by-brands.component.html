@@ -1,0 +1,26 @@
+<div class="lab-body p-3">
+    <div class="mb-4">
+        <!-- <div class="fs-2 mb-2">
+            <span class="hvr text-primary" routerLink="/new">Home</span>&nbsp; >&nbsp;
+            <span>Shop By Brand</span>
+        </div> -->
+        <div class="article-heading">All Brands</div>
+    </div>
+    <div *ngIf="allBrands.length >0" class="brnd-grid mb-3">
+        <ng-container *ngFor="let brnd of allBrands">
+            <div class="brnd-img border rounded item-shadow hvr" (click)="viewListings(brnd)">
+                <img [src]="brnd.BrandImageUrl" alt="">
+            </div>
+        </ng-container>
+    </div>
+</div>
+
+<div>
+    <app-download-app></app-download-app>
+</div>
+<div>
+    <app-sub-footer></app-sub-footer>
+</div>
+<div class="border-top">
+    <app-footer></app-footer>
+</div>

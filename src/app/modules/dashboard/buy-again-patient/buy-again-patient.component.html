@@ -1,0 +1,144 @@
+<ng-container>
+    <div style="min-height: calc(100vh - 358px);">
+    <div *ngIf="PatientmedorderList.length > 0" class="">
+        <ng-container *ngFor="let ptnt of PatientmedorderList">
+            <div class="border-bottom-shadow">
+                <div class="pad-12 fw-7 fs-7" style="background-color: #EFF8FF">{{ptnt.PatientName}}</div>
+                <div class="ac-grid p-3">
+                    <ng-container *ngFor="let item of ptnt.ItemList">
+                        <div class="d-flex border rounded p-3" [ngClass]="item.disabled? 'noClick bg-secondary-subtle': item.selected == true? 'bg-success-add': ''">
+                            <div *ngIf="!item.disabled && item.IsOutOfStock == 'N'" class="me-3 pointer" (click)="checkUnchek(item)">
+                                <span *ngIf="item.selected == false" style="font-size: 19px;"><i class="fa-regular fa-square" aria-hidden="true"></i></span>
+                                <span *ngIf="item.selected == true" style="font-size: 19px;"><i class="fa-solid fa-square-check text-success" aria-hidden="true"></i></span>
+                            </div>
+                            <div *ngIf="item.disabled || item.IsOutOfStock == 'Y'" class="me-3">
+                                <span style="font-size: 19px;"><i class="fa-regular fa-square" aria-hidden="true" style="color: lightgray;"></i></span>
+                            </div>
+                            <div class="buyagnImg position-relative me-3">
+                                <ng-container *ngIf="item.PrescriptionOTC == 'P'">
+                                    <i class="icon-Rx rxblock"></i>
+                                </ng-container>
+                                <ng-container *ngIf="item.ProductImage != '' && item.ProductImage != null">
+                                    <img src="https://asset.sastasundar.com/incom/images/product/thumb/{{item.ProductImage}}">
+                                </ng-container>
+                                <ng-container *ngIf="item.ProductImage == '' || item.ProductImage == null">
+                                    <!-- <img src="https://asset.sastasundar.com/incom/images/product/thumb/default_product1460098847.jpg"> -->
+                                    <img *ngIf="item.PrescriptionOTC == 'P' || item.PrescriptionOTC == 'M'"  src="https://asset.sastasundar.com/incom/images/product/thumb/Med.svg">
+                                    <img *ngIf="item.PrescriptionOTC == 'O'" src="https://asset.sastasundar.com/incom/images/product/thumb/Household.svg">
+                                 </ng-container>
+                            </div>
+                            <div class="d-flex w-100 mb-1 align-items-center">
+                                <div class="w-100 pe-2">
+                                    <div class="mb-1 fw-5 hvr" (click)="CommonService.getProductDetailsPageURL(item.ProductId, item.ProductName, item.PrescriptionOTC)">{{item.DisplayName}}</div>
+                                    <div *ngIf="calculateDiff(item.OrderDate) <=10" class="text-black-50">Ordered {{calculateDiff(item.OrderDate)}} days ago </div>
+                                    <div *ngIf="calculateDiff(item.OrderDate) >10" class="text-black-50">Ordered on {{item.OrderDate| date : 'dd MMM yyyy'}} </div>
+                                    <!-- <div>Ordered on {{item.OrderDate | date : "dd MMM yyyy"}}</div> --> 
+                                    <div class="mt-1" *ngIf="item.IsOutOfStock == 'N'">
+                                        <span class="fw-5">{{item.OfferPrice | currency : 'INR'}}</span>
+                                        <del class="s-price px-2 text-black-50">{{item.MRP | currency : 'INR'}}</del>
+                                        <!-- <span class="s-price px-2">{{item.MRP | currency : 'INR'}}</span> -->
+                                        <b class="text-orange" *ngIf="item.DiscountPercent > 0">{{item.DiscountPercent}} % off</b>
+                                    </div>
+                                    <div class="mt-1" *ngIf="item.IsOutOfStock == 'Y'">
+                                        <span class="text-secondary">Out of Stock</span>
+                                    </div>                                      
+                                </div>
+
+                                <ng-container *ngIf="item.IsOutOfStock == 'N'">
+                                    <div *ngIf="!item.disabled" class="action-btn addbutton-color">
+                                        <span class="item-action" (click)="removeUpdateItem(item)">&#8722;</span>
+                                        <span *ngIf="item.selected == false" class="item-text" >{{item.ItemQuantity}}</span>
+                                        <span *ngIf="item.selected == true" class="item-text" >{{item.addedQty}}</span>
+                                        <span class="item-action" (click)="addUpdateItem(item)">&#43;</span>
+                                    </div>
+    
+                                    <div *ngIf="item.disabled" class="action-btn addbutton-disabled">
+                                        <span class="item-action">&#8722;</span>
+                                        <span class="item-text">{{item.ItemQuantity}}</span>
+                                        <span class="item-action">&#43;</span>
+                                    </div>
+                                </ng-container>
+
+                                <ng-container *ngIf="item.IsOutOfStock == 'Y'">
+                                    <div class="notify-btn hvr" (click)="requestNotify(item)">
+                                        <span class="fs-3 fw-5" >Notify</span>
+                                    </div>
+                                </ng-container>
+                            </div>
+                        </div>
+                    </ng-container>
+                </div>
+            </div>
+        </ng-container>
+    </div>
+
+    <div *ngIf="OtcHouseHoldList.length > 0" class="border-bottom-shadow">
+        <div class="pad-12 bg-success-light fw-7 fs-7">Household Products</div>
+        <div class="ac-grid p-3">
+            <ng-container *ngFor="let item of OtcHouseHoldList">
+                <div class="d-flex border rounded p-3" [ngClass]="item.selected == true? 'bg-success-add': ''">
+                    <div *ngIf="item.IsOutOfStock == 'N'" class="me-3 pointer" (click)="otcCheckUncheck(item)">
+                        <span *ngIf="item.selected == false" style="font-size: 19px;"><i class="fa-regular fa-square" aria-hidden="true"></i></span>
+                        <span *ngIf="item.selected == true" style="font-size: 19px;"><i class="fa-solid fa-square-check text-success" aria-hidden="true"></i></span>
+                    </div>
+                    <div *ngIf="item.IsOutOfStock == 'Y'" class="pointer">
+                        <span style="font-size: 19px;"><i class="fa-regular fa-square" aria-hidden="true" style="color: lightgray;"></i></span>
+                    </div>
+                    <div class="buyagnImg me-3">
+                        <ng-container *ngIf="item.ProductImage != '' && item.ProductImage != null">
+                            <img src="https://asset.sastasundar.com/incom/images/product/thumb/{{item.ProductImage}}">
+                        </ng-container>
+                        <ng-container *ngIf="item.ProductImage == '' || item.ProductImage == null">
+                            <!-- <img src="https://asset.sastasundar.com/incom/images/product/thumb/default_product1460098847.jpg"> -->
+                            <img *ngIf="item.PrescriptionOTC == 'P' || item.PrescriptionOTC == 'M'"  src="https://asset.sastasundar.com/incom/images/product/thumb/Med.svg">
+                            <img *ngIf="item.PrescriptionOTC == 'O'" src="https://asset.sastasundar.com/incom/images/product/thumb/Household.svg">
+                         </ng-container>
+                    </div>
+                    <div class="d-flex w-100 mb-1 align-items-center">
+                        <div class="w-100 pe-2">
+                            <div class="mb-1 fw-5 hvr" (click)="CommonService.getProductDetailsPageURL(item.ProductId, item.ProductName, item.PrescriptionOTC)">{{item.DisplayName}}</div>
+                            <div *ngIf="calculateDiff(item.OrderDate) <=10" class="text-black-50">Ordered {{calculateDiff(item.OrderDate)}} days ago </div>
+                            <div *ngIf="calculateDiff(item.OrderDate) >10" class="text-black-50">Ordered on {{item.OrderDate| date : 'dd MMM yyyy'}} </div>
+                            <!-- <div>Ordered on {{item.OrderDate | date : "dd MMM yyyy"}}</div> -->
+                            <div class="mt-1" *ngIf="item.IsOutOfStock == 'N'">
+                                <span class="fw-5">{{item.OfferPrice | currency : 'INR'}}</span>
+                                <!-- <span class="s-price px-2">{{item.MRP | currency : 'INR'}}</span> -->
+                                <del class="s-price px-2 text-black-50">{{item.MRP | currency : 'INR'}}</del>
+                                <b class="text-orange" *ngIf="item.DiscountPercent > 0">{{item.DiscountPercent}} % off</b>
+                            </div>
+                            <div class="mt-1" *ngIf="item.IsOutOfStock == 'Y'">
+                                <span class="text-secondary">Out of Stock</span>
+                            </div> 
+                        </div>
+                        <div *ngIf="item.IsOutOfStock == 'N'" class="action-btn addbutton-color">
+                            <span class="item-action" (click)="otcRemoveUpdate(item)">&#8722;</span>
+                            <span *ngIf="item.selected == false" class="item-text" >{{item.ItemQuantity}}</span>
+                            <span *ngIf="item.selected == true" class="item-text" >{{item.addedQty}}</span>
+                            <span class="item-action" (click)="otcAddUpdate(item)">&#43;</span>
+                        </div>
+                        
+                        <div *ngIf="item.IsOutOfStock == 'Y'" class="notify-btn hvr" (click)="requestNotify(item)">
+                            <span class="fs-3 fw-5" >Notify</span>
+                        </div>
+                    </div>
+                </div>
+            </ng-container>
+        </div>
+    </div>
+
+    <ng-container *ngIf="PatientmedorderList.length == 0 && OtcHouseHoldList.length == 0">
+        <div class="notfoundbox mt-3">
+            <ng-container >
+                <div class="fw-5">No Record Found...</div>
+            </ng-container>
+        </div>
+    </ng-container>
+    </div>
+    <div *ngIf="PatientmedorderList.length > 0 || OtcHouseHoldList.length > 0" class="p-3 d-flex justify-content-between align-items-center border-top bg-white" [ngClass]="scrollPosition>0 ? 'sticky-bottom':''">
+        <div class="border rounded px-3 py-2">{{checkoutArr.length}} item<span *ngIf="checkoutArr.length > 1">s</span></div>
+        <div class="btnSec">
+            <button *ngIf="checkoutArr.length > 0" class="btnSubmit" (click)="proceed()">Go to cart</button>
+            <button *ngIf="checkoutArr.length == 0" class="btnSubmit" type="button" disabled>Go to cart</button>
+        </div>
+    </div>
+</ng-container>

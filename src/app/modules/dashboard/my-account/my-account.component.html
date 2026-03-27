@@ -1,0 +1,118 @@
+<div class="commonngwhite p-3">
+
+    <div><app-route-path></app-route-path></div>
+
+    <div>
+        <div class="commonHeadertitleSec">
+            <div class="custNameSec">
+                <small>Welcome Back</small>
+                <strong>{{authService.customerName}}</strong>
+            </div>
+            <div *ngIf="authService.totalSavings>0" class="custSaved">
+                <strong>You have saved {{authService.totalSavings | currency:'INR'}} so far</strong>
+                <!-- <i class="fa-solid fa-wallet"></i> -->
+                <span><img src="https://asset.sastasundar.com/incom/sspl_website/images/Confetti.png" alt="" style="width: 40px;" /></span>
+            </div>
+        </div>
+
+        <div class="listGridSec">
+            <div class="secgrid">
+                <div class="left">
+                    <div class="iconSec green"><i class="fa-solid fa-hand-holding-heart"></i></div>
+                    <div class="conSec">
+                        <small>Life Time Savings</small>
+                        <strong>{{authService.totalSavings | currency:'INR'}}</strong>
+                    </div>
+                </div>
+                <!-- <div><i class="icon-info"></i></div> -->
+            </div>
+
+            <div class="secgrid hvr" (click)="viewAllorders()">
+                <div class="left">
+                    <div class="iconSec red"><i class="icon-medicines_ss"></i></div>
+                    <div class="conSec">
+                        <small>Medicine Orders</small>
+                        <strong>{{authService.totalOrders}}</strong>
+                    </div>
+
+                </div>
+                <!-- <div class="infoIcon"><i class="icon-info"></i></div> -->
+            </div>
+
+            <div *ngIf="authService.ConfigData.WalletEnable == 'Y'" class="secgrid hvr" (click)="getWalletRecords()">
+                <div class="left">
+                    <div class="iconSec yellow"><i class="fa-solid fa-wallet"></i></div>
+                    <div class="conSec">
+                        <small>Wallet Balance</small>
+                        <strong *ngIf="this.authService.walletBalance >0">{{this.authService.walletBalance | currency : this.authService.walletInfo['currency']}}</strong>
+                        <strong *ngIf="this.authService.walletBalance == 0">{{this.authService.walletBalance | currency : 'INR'}}</strong>
+                        <ng-container *ngIf="this.authService.walletInfo.expiring_balance > 0">
+                            <small>{{this.authService.walletInfo['walletInfo.expiring_balance'] | currency : this.authService.walletInfo['currency']}} will expire on {{this.authService.walletInfo.expiry_date}}</small>
+                        </ng-container>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="secgrid d-none">
+                <div class="left">
+                    <div class="iconSec red"><i class="fa-solid fa-flask"></i></div>
+                    <div class="conSec">
+                        <small>Lab Bookings</small>
+                        <strong>{{authService.labBookings}}</strong>
+                    </div>
+                </div>
+                <div class="infoIcon"><i class="icon-info"></i></div>
+            </div>
+
+            <div class="secgrid d-none">
+                <div class="left">
+                    <div class="iconSec blue"><i class="fa-solid fa-stethoscope"></i></div>
+                    <div class="conSec">
+                        <small>Doctor Consultations</small>
+                        <strong>{{authService.doctorConsultations}}</strong>
+                    </div>
+                </div>
+                <div class="infoIcon"><i class="icon-info"></i></div>
+            </div>
+        </div>
+
+        <div class="recentOrdSec">
+            <div class="leftSec">
+                <div class="headerSec">
+                    <h3>Your Recent Orders</h3>
+                    <span (click)="viewAllorders()">View all orders</span>
+                </div>
+
+                <div class="currentOrdersSec">
+
+                    <div class="thead">
+                        <div>Order ID</div>
+                        <div>Order Date</div>
+                        <div>Status</div>
+                        <div>Bill Amount</div>
+                        <div>Actions</div>
+                    </div>
+
+                    <div *ngIf="currentOrders.length>0">
+                        <ng-container *ngFor="let item of currentOrders; let i=index">
+
+                            <div class="tbody">
+                                <div>#{{item.OrderId}}</div>
+                                <div>{{item.OrderDate | date: 'dd-MM-yyyy'}}</div>
+                                <div><span class="active">{{item.OrderStatusDesc}}</span></div>
+                                <div>{{item.OrderBillAmount | currency:'INR'}}</div>
+                                <div class="btnSec">
+                                    <!-- <a class="activeBtn hvr" (click)="viewDetails(item.OrderId)">Track Order</a> -->
+                                    <!-- <a class="defultBtn hvr" (click)="viewDetails(item.OrderId)">View Details</a> -->
+                                    <a class="activeBtn hvr" (click)="viewDetails(item.OrderId)">View Details</a>
+                                </div>
+                            </div>
+                        </ng-container>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>

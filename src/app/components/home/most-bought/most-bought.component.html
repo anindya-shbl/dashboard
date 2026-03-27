@@ -1,0 +1,98 @@
+<div *ngIf="mstBgt.length>0" class="p-3">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+            <span class="fs-20 fw-7">Most Baught Products</span>
+            <!-- <span>View All</span> -->
+    </div>
+    <div class="owl-cont">
+        <owl-carousel-o [options]="customOptions">
+        <ng-container *ngFor="let item of mstBgt">
+            <ng-template carouselSlide [id]="item.ProductId">
+                <div class="p-2 ">
+                    <div class="border rounded position-relative item-shadow p-3 bg-white">
+                        <div *ngIf="item.Discountpercentage > 0" class="discount">
+                            {{item.Discountpercentage}}% Off
+                        </div>
+                        <div class="hg-prd hvr" (click)="viewProductDetails(item.EncodeProdId, item.DisplayName, item.PrescriptionOTC)">
+
+                            <div class="tst-img py-3">
+                                <div *ngIf="item.PrescriptionOTC == 'P'" class="rx-icon">&#8478;</div>
+                                <ng-container *ngIf="item.ProductImage != '' && item.ProductImage != null">
+                                    <img src="https://asset.sastasundar.com/incom/images/product/thumb/{{item.ProductImage}}"
+                                        alt >
+                                </ng-container>
+                                <ng-container *ngIf="item.ProductImage == '' || item.ProductImage == null">
+                                    <img *ngIf="item.PrescriptionOTC == 'P' || item.PrescriptionOTC == 'M'"
+                                        src="https://asset.sastasundar.com/incom/images/product/thumb/Med.svg" alt=""
+                                        >
+                                    <img *ngIf="item.PrescriptionOTC == 'O'"
+                                        src="https://asset.sastasundar.com/incom/images/product/thumb/Household.svg"
+                                        alt="" >
+                                </ng-container>
+                            </div>
+                            <div class="fw-5 text-center line-clamp-2 mb-2">{{item.DisplayName}}</div>
+                        </div>
+                        <div class="d-flex w-100 justify-content-between hg-btm">
+                            <div class="w-100 hvr">
+                                <ng-container *ngIf="item.OfferPrice > 0 && item.OfferPrice != null && item.OfferPrice != '' && item.OfferPrice !=undefined">
+                                    <div class="me-2 fw-5 fs-5" >
+                                        {{item.OfferPrice | currency: 'INR'}}
+                                    </div>
+                                    <div class="me-2 text-decoration-line-through text-secondary" *ngIf="item.MRP > item.OfferPrice">
+                                        {{item.MRP | currency: 'INR'}}
+                                    </div>
+                                </ng-container>
+                                <ng-container *ngIf="item.OfferPrice == 0 || item.OfferPrice == null || item.OfferPrice == '' || item.OfferPrice ==undefined">
+                                    <div class="text-secondary mb-1">Out Of Stock</div>
+                                </ng-container>
+                            </div>
+                            <div class="ms-3">
+                                <ng-container *ngIf="item.OfferPrice > 0 && item.OfferPrice != null && item.OfferPrice != '' && item.OfferPrice !=undefined">
+                                    <div *ngIf="item.addedQty == 0" class="action-btn  hvr"
+                                        (click)="addToCart(item, 1);">
+                                        <span class="action-btn addbutton-color">ADD</span>
+                                    </div>
+                                    <div *ngIf="item.addedQty > 0" class="action-btn action-add">
+                                        <span class="item-action" (click)="cartAddMinus(item)">&#8722;</span>
+                                        <span class="item-text">{{item.addedQty}}</span>
+                                        <span class="item-action" (click)="cartAddPlus(item)">&#43;</span>
+                                    </div>
+                                </ng-container>
+
+                                <ng-container *ngIf="item.OfferPrice == 0 || item.OfferPrice == null || item.OfferPrice == '' || item.OfferPrice ==undefined">
+                                    <div class="notify-btn  hvr" (click)="requestNotify(item)">
+                                        <span class="fw-5">Notify</span>
+                                    </div>
+                                </ng-container>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </ng-template>
+        </ng-container>
+    </owl-carousel-o>
+        <!-- <owl-carousel-o [options]="customOptions">
+
+            <ng-container *ngFor="let item of mstBgt">
+                <ng-template carouselSlide [id]="item.id">
+                    <div class="p-2">
+                        <div class="border rounded bg-white position-relative">
+                            <div class="badge">{{item.Discountpercentage}}% off</div>
+                            <div class="d-flex align-items-center justify-content-center p-4">
+                                <img [src]="item.ProductImageUrl" [alt]="item.ProductImage" [title]="item.DisplayName" width="150px">
+                            </div>
+                            <div class="px-3">
+                                <div class="fw-semibold mb-2 line-clamp-2">{{item.DisplayName}}</div>
+                                <div class="d-flex align-items-center mb-3">
+                                    <div class="fw-bold me-2">{{item.OfferPrice | currency: 'INR'}}</div>
+                                    <div class="text-decoration-line-through">{{item.MRP | currency: 'INR'}}</div>
+                                </div>
+                                <div class="addBtn w-100 mb-3">ADD</div>
+                            </div>
+                        </div>                        
+                    </div>
+                </ng-template>
+            </ng-container>
+    
+        </owl-carousel-o> -->
+    </div>
+</div>

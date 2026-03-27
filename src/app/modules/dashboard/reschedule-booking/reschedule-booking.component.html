@@ -1,0 +1,54 @@
+<ng-container *ngIf="allslotsList.length > 0">
+    <div *ngIf="orderDetails.IsHomeCollection == 1">
+        <div class="fw-5 mb-3">Select Available Date</div>
+        <div class="row mb-3">
+            <ng-container *ngFor="let slot of allslotsList">
+                <div class="col-auto date-slot" [ngClass]="selectedDate==slot.Date ? 'date-slot-selected':''" (click)="showSlots(slot)">
+                    {{slot.Slots[0].DayName}}, {{slot.Date  | date: 'dd MMM yyyy'}}
+                </div>
+            </ng-container>
+        </div>
+        <div *ngIf="showTimeslots">
+            <div *ngIf="morningSlots.length > 0">
+                <div class="mb-3">Select prefered time</div>
+                <div class="row mb-3">
+                    <ng-container *ngFor="let timeslot of morningSlots">
+                        <div class="col-auto date-slot" [ngClass]="selectedSlot.SlotId == timeslot.SlotId ? 'date-slot-selected':''" (click)="setSlots(timeslot)">
+                            {{timeslot.StartTime}} - {{timeslot.EndTime}}
+                        </div>
+                    </ng-container>
+                </div>
+            </div>
+            <div *ngIf="eveningSlots.length > 0">
+                <div class="mb-3">Select prefered time</div>
+                <div class="row mb-3">
+                    <ng-container *ngFor="let timeslot of eveningSlots">
+                        <div class="col-auto date-slot" [ngClass]="selectedSlot_two.SlotId == timeslot.SlotId ? 'date-slot-selected':''"  (click)="setSlots_two(timeslot)">
+                            {{timeslot.StartTime}} - {{timeslot.EndTime}}
+                        </div>
+                    </ng-container>
+                </div>
+            </div>
+        </div>
+
+        <div class="btnSec pt-3">
+            <button class="btnCancel" #closebutton type="button" data-bs-dismiss="modal" aria-label="Close" (click)="onReset()">Cancel</button>                        
+            <button *ngIf="showSubmit" type="button" class="btnSubmit" (click)="reschedulebooking()">Submit</button>
+        </div>
+    </div>
+
+    <div *ngIf="orderDetails.IsHomeCollection == 0">
+        <div class="fw-5 mb-3">Select Available Date</div>
+        <div class="row mb-3">
+            <ng-container *ngFor="let slot of allslotsList">
+                <div class="col-auto date-slot" [ngClass]="selectedDate==slot.Date ? 'date-slot-selected':''" (click)="checkLabslotSubmit(slot)">
+                    {{slot.Slots[0].DayName}}, {{slot.Date  | date: 'dd MMM yyyy'}}
+                </div>
+            </ng-container>
+        </div>
+        <div class="btnSec pt-3">
+            <button class="btnCancel" #closebutton type="button" data-bs-dismiss="modal" aria-label="Close" (click)="onReset()">Cancel</button>                        
+            <button *ngIf="showSubmit" type="button" class="btnSubmit" (click)="reschedulebooking()">Submit</button>
+        </div>
+    </div>
+</ng-container>

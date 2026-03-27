@@ -1,0 +1,92 @@
+<div *ngIf="!searchLoading" class="d-flex p-3">
+    <div class="lft-pnl border item-shadow rounded me-3">
+        <div class="p-3 border-bottom fw-6 fs-6">Filter By</div>
+        <div class="px-4 py-3 border-bottom border-light-subtle fw-5 hvr" routerLink="/newhealth-packages">Health
+            Packages</div>
+        <div class="px-4 py-3 border-bottom border-light-subtle fw-5 hvr" routerLink="/newdiagnostic-test">Diagnostic Tests
+        </div>
+        <div class="px-4 py-3 border-bottom border-light-subtle fw-5 text-primary">Radiology Tests
+        </div>
+    </div>
+    <div  class="w-100">
+        <div class="article-heading p-3 bg-light rounded mb-3">
+            <span class="">Radiology Tests</span>
+        </div>
+        <div *ngIf="searchProducts.length > 0" class="pckg-grid">
+            <ng-container *ngFor="let item of searchProducts">
+                <div class="border rounded item-shadow p-3">
+                    <div class="hvr" (click)="viewPackageDetails(item)">
+                        <div class="tst-img mb-3">
+                            <img src="https://asset.sastasundar.com/incom/sspl_website/images/radiology_image170x170.png"
+                                alt="">
+                        </div>
+                        <div class="fs-5 fw-5 text-center text-truncate mb-3">{{item.ServiceName}}</div>
+                        <div class="text-center mb-3 fs-6">
+                            <span class="fw-5"
+                                *ngIf="(item.OfferFees > 0 && item.Fees > item.OfferFees) else showmrp">{{item.OfferFees
+                                | currency: 'INR'}}</span>
+                            <ng-template #showmrp>
+                                <span class="fw-5" *ngIf="item.Fees > 0">{{item.Fees | currency: 'INR'}}</span>
+                            </ng-template>
+                            <span class="text-secondary text-decoration-line-through mx-2 fs-5"
+                                *ngIf="item.Fees > item.OfferFees">{{item.Fees | currency: 'INR'}}</span>
+                            <span *ngIf="item.DiscPercent > 0" class="fw-5"
+                                style="color: #f46a12;">{{item.DiscPercent}}% Off</span>
+                        </div>
+                        <div class="text-secondary fs-3 text-center text-truncate mb-3">
+                            <span
+                                *ngIf="(item.ServicePreparation != '' && item.ServicePreparation != null && item.ServicePreparation != undefined) else svrp">{{item.ServicePreparation}}</span>
+                            <ng-template #svrp>
+                                <span>NA</span>
+                            </ng-template>
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center top-dashed pt-3 mb-1">
+                        <div class="me-3 fs-3 text-secondary">{{item.ReportText}}</div>
+                        <div class="">
+                            <ng-container *ngIf="item.IsActive">
+                                <div *ngIf="item.IsAdded == false" class="action-btn hvr btnS"
+                                    (click)="addLabTest(item)">
+                                    <span class="fw-5 addbutton-color">BOOK NOW</span>
+                                </div>
+                                <div *ngIf="item.IsAdded == true" class="action-btn action-add hvr btnS"
+                                    (click)="deleteLabTest(item)">
+                                    <span class="fw-5 item-text">REMOVE</span>
+                                </div>
+                            </ng-container>
+                            <div *ngIf="!item.IsActive" class="text-lite">Discontinued</div>
+                        </div>
+                    </div>
+                </div>
+            </ng-container>
+            <ng-container *ngIf="totalcount > searchProducts.length">
+                <div class="rounded item-shadow p-3 d-flex justify-content-center align-items-center"
+                    style="min-height: 290px;">
+                    <div class="action-btn hvr btnS" style="width: 150px; height: 46px;" (click)="loadMore()">
+                        <span class="fw-5 addbutton-color">LOAD MORE ...</span>
+                    </div>
+                </div>
+            </ng-container>
+        </div>
+        <div *ngIf="searchProducts.length == 0" class="text-center my-5" >
+            <div class="fs-5 fw-5 my-3">No result found</div>
+            <div>You have searched for Radiology Tests. Currently no tests is available in our store</div>
+        </div>
+    </div>
+</div>
+
+<button #radiologyMdl data-bs-toggle="modal" data-bs-target="#radiologyMdl" class="d-none"></button>
+<div class="modal fade" id="radiologyMdl" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+    aria-labelledby="radiologyMdlLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-body" style="background-color: #f6fcff; border-radius: 8px;">
+                <div class="d-flex w-100 fw-5 text-danger p-3" style="min-height: 60px;">{{alertMsg}}</div>
+                <div class="d-flex justify-content-end p-3">
+                    <button type="button" class="action-btn action-add" data-bs-dismiss="modal"
+                        aria-label="Close">Ok</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

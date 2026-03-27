@@ -1,0 +1,151 @@
+.item-shadow{
+    box-shadow: 0 1px 3px 2px #8c959f26;
+}
+
+.btnS {
+    width: 108px;
+}
+
+.fxd-top{
+  position: sticky;
+  top: 76px;
+}
+
+.fs-22{
+    font-size: 22px;
+}
+
+.sclr-div{
+    max-height: calc(100vh - 170px);
+    overflow-y: auto;
+}
+
+.rx-icn{
+    position: absolute;
+    top: -5px;
+    left: -5px;
+    background: #e6e8e9;
+    line-height: 12px;
+    font-size: 12px;
+    padding: 4px 6px;
+    border-radius: 4px;
+}
+
+.smlr-img{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px;
+    width: 80px;
+    min-width: 80px;
+    
+    // padding: 8px;
+    // min-height: 120px;
+    img{
+        width: 100%;
+    }
+}
+
+::-webkit-scrollbar {
+  width: 3px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #ffffff;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #e4e6e7;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #e9e7e7;
+  cursor: pointer;
+}
+
+// .tst-img{
+//     display: flex;
+//     align-items: center;
+//     justify-content: center;
+//     min-height: 120px;
+//     img{
+//         width: 100px;
+//     }
+// }
+
+// .hg-prd{
+//     min-height: 200px;
+// }
+
+
+
+// .ofr-price{
+//     color: #fff;
+//     position: absolute;
+//     top: 0;
+//     left: 0;
+//     background-color: orangered;
+//     padding: 4px 9px;
+//     width: 76px;
+//     text-align: center;
+//     border-radius: 6px 0px;
+//     font-size: 12px;
+//     font-weight: 500;
+//     line-height: 22px;
+// }
+
+// ::ng-deep .owl-carousel .owl-item {
+// //   width: auto !important;      /* let autoWidth work */
+//   max-width: 350px;            /* set your fixed max width */
+// }
+
+// ::ng-deep .owl-carousel .item-shadow {
+//   width: 100%;
+//   max-width: 350px;            /* keep content aligned */
+//   margin: auto;
+// }
+
+// ::ng-deep .owl-carousel .owl-nav {
+//     position: absolute;
+//     top: 40%;
+//     width: 100%;
+//     display: flex;
+//     justify-content: space-between;
+//     transform: translateY(-50%);
+//     padding: 2px;
+//     pointer-events: none;
+//     /* allow clicks to pass through */
+// }
+
+// ::ng-deep .owl-theme .owl-nav {
+//     margin-top: 0px;
+//     text-align: center;
+//     -webkit-tap-highlight-color: transparent;
+// }
+
+// ::ng-deep .owl-prev, 
+// ::ng-deep .owl-next {
+//     color: #FFF !important;
+//     font-size: 14px !important;
+//     margin: 5px !important;
+//     padding: 10px 8px !important;
+//     background: #c1c0c0 !important;
+//     display: inline-block !important;
+//     cursor: pointer !important;
+//     pointer-events: all !important;
+// }
+// ::ng-deep .owl-prev {
+//     border-radius: 0 6px 6px 0 !important;
+// }
+// ::ng-deep .owl-next {
+//     border-radius: 6px 0 0 6px !important;
+// }
+
+// ::ng-deep .owl-theme .owl-nav .disabled {
+//     pointer-events: none !important;
+//     opacity: 0.15 !important;
+//     cursor: none !important;
+// }

@@ -1,0 +1,121 @@
+.timer {
+    position: absolute;
+    right: 40px;
+    margin-top: 5px;
+    padding: 9px 18px;
+    background-color: #f5f5f5;
+    border-radius: 4px;
+}
+
+.fs-24 {
+    font-size: 24px;
+}
+
+.lg-area {
+    width: 900px;
+    min-width: 900px;
+    margin: 30px auto;
+    background-color: white;
+}
+.ss-login{
+    min-height: calc(100vh - 220px);
+    padding: 1rem;
+    background: linear-gradient(147deg, rgb(236, 247, 255) 42%, rgb(252, 236, 236) 56%);
+}
+
+.item-shadow {
+    box-shadow: 0 1px 3px 2px #8c959f26;
+}
+
+.loginSec {
+    display: flex;
+    // align-items: flex-start;
+    justify-content: space-between;
+    position: relative;
+}
+
+.lft-bnr {
+    width: 360px;
+    min-width: 360px;
+    padding: 30px;
+    border-right: 1px dashed lightblue;
+    // margin-right: 20px;
+}
+
+.right-bnr {
+    width: 100%;
+    padding: 20px 30px;
+}
+
+.carousel-indicators {
+    margin: 0px !important;
+    bottom: -24px !important;
+
+    button {
+        background-color: #4d4d4d !important;
+    }
+}
+
+.captchaHolder {
+    border-top: 3px solid #8aa8b3;
+    border-bottom: 3px solid #8aa8b3;
+    border-radius: 6px;
+    background: #8ba8b2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 48px;
+
+    & img {
+        border-radius: 4px;
+        border: none;
+        width: 94%;
+    }
+}
+
+.captchaLoader {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 144px;
+    height: 48px;
+    border: 1px solid rgb(190, 190, 190);
+    border-radius: 4px;
+    background-color: #8aa8b3;
+}
+
+.proceedBtn {
+    background-color: #006DB5;
+    border: 1px solid #006DB5;
+    border: none;
+    padding: 12px 40px;
+    border-radius: 6px;
+    color: #fff;
+    font-size: 19px;
+    margin: 0;
+
+    &.btn:disabled {
+        background-color: #B1E1FA;
+        border: 1px solid #B1E1FA;
+        opacity: 1;
+        cursor: not-allowed;
+    }
+
+    &:disabled {
+        background-color: #B1E1FA;
+        border: 1px solid #B1E1FA;
+        opacity: 1;
+        cursor: not-allowed;
+    }
+
+    &:disabled {
+        pointer-events: none;
+        opacity: 0.6;
+        -webkit-user-select: none;
+        /* Safari */
+        -ms-user-select: none;
+        /* IE 10 and IE 11 */
+        user-select: none;
+        /* Standard syntax */
+    }
+}

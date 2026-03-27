@@ -1,0 +1,77 @@
+<div class="text-center">
+    <div class="text-5lg fw-7 mb-4 pt-5">Quality Medicines, Upto 60% Savings</div>
+    <!-- <div class="text-secondary mb-4 fs-6">Save More with Jito Recommended Alternatives</div> -->
+    <div class="position-relative mx-auto" style="max-width: 700px;">
+        
+        <div class="search-icon">
+            <span *ngIf="searchList.length == 0"><i class="fa fa-search"></i></span>
+            <span *ngIf="searchList.length > 0" class="hvr" (click)="cleareSearch()"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="input-group mb-1 hvr ">
+            <input type="text" class="form-control" placeholder="Search for Jito Recommended Alternative"
+                [(ngModel)]="searchText" (keyup)="onSearchChange($event)" (keydown)="onKeydown()">
+        </div>
+    </div>
+</div>
+
+<div *ngIf="showSearchArea" class="search-body p-3">
+    <div *ngIf="!isLoading" class="search-list">
+
+        <div *ngIf="searchList.length > 0">
+            <div class="jito-result">
+                <div *ngIf="uniqueSalts.length > 0" class="p-3">
+                    <div class="fw-5 mb-3 text-primary border-bottom pb-2">By Salt Composition</div>
+                    <ng-container *ngFor="let salt of uniqueSalts">
+                        <div *ngIf="salt != '' && salt != undefined" class="d-flex hvr mb-3 text-primary-emphasis" (click)="onSaltClick(salt)">
+                            <div class="pe-3 ps-1"><i class="fa fa-search"></i></div>
+                            <div class="search-item">{{salt.Name}}</div>
+                        </div>
+                    </ng-container>
+                </div>
+
+                <div class="p-3">
+                    <div class="fw-5 mb-3 text-primary border-bottom pb-2">By Product Name</div>
+                    <ng-container *ngFor="let item of searchList">
+                        <div class="d-flex hvr mb-3 text-primary-emphasis" (click)="onselectItem(item)">
+                            <div class="pe-3"><i class="fa fa-arrow-right" style="rotate: -45deg"></i></div>
+                            <div class="search-item">{{item.DisplayName}}</div>
+                        </div>
+                    </ng-container>
+                </div>
+            </div>
+
+            <div *ngIf="totalItem > searchList.length" class="text-center fw-5 text-primary hvr pb-3" (click)="loadMore()">Load More...</div>
+        </div>
+
+        <div *ngIf="searchList.length == 0" class="empty-search">
+            <div class="empty-search-img p-3">
+                <img src="https://asset.sastasundar.com/incom/jito-health/assets/Images/no-results.png" alt="">
+            </div>
+            <div>
+                <div class="mb-3 fw-6 fs-18"> No Result Found for {{searchText}}</div>
+                <div class="mb-3">Call us and we will assist you with your medicine order</div>
+                <div>
+                    <button class="btn btn-primary">Call us for assistance</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div *ngIf="isLoading" class="search-list">
+        <div class="text-center mt-5">
+            <div class="spinner-border" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div *ngIf="!showSearchArea" class="p-3">
+    <div class="bg-white text-center mt-3 p-3" style="min-height: calc(100vh - 300px);">
+        <div class="my-4">
+            <img src="https://asset.sastasundar.com/incom/jito-health/assets/Images/search-pro.png" alt="">
+        </div>
+        <div class="text-3xl fw-7 mb-3">Save More with Jito Recommended Alternatives.</div>
+        <div class=""><a href="https://jitohealth.com" class="jito-btn">Powered by JitoPharma</a></div>
+    </div>
+</div>

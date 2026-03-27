@@ -1,0 +1,184 @@
+<div *ngIf="!isloading" class="">
+    <div class="p-3">
+        <app-route-path></app-route-path>
+    </div>
+
+    <div class="fw-7 mb-3 border-bottom px-3 pb-3" style="font-size: 22px; line-height: 32px;">
+        Book Consultation Slot for - {{labBookingId}}
+    </div>
+
+    <ng-container >
+        <div *ngIf="slotList.length > 0" class="row g-0">
+            <div class="col-xl-8 col-xxl-9 px-4 border-end">
+                <div *ngIf="docList.length >= 5" class="mb-3 overflow-x-auto">
+                    <div class="mb-3 fs-5">A qualified doctor from our team will walk you through your report</div>
+                    <div class="d-flex mb-3" style="margin-left: 8px;" >
+                        <ng-container *ngFor="let doc of docList; let i = index">
+                            <span *ngIf="doc.DoctorImage != undefined && doc.DoctorImage != null && doc.DoctorImage != ''" class="doc-img" (mouseenter)="onMouseEnter(doc)" (mouseleave)="onMouseLeave()">
+                                <img [src]="doc.DoctorImage" alt="" width="100%">
+                            </span>
+                            <span *ngIf="doc.DoctorImage == undefined || doc.DoctorImage == null || doc.DoctorImage == ''" class="doc-img" (mouseenter)="onMouseEnter(doc)" (mouseleave)="onMouseLeave()">
+                                <img src="https://asset.sastasundar.com/incom/images/product/thumb/default_product1460098847.jpg" alt="" width="100%">
+                            </span>
+                        </ng-container>
+                    </div>
+                    <div *ngIf="showHideDoc" class="my-3 p-3 d-flex align-items-end bg-light">
+                        <!-- <span class="me-2 text-secondary fs-3"><i class="fa-solid fa-stethoscope"></i></span> -->
+                        <span class="me-2 fw-5 fs-5 text-primary-emphasis">{{selectedDoc.Salutation}} {{selectedDoc.FullName}},</span>
+                        <span class="">{{selectedDoc.SpecialityName}}</span>
+                    </div>
+                </div>
+                <div class="pb-3 mb-3">
+                    <div class="lf-block">Select Language</div>
+                    <div class="lang-grid">
+                        <div class="inner-block lang-blck hvr" [ngClass]="selectedLang == 'Hindi' ? 'inner-active': ''"
+                            (click)="setLang('Hindi')">Hindi</div>
+                        <div class="inner-block lang-blck hvr"
+                            [ngClass]="selectedLang == 'Bengali' ? 'inner-active': ''" (click)="setLang('Bengali')">
+                            Bengali</div>
+                        <div class="inner-block lang-blck hvr"
+                            [ngClass]="selectedLang == 'English' ? 'inner-active': ''" (click)="setLang('English')">
+                            English</div>
+                    </div>
+                </div>
+                <div class="pb-3 mb-3">
+                    <div class="lf-block">Select Appointment Date</div>
+                    <div class="date-grid">
+                        <ng-container *ngFor="let dts of slotList">
+                            <div class="inner-block hvr" [ngClass]="dts.date == currentDate ? 'inner-active': ''"
+                                (click)="setcurrentslotList(dts)">
+                                <div class="text-center">
+                                    <div class="pt-2 pb-1">{{dts.date | date: 'dd MMM, y'}}</div>
+                                    <div class="pt-1 pb-2">{{dts.date | date: 'EEEE'}}</div>
+                                </div>
+                            </div>
+                        </ng-container>
+                    </div>
+                </div>
+                <div class="pb-3 mb-3">
+                    <div class="lf-block">Select Slot</div>
+                    <div class="slot-grid">
+                        <ng-container *ngFor="let slt of currentslotList">
+                            <div *ngIf="slt.IsBlocked == 0" class="inner-block hvr"
+                                [ngClass]="slt.StartTS == selectedSlot.StartTS ? 'inner-active': ''"
+                                (click)="setcurrentSlot(slt)">
+                                {{slt.SlotStartTime | timeConverter}} - {{slt.SlotEndTime | timeConverter}}
+                            </div>
+                            <div *ngIf="slt.IsBlocked == 1" class="inner-block bg-secondary-subtle">
+                                Slot Full
+                            </div>
+                        </ng-container>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-4 col-xxl-3 px-4">
+                <div class="fixed-content">
+                    <div class="pb-3 mb-3">
+                        <div class="lf-block">Consultation Fee</div>
+                        <div class="fs-5 fw-5 text-success">Free</div>
+                    </div>
+                    <div class="pb-3 mb-3">
+                        <div class="lf-block">Amount to be paid</div>
+                        <div class="fs-5 fw-5 text-success">Free</div>
+                    </div>
+                    <div class="mb-3 pb-2">
+                        <div class="lf-block"></div>
+                        <div *ngIf="currentDate != '' && selectedSlot != '' && selectedLang !=''" class="slot-grid">
+                            <div class="inner-block hvr bg-primary text-white" (click)="bookApointment()">Book
+                                Consultation</div>
+                        </div>
+                        <div *ngIf="currentDate == '' || selectedSlot == '' || selectedLang ==''" class="slot-grid">
+                            <div class="inner-block text-secondary">Book Consultation</div>
+                        </div>
+                    </div>
+                    <div class="mb-3 pb-3 fs-3 text-secondary">
+                        <span class="pe-1">By continuing, you consent to share your test report with the doctor and accept our </span>                        
+                        <span class="text-primary hvr">
+                            <a class="nowrap text-decoration-none" target="_blank" href="{{ CommonService.baseurl }}pages/view/privacy-policy">Privacy Policy</a>
+                        </span> 
+                        <span class="px-1">and</span> 
+                        <span class="text-primary hvr">
+                            <a class="nowrap text-decoration-none" target="_blank" href="{{ CommonService.baseurl }}pages/view/terms_condition">Terms &amp; Conditions</a>
+                        </span>.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div *ngIf="slotList.length == 0" class="px-4">
+            <div *ngIf="isRequest" class="mb-3 fs-5 fw-5 p-4 rounded bg-success-subtle text-success-emphasis">
+                <span class="me-2"><i class="fa-solid fa-circle-check"></i></span>
+                <span>{{respMsg}}</span>                
+            </div>
+            <div *ngIf="!isRequest" class="mb-3 fs-5 fw-5 rounded bg-danger-subtle text-danger-emphasis p-4">
+                <span class="me-2"><i class="fa-solid fa-circle-exclamation"></i></span>
+                <span>{{respMsg}}</span>
+            </div>
+            <div class="mb-3">
+                <button class="btnSubmit" type="button" (click)="redirect()">View Bookings</button>
+            </div>
+        </div>
+    </ng-container>
+</div>
+
+
+<button #bkApModal data-bs-toggle="modal" data-bs-target="#bkApModal" class="d-none"></button>
+<div class="modal fade" id="bkApModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+    aria-labelledby="bkApModal" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div *ngIf="respMsg != ''" class="modal-body">
+
+                <div *ngIf="respMsg['status']!=200" class="text-center mb-3">
+                    <div class="text-center my-3">
+                        <i class="fa-solid fa-circle-exclamation text-secondary" style="font-size: 50px;"></i>
+                    </div>
+                    <div class="text-center mb-3 fw-5 fs-6">
+                        {{respMsg['message']}}
+                    </div>
+                    <div class="btnSec justify-content-center pt-3 mb-3">
+                        <button class="btnSubmit" type="button" data-bs-dismiss="modal" aria-label="Close">Close</button>
+                    </div>
+                </div>
+
+                <div *ngIf="respMsg['status'] ==200" class="mb-3 text-center">
+                    <div class="text-center my-3">
+                        <i class="fa-solid fa-circle-check text-success" style="font-size: 50px;"></i>
+                    </div>
+                    <div class="text-center mb-3 fw-5 fs-6">
+                        {{respMsg['message']}}
+                    </div>
+                    <!-- <div class="d-flex align-items-center mb-3">
+                        <span class="w-130">Consultation No : </span>
+                        <span class="fw-5">{{respMsg['data']['AppointmentDetails']['BookingNo']}}</span>
+                    </div> -->
+                    <div class="d-flex align-items-center mb-3">
+                        <span class="w-130">Doctor Name : </span>
+                        <span class="fw-5">{{respMsg['data']['AppointmentDetails']['DocotrName']}}</span>
+                    </div>
+                    <div class="d-flex align-items-center mb-3">
+                        <span class="w-130">Appointment Date : </span>
+                        <span class="fw-5">{{respMsg['data']['AppointmentDetails']['AppointmentDate'] | date: 'dd MMM, y - EEEE'}}</span>
+                    </div>
+                    <div class="d-flex align-items-center mb-3">
+                        <span class="w-130">Appointment Time : </span>
+                        <span class="fw-5">{{respMsg['data']['SlotStartTime'] | timeConverter}} -
+                            {{respMsg['data']['SlotEndTime'] | timeConverter}}</span>
+                    </div>
+                    <div class="d-flex align-items-center mb-3">
+                        <span class="w-130">Patient Name : </span>
+                        <span class="fw-5">{{respMsg['data']['AppointmentDetails']['PatientName']}}</span>
+                    </div>
+                    <div class="d-flex align-items-center mb-3">
+                        <span class="w-130">Preferred Language : </span>
+                        <span class="fw-5">{{respMsg['data']['AppointmentDetails']['PreferredLanguage']}}</span>
+                    </div>
+                    <div class="btnSec justify-content-center pt-3 mb-3">
+                        <button class="btnSubmit" type="button" data-bs-dismiss="modal" aria-label="Close"
+                            (click)="redirect()">View Bookings</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

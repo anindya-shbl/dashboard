@@ -1,0 +1,307 @@
+
+<div class="commonngwhite">
+
+    <div class="p-3 pb-0 mb-0"><app-route-path></app-route-path></div>
+
+    <div class="commonHeadertitleSec border-bottom p-3 pt-0">
+        <div class="custNameSec">
+            <strong>Hello, {{customerName}}</strong>
+            <small>You have Joined in {{createDate | date: 'dd-MM-yyyy'}}</small>
+        </div>
+        <div *ngIf="authService.totalSavings>0" class="custSaved">
+            <strong>You have saved {{totalSavings | currency:'INR'}} so far</strong>
+            <i class="fa-solid fa-wallet"></i>
+        </div>
+    </div>
+
+
+    <!-- <div class="">
+        <div class="d-flex justify-content-between align-items-center p-3">
+            <div>
+                <div class="fs-7 fw-7">Hello, {{customerName}}</div>
+                <div class="mb-1">You have Joined in {{createDate | date: 'dd-MM-yyyy'}}</div>                
+            </div>
+            <div>
+                <span class="fs-7 fw-7 text-success me-3">You have saved {{totalSavings | currency:'INR'}} so far</span>
+                <span class="fs-8 fw-8 text-warning"><i class="fa-solid fa-wallet"></i></span>
+            </div>
+        </div>
+    </div> -->
+
+    <div class="profileDetails">
+
+        <div class="editSec">
+            <div class="secgrid" style="width: 30%; min-width: 300px;">
+            <div class="left">
+            <div><img src="https://asset.sastasundar.com/incom/sspl_website/images/phone.png" alt="" style="width: 34px;"/></div>
+                <div class="conSec">
+                    <small>Mobile Number</small>
+                    <strong>{{MobileNo}}</strong>
+                    </div>
+            </div>
+            <div class="infoIcon" data-bs-toggle="modal" data-bs-target="#ContactModal">EDIT</div>
+            </div>
+
+            <div class="secgrid" style="width: 40%; min-width: 384px;">
+                <div class="left">
+                <div ><img src="https://asset.sastasundar.com/incom/sspl_website/images/email.png" alt="" style="width: 34px;" /></div>
+                    <div class="conSec">
+                        <small>Email ID</small>
+                        <strong>
+                            <span *ngIf="EmailId == ''">Not Provided</span>
+                            <span *ngIf="EmailId != ''">{{EmailId}}</span>
+                        </strong>
+                    </div>
+                </div>
+                <div class="infoIcon">
+                    <ng-container *ngIf="EmailId != ''">
+                        <div *ngIf="accountdata.IsEmailVerified == 0" class="me-3 text-danger-emphasis" (click)="setOtpSec()">Verify</div>
+                        <div *ngIf="accountdata.IsEmailVerified == 1" class="me-3"><i class="icon-lab_check_round text-success"></i></div>
+                        <div data-bs-toggle="modal" data-bs-target="#EmailModal">EDIT</div>
+                    </ng-container>
+                    <ng-container *ngIf="EmailId == ''">
+                        <div data-bs-toggle="modal" data-bs-target="#EmailModal">ADD</div>
+                    </ng-container>
+                </div>
+                </div>
+
+                <!-- <div class="secgrid">
+                    <div class="left">
+                    <div class="iconSec lightgreen"><i class="icon-whatsapp2-nsm"></i></div>
+                        <div class="conSec">
+                            <strong>Receive communication over whatsapp?</strong>
+                            </div>
+                    </div>
+                    <div class="infoIcon" data-bs-toggle="modal" data-bs-target="#EmailModal">EDIT</div>
+                    </div> -->
+        </div>
+
+
+
+    
+    <!-- <div class="ac-grid">
+        <div class="d-flex align-items-center p-3 border rounded-2 bx-shdw">
+            <div><i class="fa-solid fa-phone fs-8 fw-8 px-2 me-2"></i></div>
+            <div class="w-100">
+                <div class="mb-1">Mobile Number</div>
+                <div class="fw-5">{{MobileNo}}</div>
+            </div>
+            <div class="text-primary fw-5 hvr" data-bs-toggle="modal" data-bs-target="#ContactModal">EDIT</div>
+        </div>
+        <div class="d-flex align-items-center p-3 border rounded-2 bx-shdw">
+            <div><i class="fa-solid fa-envelope-open-text fs-8 fw-8 px-2 me-2"></i></div>
+            <div class="w-100">
+                <div class="mb-1">Email ID</div>
+                <div class="fw-5">{{EmailId}}</div>
+            </div>
+            <div class="text-primary fw-5 hvr" data-bs-toggle="modal" data-bs-target="#EmailModal">EDIT</div>
+        </div>
+        <div class="d-flex align-items-center p-3 border rounded-2 bx-shdw d-none"> 
+            <div><i class="fa-brands fa-whatsapp fs-8 fw-8 px-2 me-2"></i></div>
+            <div class="w-100">
+                <div class="form-check form-switch fw-5">
+                    <input class="form-check-input" type="checkbox" role="switch" id="whatsapp">
+                    <label class="form-check-label" for="whatsapp">Receive communication over whatsapp?</label>
+                </div>
+            </div>
+        </div>
+    </div> -->
+    
+    <div class="dtlsSec">
+        <h2>Profile Details</h2>
+        <form [formGroup]="profileForm" (ngSubmit)="onSubmit()" class="profile-form">
+            <div class="ac-grid">
+                <div class="mb-3">
+                    <label for="Firstname" class="form-label">First Name <span class="text-danger"> *</span></label>
+                    <input type="text" class="form-control bx-shdw" id="Firstname" formControlName="FirstName" (keypress)="alphaOnly($event)">
+                    <div *ngIf="submitted && f['FirstName'].errors" class="text-danger txt-sm">
+                        <div *ngIf="f['FirstName'].errors['required']">* First Name is required</div>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label for="Middlename" class="form-label">Middle Name</label>
+                    <input type="text" class="form-control bx-shdw" id="Middlename" formControlName="MiddleName" (keypress)="alphaOnly($event)">
+                </div>
+
+                <div class="mb-3">
+                    <label for="Lastname" class="form-label">Last Name <span class="text-danger"> *</span></label>
+                    <input type="text" class="form-control bx-shdw" id="Lastname" formControlName="Lastname" (keypress)="alphaOnly($event)">
+                    <div *ngIf="submitted && f['Lastname'].errors" class="text-danger txt-sm">
+                        <div *ngIf="f['Lastname'].errors['required']">* Last Name is required</div>
+                    </div>
+                </div>
+    
+                <div class="mb-3">
+                    <label for="Dob" class="form-label">Date of Birth <span class="text-danger"> *</span></label>
+                    <input type="date" class="form-control bx-shdw" id="Dob" formControlName="BirthDay" [max]="maxdate" onkeydown="return false">
+                    <div *ngIf="submitted && f['BirthDay'].errors" class="text-danger txt-sm">
+                        <div *ngIf="f['BirthDay'].errors['required']">* Date of Birth is required</div>
+                    </div>                        
+                </div>
+
+                <div class="mb-3">
+                    <label for="Gender" class="form-label">Gender <span class="text-danger"> *</span></label>                        
+                    <select id="Gender" class="form-select bx-shdw" formControlName="Gender">
+                        <option value="">Select</option>
+                        <option value="M">Male</option>
+                        <option value="F">Female</option>
+                        <option value="O">Others</option>
+                    </select>
+                    <div *ngIf="submitted && f['Gender'].errors" class="text-danger txt-sm">
+                        <div *ngIf="f['Gender'].errors['required']">* Gender is required</div>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label for="Prfmobile" class="form-label">Preferred Mobile No</label>
+                    <input type="phone" class="form-control bx-shdw" id="Prfmobile" formControlName="PreferredMobile" maxlength="10" pattern="[5-9]{1}[0-9]{9}" (keypress)="numCheck($event)">
+                    <div *ngIf="submitted && f['PreferredMobile'].errors" class="error-text">
+                        <div *ngIf="f['PreferredMobile'].errors['pattern']">*Invalid mobile no</div>
+                    </div>
+                </div>  
+
+                <div class="mb-3">
+                    <label for="Prfemail" class="form-label">Preferred Email</label>                
+                    <input type="email" class="form-control bx-shdw" id="Prfemail" formControlName="PreferredEmail" pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}">
+                    <div *ngIf="submitted && f['PreferredEmail'].errors" class="error-text">
+                        <div *ngIf="f['PreferredEmail'].errors['pattern']">*Invalid email id</div>
+                    </div>
+                </div>
+            </div>
+            <div class="btnSec">
+                <button type="reset" class="btnCancel" (click)="onReset()">Cancel</button>
+                <button type="submit" class="btnSubmit">Save</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+</div>
+
+
+<div class="modal fade" id="ContactModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="ContactModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-body">
+            <form *ngIf="!showOTPInput" [formGroup]="primaryMobForm" (ngSubmit)="getMobileOtp()">
+                <div class="fs-7 fw-5 mb-2 px-3 pt-3 mb-3">Enter your new Number</div>
+                <div class="px-3 mb-3">Verification Code will be send to this mobile number to verify</div>
+                <div class="p-3 mb-3">            
+                    <input type="phone" class="form-control bx-shdw" placeholder="Eg : 9999999999" formControlName="PrimaryMobile" maxlength="10" pattern="[5-9]{1}[0-9]{9}" (keypress)="numCheck($event)">
+                    <div *ngIf="submitted && fM['PrimaryMobile'].errors" class="error-text">
+                        <div *ngIf="fM['PrimaryMobile'].errors['required']">* Mobile No. is required</div>
+                    </div>
+                    <div *ngIf="submitted && fM['PrimaryMobile'].errors" class="error-text">
+                        <div *ngIf="fM['PrimaryMobile'].errors['pattern']">*Invalid mobile no</div>
+                    </div>
+                </div>
+                <div *ngIf="!showOTPInput && respMsg!= ''" class="p-3 mb-3 error-text">{{respMsg}}</div>
+                <div class="btnSec mb-2">
+                    <button class="btnCancel" type="button" data-bs-dismiss="modal" aria-label="Close" (click)="resetPrimary()">Back</button>
+                    <button class="btnSubmit" type="submit" [disabled]="primaryMobForm.invalid">Continue</button>
+                </div>
+            </form>
+            <div *ngIf="showOTPInput" class="p-3">
+                <form [formGroup]="otpForm" (ngSubmit)="verifyMobileOtp()">
+                    <div class="d-flex">
+                        <div class="w-100">
+                            <div class="fs-7 fw-5 mb-3 pb-2">Verify your new Mobile Number</div>
+                            <div >
+                                <div class="fs-3 text-lite mb-2">A 5 digit code has been sent to :</div>
+                                <div class="fw-5 fs-5 mb-3">{{primaryMobForm.value?.PrimaryMobile}}</div>
+                            </div>
+                        </div>
+                        <div class="">
+                            <img src="https://asset.sastasundar.com/incom/sspl_website/images/phone.png" alt="" style="width: 44px;" />
+                        </div>
+                    </div>
+                    <div class="mb-2">
+                        <input type="phone" class="form-control bx-shdw" formControlName="otpVal" maxlength="5" pattern="[1-9]{1}[0-9]{5}" (keypress)="numCheck($event)">
+                    </div>
+                    <div class="d-flex justify-content-end mb-3">
+                        <span *ngIf="showTimer" class="fs-3 text-lite">Resend verification code ({{ secondsLeft }}s)</span>
+                        <span *ngIf="!showTimer" class="fs-3 text-primary hvr" (click)="getMobileOtp()">Resend verification code</span>
+                    </div>
+                    <div class="btnSec">
+                        <button class="btnCancel" type="button" data-bs-dismiss="modal" aria-label="Close" (click)="resetPrimary()">Back</button>
+                        <button class="btnSubmit" type="submit" [disabled]="oT['otpVal'].value?.length != 5">Continue</button>
+                    </div>
+                </form>
+                
+            </div>
+        </div>
+      </div>
+    </div>
+</div>
+
+<button #verfEmail data-bs-toggle="modal" data-bs-target="#EmailModal" class="d-none"></button>
+<div class="modal fade" id="EmailModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="EmailModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-body">
+            <form *ngIf="!showOTPInput" [formGroup]="primaryEmailForm" (ngSubmit)="getEmailOtp()">
+                <div class="fs-7 fw-5 mb-2 px-3 pt-3 mb-3">Enter your new Email ID</div>
+                <div class="px-3 mb-3">Verification Code will be send to this email id to verify</div>
+                <div class="p-3 mb-3">
+                    <input type="phone" class="form-control bx-shdw" placeholder="Eg : example.123@email.com" formControlName="PrimaryEmail" pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}">
+                    <div *ngIf="submitted && fE['PrimaryEmail'].errors" class="error-text">
+                        <div *ngIf="fE['PrimaryEmail'].errors['required']">*Email is required</div>
+                    </div>
+                    <div *ngIf="submitted && fE['PrimaryEmail'].errors" class="error-text">
+                        <div *ngIf="fE['PrimaryEmail'].errors['pattern']">*Invalid email id</div>
+                    </div>
+                </div>
+                <div *ngIf="!showOTPInput && respMsg!= ''" class="p-3 mb-3 error-text">{{respMsg}}</div>
+                <div class="btnSec mb-2">
+                    <button class="btnCancel" type="button" data-bs-dismiss="modal" aria-label="Close" (click)="resetPrimary()">Back</button>
+                    <button class="btnSubmit" type="submit" [disabled]="primaryEmailForm.invalid" >Continue</button>
+                </div>
+            </form>
+            <div *ngIf="showOTPInput" class="p-3">
+                <form [formGroup]="otpForm" (ngSubmit)="verifyEmailOtp()">
+                    <div class="d-flex">
+                        <div class="w-100">
+                            <div class="fs-7 fw-5 mb-3 pb-2">Verify your new Email ID</div>
+                            <div >
+                                <div class="fs-3 text-lite mb-2">A 5 digit code has been sent to :</div>
+                                <div class="fw-5 fs-5 mb-3">{{EmailId}}</div>
+                            </div>
+                        </div>
+                        <div class="">
+                            <img src="https://asset.sastasundar.com/incom/sspl_website/images/email.png" alt="" style="width: 44px;" />
+                        </div>
+                    </div>
+                    
+                    <div class="mb-2">
+                        <input type="phone" class="form-control bx-shdw" formControlName="otpVal" maxlength="5" pattern="[1-9]{1}[0-9]{5}" (keypress)="numCheck($event)">
+                    </div>
+                    <div class="d-flex justify-content-end mb-3">
+                        <span *ngIf="showTimer" class="fs-3 text-lite">Resend verification code ({{ secondsLeft }}s)</span>
+                        <span *ngIf="!showTimer" class="fs-3 text-primary hvr" (click)="getEmailOtp()">Resend verification code</span>
+                    </div>
+                    <div class="btnSec">
+                        <button class="btnCancel" type="button" data-bs-dismiss="modal" aria-label="Close" (click)="resetPrimary()">Back</button>
+                        <button class="btnSubmit" type="submit" [disabled]="oT['otpVal'].value?.length != 5">Continue</button>
+                    </div>
+                </form>
+                
+            </div>
+        </div>
+      </div>
+    </div>
+</div>
+
+<button #profileModal data-bs-toggle="modal" data-bs-target="#profileModal" class="d-none"></button>
+<div class="modal fade" id="profileModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="profileModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-body">            
+            <div class="d-flex w-100 my-3 fs-7 fw-5">{{respMsg}}</div>
+            <div class="btnSec">
+                <button type="button" class="btnSubmit" data-bs-dismiss="modal" aria-label="Close" (click)="resetPrimary()">Ok</button>
+            </div>
+        </div>
+      </div>
+    </div>
+</div>

@@ -1,0 +1,94 @@
+<div class="bg-white p-3">
+
+    <div class="mb-2"><app-route-path></app-route-path></div>
+    <div class="commonHeadertitleSec">
+        <div class="custNameSec">
+            <strong>Manage Healthbuddy</strong>
+        </div>
+    </div>
+
+    <div class="p-3 border rounded-2 bx-shdw">
+        <div class="d-flex w-100">
+            <div class="hb-img">
+                <div class="">
+                    <img *ngIf="authService.HealthBuddyImage != '' &&  authService.HealthBuddyImage != null" src="https://asset.sastasundar.com/incom/images/product/thumb/{{authService.HealthBuddyImage}}" alt="...">
+                    <img *ngIf="authService.HealthBuddyImage == '' ||  authService.HealthBuddyImage == null" src="https://asset.sastasundar.com/incom/images/product/thumb/default_product1460098847.jpg" alt="">
+                </div>
+                <div class="changeHB" (click)="changeSeller()">Change Healthbuddy</div>
+            </div>
+            <div class="w-100">
+                <div class="border">
+                    <div class="d-flex border-bottom">
+                        <div class="hb-Inc hb-pad border-end">Healthbuddy Name</div>
+                        <div class="hb-pad">{{authService.HBName}}</div>
+                    </div>
+                    <div class="d-flex border-bottom">
+                        <div class="hb-Inc hb-pad border-end">Person In Charge</div>
+                        <div class="hb-pad">{{authService.PersonInCharge}}</div>
+                    </div>
+                    <div class="d-flex border-bottom">
+                        <div class="hb-Inc hb-pad border-end">Healthbuddy Email</div>
+                        <div class="hb-pad">{{authService.HBEmail}}</div>
+                    </div>
+                    <div class="d-flex border-bottom">
+                        <div class="hb-Inc hb-pad border-end">Healthbuddy Contact No</div>
+                        <div class="hb-pad">{{authService.HBMobileNo}}</div>
+                    </div>
+                    <div class="d-flex border-bottom">
+                        <div class="hb-Inc hb-pad border-end">Healthbuddy Address</div>
+                        <div class="hb-pad"></div>
+                    </div>
+                    <div class="d-flex">
+                        <div class="hb-Inc hb-pad border-end">Healthbuddy Drug License No</div>
+                        <div class="hb-pad">{{authService.DrugLicenseNo}}</div>
+                    </div>              
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div *ngIf="showPrfSeller" class="border-top mt-4 pt-4">
+        <div *ngIf="RelivantHBData != '' || RelivantHBData != undefined" class="border rounded bx-shdw mb-4">
+            <div class="p-3 fs-5 fw-5" style="background-color: #eff8ff;">{{RelivantHBData.HeaderTitle}}</div>
+            <div *ngIf="RelivantHBData.HBList.length > 0" class="p-3">
+                <ng-container *ngFor="let hb of RelivantHBData.HBList">
+                    <div>{{hb.Seller}}</div>
+                </ng-container>
+            </div>
+        </div>
+
+        <div class="border rounded bx-shdw p-3 mb-3">
+            <form [formGroup]="RequestHBForm" (ngSubmit)="submitHB()">
+                <div class="mb-2">Please mention preferred seller name</div>
+                <div class="w-100 mb-3">
+                    <textarea class="form-control" rows="3" id="hbName" formControlName="hbName"></textarea>
+                    <div *ngIf="submitted && f['hbName'].errors" class="error-text mt-1">
+                        <div *ngIf="f['hbName'].errors['required']">*Healthbuddy name is required</div>
+                    </div>
+                </div>
+                <div *ngIf="RelivantHBData.DisclaimerText != '' && RelivantHBData.DisclaimerText != null && RelivantHBData.DisclaimerText != undefined" class="p-3 fs-3 mb-3" style="background-color: lightgoldenrodyellow;">
+                    <div [innerHTML]="RelivantHBData.DisclaimerText"></div>
+                </div>
+                <div class="btnSec">
+                    <button type="reset" class="btnCancel" (click)="hbReset()">Cancel</button>
+                    <button type="submit" class="btnSubmit">Submit Request</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+<button #hbReqModal data-bs-toggle="modal" data-bs-target="#hbReqModal" class="d-none"></button>
+<div class="modal fade" id="hbReqModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="hbReqModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-body">            
+            <div class="d-flex w-100 my-3 fs-7 fw-5">{{respMsg}}</div>
+            <div class="btnSec">
+                <button type="button" class="btnSubmit" data-bs-dismiss="modal" aria-label="Close" (click)="hbReset()">Ok</button>
+            </div>
+        </div>
+      </div>
+    </div>
+</div>

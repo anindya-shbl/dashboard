@@ -1,0 +1,115 @@
+<div class="px-3 pt-3">
+    <app-article-path></app-article-path>
+</div>
+<div *ngIf="!isLoading" class="p-3">
+    <div class="article-heading mb-4">All Trending Articles</div>
+    <ng-container *ngIf="langContent.length>0">
+        <div class="load-more-cont">
+            <div class="trnd-grid">
+                <ng-container *ngFor="let trnd of langContent">
+                    <div class="border rounded bx-shdw hvr bg-white" (click)="viewArtical(trnd.Permalink)">
+                        <div class="position-relative">
+                            <div class="tag" [style.background-color]="trnd.ColorCode">{{trnd.CategoryName}}</div>
+                            <div class="imgCont mb-3">
+                                <!-- <img [src]="trnd.HomePageSmallBanner" alt="" width="100%" class="rounded-top"> -->
+                                <img [src]="trnd.Content.Thumbnail" alt="" width="100%" class="rounded-top">
+                            </div>
+                            <div class="mh-1 px-3">
+                                <div class="mb-3 fs-6 fw-6 line-clamp-2 h-46">{{trnd.Content.Title}}</div>
+                                <div class="mb-3 fs-3 line-clamp-2 text-secondary">{{trnd.Content.ShortDescription}}</div>
+                            </div>
+                            <div class="d-flex justify-content-between text-secondary px-3 mb-3">
+                                <div class="fs-3">
+                                    <span class="text-secondary">{{trnd.UpdatedDate | date : "MMM yy"}}</span>
+                                </div>
+                                <div>
+                                    <span class="pe-3">
+                                        <span *ngIf="!trnd.IsLiked"><i class="fa-regular fa-heart"></i></span>
+                                        <span *ngIf="trnd.IsLiked"  class="hvr"><i class="fa-solid fa-heart text-danger"></i></span>
+                                        {{trnd.LikeCount}}
+                                    </span>
+                                    <span class="pe-3">
+                                        <i class="fa-regular fa-eye pe-1"></i> 
+                                        {{trnd.Viewcount}}
+                                    </span>
+                                    <span class="">
+                                        <span *ngIf="!trnd.IsBookmarked"><i class="fa-regular fa-bookmark"></i></span>
+                                        <span *ngIf="trnd.IsBookmarked"><i class="fa-solid fa-bookmark text-success"></i></span>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- <div class="imgCont">
+                            <img [src]="trnd.HomePageSmallBanner" alt="" width="100%" class="rounded">
+                        </div> -->
+                    </div>
+                    <!-- <div class="hvr ">
+                        <div (click)="viewArtical(trnd.Permalink)">
+                            <div class="imgCont">
+                                <img [src]="trnd.Thumbnail" alt="" class="img-fluid rounded">
+                            </div>
+                            <div class="my-3 fs-5 fw-6 text-truncate">{{trnd.Content.Title}}</div>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center text-secondary">
+                            <div>{{trnd.CategoryName}}</div>
+                            <div class="fs-3">
+                                <span class="px-1">
+                                    <span *ngIf="!trnd.IsLiked" (click)="likeArticle(trnd)" class="hvr"><i class="fa-regular fa-heart fs-7"></i></span>
+                                    <span *ngIf="trnd.IsLiked" (click)="likeArticle(trnd)" class="hvr"><i class="fa-solid fa-heart fs-7 text-danger"></i></span>
+                                    {{trnd.LikeCount}}
+                                </span>
+                                <span class="px-1 hvr">
+                                    <span *ngIf="!trnd.IsBookmarked" (click)="bookmarkArticle(trnd)"><i class="fa-regular fa-bookmark fs-7"></i></span>
+                                    <span *ngIf="trnd.IsBookmarked" (click)="bookmarkArticle(trnd)"><i class="fa-solid fa-bookmark fs-7 text-success"></i></span>
+                                </span>
+                            </div>
+                        </div>
+                    </div> -->
+                </ng-container>
+            </div>
+        </div>
+        <div *ngIf="totalCount > langContent.length" class="load-more-btn mt-3" (click)="loadMore()">
+            <span>Load More</span>
+        </div>
+    </ng-container>
+    <ng-container *ngIf="langContent.length==0">
+        <div>
+            <app-not-found></app-not-found>
+        </div>
+    </ng-container>
+</div>
+
+
+    <!-- <ng-container *ngIf="langContent.length>0">
+        <div class="load-more-cont">
+            <div class="trnd-grid">
+                <ng-container *ngFor="let trnd of langContent">
+                    <div class="hvr ">
+                        <div (click)="viewArtical(trnd.Permalink)">
+                            <div class="imgCont">
+                                <img [src]="trnd.Thumbnail" alt="" class="img-fluid rounded">
+                            </div>
+                            <div class="my-3 fs-5 fw-6 text-truncate">{{trnd.Content.Title}}</div>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center text-secondary">
+                            <div>{{trnd.CategoryName}}</div>
+                            <div class="fs-3">
+                                <span class="px-1">
+                                    <span *ngIf="!trnd.IsLiked" (click)="likeArticle(trnd)" class="hvr"><i class="fa-regular fa-heart fs-7"></i></span>
+                                    <span *ngIf="trnd.IsLiked" (click)="likeArticle(trnd)" class="hvr"><i class="fa-solid fa-heart fs-7 text-danger"></i></span>
+                                    {{trnd.LikeCount}}
+                                </span>
+                                <span class="px-1 hvr">
+                                    <span *ngIf="!trnd.IsBookmarked" (click)="bookmarkArticle(trnd)"><i class="fa-regular fa-bookmark fs-7"></i></span>
+                                    <span *ngIf="trnd.IsBookmarked" (click)="bookmarkArticle(trnd)"><i class="fa-solid fa-bookmark fs-7 text-success"></i></span>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </ng-container>
+            </div>
+        </div>
+        <div *ngIf="totalCount > langContent.length" class="load-more-btn mt-3" (click)="loadMore()">
+            <span>Load More</span>
+        </div>
+    </ng-container> -->

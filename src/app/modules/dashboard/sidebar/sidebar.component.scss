@@ -1,0 +1,42 @@
+.fa-solid, .fa-regular{
+    width: 18px;
+}
+
+.sb-active{
+    color: rgb(49, 157, 245);
+}
+
+
+.leftAccountSec {
+    background-color: #fff;
+    padding: 0px;
+    position: sticky;
+    top: 60px;
+    z-index: 2;
+    & h2 {
+        border-bottom: 1px solid #F2F4F7;
+        padding: 10px 20px;
+        color: #007DC9;
+        font-size: 20px;
+        font-weight: 700;
+        line-height: 30px;
+    }
+    & .tabSec {
+        background-color: #fff;
+        border-bottom: 1px solid #F2F4F7;
+        padding: 0px;
+        & h4 {
+        padding: 10px 20px 16px;
+        color: #344054;
+        font-size: 16px;
+        font-weight: 600;
+        line-height: 24px;
+    }
+    & ul {padding: 0; margin: 0; list-style: none; display: flex; flex-direction: column; padding-bottom: 12px;
+    & li {padding: 10px 20px; margin: 0; color: #475467; font-size: 14px; font-weight: 500; line-height: 20px; display: flex; align-items: center; justify-content: flex-start; column-gap: 4px; cursor: pointer;
+    & i {height: 20px; width: 20px; font-size: 14px; display: flex; align-items: center; justify-content: flex-start; }
+    &.active { background-color: #F0F9FF; color: #0086C9; border-right: 4px solid #0086C9;}
+    } 
+    }
+    }
+}

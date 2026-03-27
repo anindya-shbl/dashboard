@@ -1,0 +1,20 @@
+<ngx-spinner bdColor = "#27272770" size = "medium" color = "#fff" type = "line-spin-fade" [fullScreen] = "true">
+    <p style="color: white" > Loading... </p>
+</ngx-spinner>
+<ng-container *ngIf="!loading">
+    <div>
+        <app-main-header></app-main-header>
+    </div>
+    <router-outlet></router-outlet>
+</ng-container>
+
+<!-- <ng-container *ngIf="!loading">
+    <ng-container *ngIf="isUser">
+        <div>
+            <app-main-header></app-main-header>
+        </div>
+        <div>
+            <router-outlet></router-outlet>
+        </div>
+    </ng-container>
+</ng-container> -->

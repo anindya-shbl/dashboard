@@ -1,0 +1,118 @@
+<div>
+    <div class="row g-3">
+        <div class="col-6 mb-3">
+            <div for="bodyWeight" class="form-label">Weight (kg)</div>
+            <div class="input-group">
+                <input type="text" class="form-control" id="bodyWeight" Name="bodyWeight" [(ngModel)]="bodyWeight">
+                <!-- <span class="input-group-text">kgs</span> -->
+            </div>
+        </div>
+        <div class="col-6 mb-3">
+            <div class="form-label">Height (cm)</div>
+            <div class="input-group">
+                <input type="text" class="form-control" id="height" Name="height" [(ngModel)]="height">
+                <!-- <span class="input-group-text">ft.</span> -->
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-3">
+        <div class="col-6 mb-3">
+            <div for="bodyTemp" class="form-label">Temperature (&deg;F)</div>
+            <div class="input-group">
+                <input type="text" class="form-control" id="bodyTemp" Name="bodyTemp" [(ngModel)]="bodyTemp">
+                <!-- <span class="input-group-text"></span> -->
+            </div>
+        </div>
+                <div class="col-6 mb-3">
+            <div for="bodyTemp" class="form-label">Blood Pressure (mmHg)</div>
+            <div class="input-group">
+                <input type="text" class="form-control" id="bloodPressure" Name="bloodPressure"
+                    [(ngModel)]="bloodPressure">
+                <!-- <span class="input-group-text"></span> -->
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-3">
+
+        <div class="col-4 mb-3">
+            <div for="bodyTemp" class="form-label">Pulse (bpm)</div>
+            <div class="input-group">
+                <input type="text" class="form-control" id="pulse" Name="pulse" [(ngModel)]="pulse">
+                <!-- <span class="input-group-text"></span> -->
+            </div>
+        </div>
+
+        <div class="col-4 mb-3">
+            <div for="bmi" class="form-label">BMI (kg/m2)</div>
+            <div class="input-group">
+                <input type="text" class="form-control" id="bmi" Name="bmi" [(ngModel)]="bmi">
+                <!-- <span class="input-group-text"></span> -->
+            </div>
+        </div>
+
+        <div class="col-4 mb-3">
+            <div for="spO2" class="form-label">spO2 (%)</div>
+            <div class="input-group">
+                <input type="text" class="form-control" id="spO2" Name="spO2" [(ngModel)]="spO2">
+                <!-- <span class="input-group-text"></span> -->
+            </div>
+        </div>
+    </div>
+
+    <div class="mb-2">
+        <div class="mb-2">Common Allergies</div>
+        <div (mouseleave)="alergySelect = false" class="">
+            <div class="input-group" (click)="alergySelect=!alergySelect">
+                <div *ngIf="slectedAllergies.length<=0" class="form-control">Select</div>
+                <div *ngIf="slectedAllergies.length>0" class="form-control">
+                    <ng-container *ngFor="let ds of slectedAllergies">{{ds['name']}}, </ng-container>
+                </div>
+                <span class="input-group-text"><i class="fa fa-angle-down"></i></span>
+            </div>
+            <div class="drop-show" *ngIf="alergySelect">
+                <ng-container *ngFor="let a of allergyArr">
+                    <div (click)="setAllergies(a)" class="mb-1">
+                        <!-- <input type="checkbox" [(ngModel)]="a.checked" (change)="setAllergies(a.checked,a.name)" /> -->
+                        <span *ngIf="a.checked" class="me-3"><i class="fa-solid fa-square-check"></i></span>
+                        <span *ngIf="!a.checked" class="me-3"><i class="fa-regular fa-square"></i></span>
+                        <span>{{a.SubConditionName}}</span>
+                    </div>
+                </ng-container>
+            </div>
+        </div>
+    </div>
+
+    <div class="mb-2">
+        <div class="mb-2">Cronic Conditions</div>
+        <div (mouseleave)="conditionSelect = false">
+            <div class="input-group" (click)="conditionSelect =! conditionSelect">
+                <div *ngIf="slectedConditions.length<=0" class="form-control">Select</div>
+                <div *ngIf="slectedConditions.length>0" class="form-control">
+                    <ng-container *ngFor="let ds of slectedConditions">{{ds['name']}}, </ng-container>
+                </div>
+                <span class="input-group-text"><i class="fa fa-angle-down"></i></span>
+            </div>
+            <div class="drop-show" *ngIf="conditionSelect">
+                <ng-container *ngFor="let a of conditionArr">
+                    <div (click)="setConditions(a)" class="mb-1">
+                        <!-- <input type="checkbox" [(ngModel)]="a.checked" (change)="setAllergies(a.checked,a.name)" /> -->
+                        <span *ngIf="a.checked" class="me-3"><i class="fa-solid fa-square-check"></i></span>
+                        <span *ngIf="!a.checked" class="me-3"><i class="fa-regular fa-square"></i></span>
+                        <span>{{a.SubConditionName}}</span>
+                    </div>
+                </ng-container>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="row">
+        <div class="btnSec">
+            <!-- <button class="btnCancel" type="button" #closePtnt data-bs-dismiss="modal" aria-label="Close"
+                (click)="onReset()">Cancel</button> -->
+            <button type="submit" class="btnSubmit" (click)="onSubmit()">Add Vitals</button>
+        </div>
+    </div>
+</div>

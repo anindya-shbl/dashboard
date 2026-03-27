@@ -1,0 +1,19 @@
+.ssbody {
+    width: 100%;
+    min-width: 860px;
+    // margin-top: 10px;
+    // background-color: #fff;
+    background-color: #eff7ff;
+    font-family: "Inter", sans-serif;
+
+    & .body-container {
+        // width: 85%;
+        // box-shadow: 0 0 5px #1018281a;
+        max-width: 1400px;
+        margin: 0 auto;
+        // background-color: #fff;
+        // display: flex;
+        // flex-direction: column;
+        min-height: calc(100vh - 66px);
+    }
+}

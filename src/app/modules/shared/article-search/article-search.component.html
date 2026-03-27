@@ -1,0 +1,4 @@
+<div class="input-box searchBox">
+    <input type="text" class="form-control" (keyup)="onSearchChange($event)"  (keydown)="onKeydown()" [(ngModel)]="searchTxt" name="searchTxt" autocomplete="off" placeholder="Search Articles">
+    <i class="icon-search-ss"></i>
+</div>

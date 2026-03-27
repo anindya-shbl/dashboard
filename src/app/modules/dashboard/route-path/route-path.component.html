@@ -1,0 +1,16 @@
+ <!-- <div class="db-header">
+        <div class="text-decoration-none">
+            <span><a class="text-decoration-none" href="http://">Home</a>&nbsp; > &nbsp;</span>
+            <span><a class="text-decoration-none" routerLink='/MyAccount' routerLinkActive="sb-active">Dashboard</a>&nbsp; > &nbsp;</span>
+            <span>{{myPath}}</span>         
+        </div>
+</div> -->
+
+
+<div class="breadcrumbSec">
+    <ul>
+        <li><a href={{Commonservice.baseurl}}>Home</a></li>
+        <li><a routerLink='/myaccount'>Dashboard</a></li>
+        <li class="active text-capitalize">{{myPath}}</li>
+    </ul>
+</div>

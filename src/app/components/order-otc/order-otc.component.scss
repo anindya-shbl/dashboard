@@ -1,0 +1,126 @@
+.prd-img {
+    width: 402px;
+    min-width: 402px;
+    margin-right: 30px;
+}
+
+
+.prd-img-sm {
+    display: none;
+}
+
+.item-shadow {
+    box-shadow: 0 1px 3px 2px #8c959f26;
+}
+
+.fxd-top {
+    position: sticky;
+    top: 76px
+}
+
+.detail-block {
+    display: flex;
+    width: 100%;
+}
+
+.fs-22 {
+    font-size: 22px;
+}
+
+.fs-24 {
+    font-size: 24px;
+}
+
+.wrpl {
+    width: 400px;
+    min-width: 400px;
+}
+
+@media only screen and (max-width: 1300px) {
+    .detail-block {
+        display: block;
+    }
+
+    .prd-img {
+        display: none;
+    }
+
+    .prd-img-sm {
+        display: block;
+        margin-bottom: 20px;
+    }
+}
+
+.type-box {
+    width: 140px;
+    min-width: 140px;
+    color: #747373;
+}
+
+.min-200 {
+    width: 200px;
+    min-width: 200px;
+    text-align: center;
+    padding: 12px 8px;
+    margin-right: 16px;
+    margin-bottom: 16px;
+}
+
+.btn-prd {
+    min-width: 180px;
+    height: 50px;
+}
+
+.var-box {
+    width: 100px;
+    min-width: 100px;
+    padding: 8px;
+    text-align: center;
+    margin-right: 4px;
+    margin-bottom: 4px;
+}
+
+.alterView {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+}
+
+.alt-mx {
+    width: 600px;
+    max-width: 600px;
+}
+
+.Alternative-btn {
+    width: 100%;
+    padding: 14px;
+    background-color: #e8f6ff;
+    color: #027a48;
+    font-size: 14px;
+    font-weight: 500;
+    display: block;
+    text-decoration: none;
+    display: flex;
+    justify-content: space-between;
+    cursor: pointer;
+}
+
+.var-img {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px;
+    width: 80px;
+    min-width: 80px;
+}
+
+.rx-icn {
+    position: absolute;
+    top: -5px;
+    left: -5px;
+    background: #e6e8e9;
+    line-height: 12px;
+    font-size: 12px;
+    padding: 4px 6px;
+    border-radius: 4px;
+}

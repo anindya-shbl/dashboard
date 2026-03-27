@@ -1,0 +1,507 @@
+<div class="p-3">
+    <div class="mb-3">
+        <app-route-path></app-route-path>
+    </div>
+    <!-- <div class="fs-7 fw-7 mb-3">My Orders</div> -->
+    <div class="commonHeadertitleSec">
+        <div class="custNameSec">
+            <strong>Online Doctor Consultation</strong>
+        </div>
+    </div>
+    <div class="d-flex mb-3">
+        <ng-container *ngFor="let step of steps">
+            <div class="step-blck"
+                [ngClass]="step.completed ? (step.id == activeStep.id ? 'stp-actv':'stp-cmplt') : (step.id == activeStep.id ? 'stp-actv' : 'stp-inactv')">
+                <span>{{step.id}}. {{ step.name }}</span>
+                <span *ngIf="step.completed"><i class="fa-regular fa-circle-check"></i></span>
+                <!-- <span *ngIf="!step.completed && step.id == activeStep.id"><i class="fa-solid fa-circle fs-8"></i></span> -->
+            </div>
+        </ng-container>
+    </div>
+
+    <div *ngIf="!isloading" class="d-flex justify-content-between">
+        <div class="w-100 border rounded me-4">
+
+            <!-- =================  add patient block =================== -->
+            <ng-container *ngIf="activeStep.id == 1">
+                <div class="d-flex justify-content-between align-items-center rounded-top bg-light p-3">
+                    <div class="fs-6 fw-5 me-3">1. Select Patient</div>
+                    <div class="text-primary d-flex align-items-center" type="button" data-bs-toggle="modal"
+                        data-bs-target="#addPtntMdl" (click)="addPatientWebEngage()">
+                        <span class="fs-2 me-2"><i class="fa-solid fa-plus"></i></span>
+                        <span class="fs-5 fw-5">Add Patient</span>
+                    </div>
+                </div>
+                <div *ngIf="familyMemberList.length > 0">
+
+                        <ng-container *ngFor="let member of familyMemberList">
+                            <div class="d-flex p-3 justify-content-between align-items-center border-bottom"
+                                [ngClass]="selectedPatient.MyFamilyId == member.MyFamilyId? 'ptnt-selected': 'hvr'"
+                                (click)="selectPatient(member)">
+                                <div class="user-box me-3">
+                                    <i class="fa-regular fa-user"></i>
+                                </div>
+                                <div class="w-100 me-3">
+                                    <div class="mb-2 fw-5 fs-5">{{member.Name}}</div>
+                                    <div class="d-flex align-items-center">
+                                        <div class="me-2">{{member.Age}}, </div>
+                                        <div class="me-2">
+                                            <span *ngIf="member.Gender == 'M'">Male</span>
+                                            <span *ngIf="member.Gender == 'F'">Female</span>
+                                            <span *ngIf="member.Gender == 'O'">Others</span>
+                                        </div>
+                                        <div class="bg-light rounded" style="color: #E9640D; padding: 2px 8px;">
+                                            {{member.Relationship}}
+                                        </div>
+                                    </div>
+                                    <!-- <div class="fs-3">{{member.MobileNo}}</div> -->
+                                </div>
+                            </div>
+                        </ng-container>
+
+                </div>
+                <div class="d-flex p-3">
+                    <button *ngIf="this.selectedPatient != ''" class="btnSubmit btn-wdt"
+                        (click)="continue()">CONTINUE</button>
+                    <button *ngIf="this.selectedPatient == ''" class="notify-btn btn-wdt" disabled>CONTINUE</button>
+                </div>
+            </ng-container>
+
+            <!-- =================  Check Availability block =================== -->
+            <ng-container *ngIf="activeStep.id == 2">
+                <div class="d-flex justify-content-between align-items-center rounded-top bg-light p-3">
+                    <div class="fs-6 fw-5 me-3">2. Check Availability</div>
+                    <div *ngIf="docList.length > 0">
+                        <span class="text-secondary">Estimated Wait Time : </span>
+                        <span class="fw-5 text-danger">15 Mins</span>
+                    </div>
+                </div>
+
+                <div *ngIf="docList.length > 0" class="">
+                    <div class="overflow-x-auto p-3 border-bottom">
+                        <div class="fs-5 fw-5 mb-3">
+                            {{docList.length}} general physicians are available to consult you within the next 5
+                            minutes.
+                        </div>
+                        <div class="d-flex mb-3" style="margin-left: 8px;">
+                            <ng-container *ngFor="let doc of docList; let i = index">
+                                <span
+                                    *ngIf="doc.DoctorImage != undefined && doc.DoctorImage != null && doc.DoctorImage != ''"
+                                    class="doc-img" (mouseenter)="onMouseEnter(doc)" (mouseleave)="onMouseLeave()">
+                                    <img [src]="doc.DoctorImage" alt="" width="100%">
+                                </span>
+                                <span
+                                    *ngIf="doc.DoctorImage == undefined || doc.DoctorImage == null || doc.DoctorImage == ''"
+                                    class="doc-img" (mouseenter)="onMouseEnter(doc)" (mouseleave)="onMouseLeave()">
+                                    <img src="https://asset.sastasundar.com/incom/images/product/thumb/default_product1460098847.jpg"
+                                        alt="" width="100%">
+                                </span>
+                            </ng-container>
+                        </div>
+                        <div *ngIf="showHideDoc" class="mb-3 p-3 d-flex align-items-end bg-light">
+                            <!-- <span class="me-2 text-secondary fs-3"><i class="fa-solid fa-stethoscope"></i></span> -->
+                            <span class="me-2 fw-5 text-primary-emphasis">{{selectedDoc.Salutation}}
+                                {{selectedDoc.FullName}},</span>
+                            <span class="me-2">{{selectedDoc.SpecialityName}}, </span>
+                            <span class="">{{selectedDoc.DoctorDegree}}</span>
+                        </div>
+                        <!-- <div class="mb-3 p-3 bg-primary-subtle">Estimated Wait Time: 15 Mins</div> -->
+                    </div>
+
+                    <div class="p-3 border-bottom">
+                        <div class="fs-5 fw-5 mb-3">Describe your symptoms (Optional)</div>
+                        <div class="mb-3">
+                            <textarea id="symptm" class="form-control fs-4 p-3" [(ngModel)]="symptoms" [maxLength]="200"
+                                rows="3" placeholder="For example: I am having fever and cough"></textarea>
+                        </div>
+                    </div>
+
+                    <div class="p-3 border-bottom">
+                        <div class="fs-5 fw-5 mb-3">Upload past reports (Optional)</div>
+                        <ng-container *ngIf="uploadedPath != ''">
+                            <div class="mb-3 hvr" (click)="showUploadedPresc()">
+                                <div>
+                                    <i class="fa-solid fa-file-circle-check text-success" style="font-size: 50px;"></i>
+                                </div>
+                                <div class="px-3 fw-5 fs-5 text-success">Prescription Uploaded</div>
+                            </div>
+                        </ng-container>
+
+                        <ng-container *ngIf="uploadedPath == ''">
+                            <div class="d-flex align-items-center mb-3">
+                                <div class="">
+                                    <label for="file-input" class="lng-blck mode-blk text-center hvr">Select
+                                        Files</label>
+                                    <input id="file-input" type="file" class="d-none"
+                                        (change)="selectPrescription($event)" multiple accept=".jpg, .jpeg, .pdf" />
+                                </div>
+                                <div *ngIf="prscImages.length > 0"
+                                    class="lng-blck mode-blk text-center hvr bg-primary text-white">
+                                    Upload Files
+                                </div>
+                            </div>
+                            <div class="fs-3 text-secondary mb-3">Upload jpg, jpeg, png and pdf below 5MB</div>
+                            <div *ngIf="prscImages.length > 0" class="mb-3">
+                                <div class="d-flex flex-wrap gap-10">
+                                    <ng-container *ngFor="let image of prscImages">
+                                        <div class="position-relative">
+                                            <div class="cross" (click)="delFile(image)">
+                                                <i class="fa fa-times-circle"></i>
+                                            </div>
+                                            <div class="prsc-slot-new">
+                                                <ng-container *ngIf="image.type == 'application/pdf'">
+                                                    <i class="fa-solid fa-file-lines text-danger"
+                                                        style="font-size: 70px;"></i>
+                                                </ng-container>
+                                                <ng-container *ngIf="image.type != 'application/pdf'">
+                                                    <img [src]="image.url" width="80px" height="80px" />
+                                                </ng-container>
+                                            </div>
+                                        </div>
+                                    </ng-container>
+                                </div>
+                            </div>
+                        </ng-container>
+                    </div>
+
+                    <div class="p-3 border-bottom">
+                        <div class="fs-5 fw-5 mb-3">Preferred Mode of Consultation</div>
+                        <div class="d-flex align-items ">
+                            <div class="lng-blck mode-blk" [ngClass]="selectedMode == 'A' ? 'inner-active': 'hvr'"
+                                (click)="setMode('A')">
+                                <div class="d-flex align-items-center mb-2">
+                                    <span class="me-2"><i class="fa-solid fa-phone"></i></span>
+                                    <span>Phone Call</span>
+                                </div>
+                                <div class="fs-3 text-secondary">Doctor will call you</div>
+                            </div>
+                            <div class="lng-blck mode-blk" [ngClass]="selectedMode == 'V' ? 'inner-active': 'hvr'"
+                                (click)="setMode('V')">
+                                <div class="d-flex align-items-center mb-2">
+                                    <span class="me-2"><i class="fa-solid fa-video"></i></span>
+                                    <span>Video Call</span>
+                                </div>
+                                <div class="fs-3 text-secondary">A video link will be sent</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="p-3 border-bottom">
+                        <div class="fs-5 fw-5 mb-3">Preferred Language</div>
+                        <div class="d-flex align-items ">
+                            <div class="lng-blck d-flex justify-content-center align-items-center"
+                                [ngClass]="selectedLang == 'Hindi' ? 'inner-active': 'hvr'" (click)="setLang('Hindi')">
+                                Hindi
+                            </div>
+                            <div class="lng-blck d-flex justify-content-center align-items-center"
+                                [ngClass]="selectedLang == 'Bengali' ? 'inner-active': 'hvr'"
+                                (click)="setLang('Bengali')">
+                                Bengali
+                            </div>
+                            <div class="lng-blck d-flex justify-content-center align-items-center"
+                                [ngClass]="selectedLang == 'English' ? 'inner-active': 'hvr'"
+                                (click)="setLang('English')">
+                                English
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="fs-3 text-secondary p-3 pb-0">
+                        By proceeding you agree to receive the consultation through SastaSundar’s consultation
+                        partner
+                        Diagnoeasy and you agree to share your information with Diagnoeasy doctors. Please check our
+                        Privacy
+                        Policy & Terms & Conditions.
+                    </div>
+                    <div class="d-flex p-3">
+                        <button class="btnSubmit btn-wdt" (click)="saveCart()">CONTINUE</button>
+                        <!-- <button *ngIf="this.selectedMember == ''" class="notify-btn btn-wdt" disabled>CONTINUE</button> -->
+                    </div>
+
+                </div>
+
+                <div *ngIf="docList.length == 0" class="">
+                    <div class="p-4 my-4 border rounded bg-light text-danger fw-5 fs-6">{{infoText}}</div>
+                    <button class="btnSubmit btn-wdt" (click)="backToHome()">Back To Home</button>
+                </div>
+            </ng-container>
+
+            <!-- =================  Payment block =================== -->
+            <ng-container *ngIf="activeStep.id == 3">
+                <div class="d-flex justify-content-between align-items-center rounded-top bg-light p-3">
+                    <div class="fs-6 fw-5 me-3">3. Payment Method</div>
+                </div>
+                <div *ngIf="pglist.length > 0" class="d-flex justify-content-between">
+                    <div class="pg-grid border-end item-shadow">
+                        <!-- <div class="p-3 fs-6 fw-5">Payment Options</div> -->
+                        <ng-container *ngFor="let pgRow of pglist">
+                            <div class="px-3 py-2 d-flex hvr border-top align-items-center"
+                                [ngClass]="pgRow.PGListingId == selectedPG.PGListingId ? 'bg-primary-subtle text-primary': ''"
+                                (click)="assignPayment(pgRow)">
+                                <div class="pay-img me-3">
+                                    <img src="https://asset.sastasundar.com/incom/PaymentgatewayImages/web/{{pgRow.Image}}"
+                                        alt width="100%" />
+                                </div>
+                                <div class="w-100">
+                                    <span class="fw-5">{{ pgRow.Title }}</span>
+                                </div>
+                            </div>
+                        </ng-container>
+                    </div>
+                    <div class="w-100 p-4 border-top">
+                        <div *ngIf="selectedPG != ''" class="">
+                            <div class="mb-3">
+                                <div class="fs-3 text-secondary">Payable Amount : </div>
+                                <div class="fw-5 fs-5">₹244.8</div>
+                            </div>
+                            <div class="mb-3">
+                                <div class="fs-3 text-secondary">Payment Method : </div>
+                                <div class="fw-5 fs-5">{{ selectedPG.Title }}</div>
+                            </div>
+                            <div *ngIf="selectedPG.Desc != '' && selectedPG.Desc != null && selectedPG.Desc != 'NULL'"
+                                class="fs-2 mb-3">
+                                <span [innerHTML]="selectedPG.Desc"></span>
+                            </div>
+                            <div class="">
+                                <button type="button" class="btnSubmit btn-wdt" (click)="placeOrder(selectedPG)">PLACE
+                                    ENQUIRY</button>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </ng-container>
+        </div>
+
+
+        <div class="summery-grid ">
+            <div class="border rounded mb-3">
+                <div class="d-flex justify-content-between align-items-center p-3 border-bottom">
+                    <span class="fs-5 fw-5">Consultation For</span>
+                    <span *ngIf="selectedPatient != '' && activeStep.id >1" class="fs-3 text-primary hvr" (click)="changePatient()">Change </span>
+                </div>
+                <div *ngIf="selectedPatient != ''" class="d-flex align-items-center p-3">
+                    <div class="user-box me-3">
+                        <i class="fa-regular fa-user"></i>
+                    </div>
+                    <div>
+                        <div class="mb-1 fw-5">{{selectedPatient.Name}}</div>
+                        <div class="d-flex align-items-center mb-1 text-secondary fs-3">
+                            <div class="me-2">{{selectedPatient.Age}}, </div>
+                            <div class="me-2">
+                                <span *ngIf="selectedPatient.Gender == 'M'">Male,</span>
+                                <span *ngIf="selectedPatient.Gender == 'F'">Female,</span>
+                                <span *ngIf="selectedPatient.Gender == 'O'">Others,</span>
+                            </div>
+                            <div class="bg-light" style="color: #E9640D; padding: 2px 6px;">
+                                {{selectedPatient.Relationship}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div *ngIf="selectedPatient == ''" class="p-3 text-danger" style="min-height: 80px;">
+                    Please select or add a patient to continue.
+                </div>
+            </div>
+            <ng-container *ngIf="cartDetails == ''">
+                <div class="border rounded mb-3">
+                    <div class="d-flex justify-content-between align-items-center p-3 border-bottom">
+                        <span class="fs-5 fw-5">Bill Summary</span>
+                    </div>
+                    <div class="p-3 text-info">
+                        Total payable amount with complete price breakup will be shown upon availability of the Doctor
+                    </div>
+                </div>
+            </ng-container>
+            <ng-container *ngIf="cartDetails != ''">
+                <div class="border rounded mb-3">
+                    <div class="d-flex justify-content-between p-3 border-bottom hvr" data-bs-toggle="modal"
+                        data-bs-target="#bkngCouponMdl">
+                        <div class="fs-5 fw-5">Apply Coupons</div>
+                        <div><i class="fa-solid fa-angle-right"></i></div>
+                    </div>
+                    <div *ngIf="cartDetails.PromoCode == '' || cartDetails.PromoCode == null || cartDetails.PromoCode == undefined"
+                        class="p-3 d-flex align-items-center">
+                        <span class="fs-8 me-2 text-success"><i class="fa-solid fa-tag"></i></span>
+                        <span class="text-secondary">Save more with coupons available for you</span>
+                    </div>
+                    <div *ngIf="cartDetails.PromoCode != '' && cartDetails.PromoCode != null && cartDetails.PromoCode != undefined"
+                        class="p-3 d-flex justify-content-between align-items-center">
+                        <div class="me-2">
+                            <span class="text-success border rounded px-2 py-1 me-2">{{cartDetails.PromoCode}}</span>
+                            <span class="fs-2">applied</span>
+                        </div>
+                        <div class="fs-3 text-danger hvr" (click)="removePromo()">Remove</div>
+                    </div>
+                </div>
+                <div class="border rounded mb-3">
+                    <div class="d-flex justify-content-between align-items-center p-3 border-bottom">
+                        <span class="fs-5 fw-5">Bill Summary</span>
+                    </div>
+                    <div *ngIf="cartDetails != ''" class="p-3 border-bottom">
+                        <div class="d-flex justify-content-between mb-2 text-secondary">
+                            <span>Consultation Fee</span>
+                            <span>{{cartDetails.ConsultAmount | currency: 'INR'}}</span>
+                        </div>
+                        <div *ngIf="cartDetails.ConsultItemDiscount>0"
+                            class="d-flex justify-content-between mb-2 text-secondary">
+                            <span>Consultation Discount</span>
+                            <span>{{cartDetails.ConsultItemDiscount | currency: 'INR'}}</span>
+                        </div>
+                        <div *ngIf="cartDetails.CouponPromoDiscount>0"
+                            class="d-flex justify-content-between mb-2 text-secondary">
+                            <span>Prormo Discount</span>
+                            <span>{{cartDetails.CouponPromoDiscount | currency: 'INR'}}</span>
+                        </div>
+                        <div class="d-flex justify-content-between">
+                            <span class="fw-5 fs-5">Amount to be paid</span>
+                            <span class="fw-5 fs-5">{{cartDetails.ConsultVal | currency: 'INR'}}</span>
+                        </div>
+                    </div>
+                    <div class="text-warning fs-3 p-3">
+                        If a doctor doesn't join within 1 hour, you'll get a full refund plus 20% OFF on your next
+                        consultation.
+                    </div>
+                </div>
+
+
+            </ng-container>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="addPtntMdl" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+    aria-labelledby="addPtntMdlLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h6 class="modal-title mb-0" id="addPtntMdlLabel">Add Patient</h6>
+                <!-- <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" (click)="onReset()"></button> -->
+            </div>
+            <div class="modal-body">
+                <form class="family-form" [formGroup]="RecepentForm" (ngSubmit)="onSubmit()">
+
+                    <div class="ac-grid mb-2">
+                        <div class="mb-3">
+                            <label for="Name" class="form-label">Name<span class="text-danger"> *</span></label>
+                            <input type="text" class="form-control" id="Name" formControlName="Name"
+                                (keypress)="alphaOnly($event)">
+                            <div *ngIf="submitted && f['Name'].errors" class="error-text">
+                                <div *ngIf="f['Name'].errors['required']">* Name is required</div>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="Relationship" class="form-label">Relationship <span class="text-danger">
+                                    *</span></label>
+                            <select id="Relationship" class="form-select" formControlName="Relationship">
+                                <option value="">Select Relationship</option>
+                                <option value="Self">Self</option>
+                                <option value="Parent">Parent</option>
+                                <option value="Spouse">Spouse</option>
+                                <option value="Sibling">Sibling</option>
+                                <option value="Chidren">Chidren</option>
+                                <option value="Friend">Friend</option>
+                                <option value="Relative">Relative</option>
+                                <option value="Other">Other</option>
+                            </select>
+                            <div *ngIf="submitted && f['Relationship'].errors" class="error-text">
+                                <div *ngIf="f['Relationship'].errors['required']">* Relationship is required</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="ac-grid mb-2">
+                        <div class="mb-3">
+                            <label for="Gender" class="form-label">Gender <span class="text-danger"> *</span></label>
+                            <select id="Gender" class="form-select" formControlName="Gender">
+                                <option value="">Select Gender</option>
+                                <option value="M">Male</option>
+                                <option value="F">Female</option>
+                                <option value="O">Others</option>
+                            </select>
+                            <div *ngIf="submitted && f['Gender'].errors" class="error-text">
+                                <div *ngIf="f['Gender'].errors['required']">* Gender is required</div>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="Dob" class="form-label">Date of Birth <span class="text-danger">
+                                    *</span></label>
+                            <input type="date" class="form-control" id="Dob" formControlName="BirthDay" [max]="maxdate"
+                                onkeydown="return false">
+                            <div *ngIf="submitted && f['BirthDay'].errors" class="error-text">
+                                <div *ngIf="f['BirthDay'].errors['required']">* Date of Birth is required</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="ac-grid mb-2">
+                        <div class="mb-3">
+                            <label for="MobileNo" class="form-label">Mobile No <span class="text-danger">
+                                    *</span></label>
+                            <input type="phone" class="form-control" id="MobileNo" formControlName="MobileNo"
+                                maxlength="10" pattern="[5-9]{1}[0-9]{9}" (keypress)="numCheck($event)">
+                            <div *ngIf="submitted && f['MobileNo'].errors" class="error-text">
+                                <div *ngIf="f['MobileNo'].errors['required']">* Mobile No Required</div>
+                            </div>
+                            <div *ngIf="submitted && f['MobileNo'].errors" class="error-text">
+                                <div *ngIf="f['MobileNo'].errors['pattern']">*Invalid mobile no</div>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="Email" class="form-label">Email Address</label>
+                            <input type="email" class="form-control" id="Email" formControlName="Email"
+                                pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}">
+                            <div *ngIf="submitted && f['Email'].errors" class="error-text">
+                                <div *ngIf="f['Email'].errors['pattern']">*Invalid email id</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="btnSec">
+                            <button class="btnCancel" type="button" #closePtnt data-bs-dismiss="modal"
+                                aria-label="Close" (click)="onReset()">Cancel</button>
+                            <button type="submit" class="btnSubmit">Add Patient</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="bkngCouponMdl" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+    aria-labelledby="bkngCouponMdlLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h6 class="modal-title mb-0" id="bkngCouponMdlLabel">Apply Coupon</h6>
+                <button #clsCupon type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <ng-container *ngFor="let cpn of couponList">
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div class="d-flex me-3 justify-content-between align-items-center">
+                                <div class="me-3">
+                                    <i class="fa-solid fa-tag text-success"></i>
+                                </div>
+                                <div>
+                                    <div class="mb-1 fw-5 text-success">{{cpn.PromoCode}}</div>
+                                    <div class="mb-2">{{cpn.PromoName}}</div>
+                                </div>
+                            </div>
+                            <div *ngIf="cartDetails.PromoCode == cpn.PromoCode">Applied</div>
+                            <div *ngIf="cartDetails.PromoCode != cpn.PromoCode" class="text-primary hvr"
+                                (click)="applyPromo(cpn)">Apply</div>
+
+                        </div>
+                        <div class="mb-1 text-secondary fs-3">{{cpn.PromoDesc}}</div>
+                    </div>
+                </ng-container>
+            </div>
+        </div>
+    </div>
+</div>

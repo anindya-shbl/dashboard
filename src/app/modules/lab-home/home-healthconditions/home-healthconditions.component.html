@@ -1,0 +1,23 @@
+<div *ngIf="healthConditions.length > 0" class="p-3">
+    <div class="d-flex justify-content-between mb-3">
+        <span class="fs-20 fw-6">Test By Health Conditions</span>
+        <span class="text-primary hvr" (click)="viewByCondition(healthConditions[0].HealthCondition)">View all</span>
+    </div>
+    <owl-carousel-o [options]="customOptions">
+        <ng-container *ngFor="let item of healthConditions">
+            <ng-template carouselSlide [id]="item.id">
+                <!-- <div class="" (click)="viewCategory(item.actionUrl)"> -->
+                    <div class="p-2">
+                        <div class="rounded item-shadow hvr p-3 pckg-grad mx-320" (click)="viewByCondition(item.HealthCondition)">
+                            <div class="cndt-img mb-3">
+                                <img src="https://asset.sastasundar.com/genu_path_lab/android_2018_01_18/images/home_v3/health_condition/web/{{item.NewAppHomeImage}}" alt="">
+                            </div>
+                            <div class="fs-6 fw-5 text-center text-truncate mb-2">{{item.HealthCondition}}</div>
+                        </div>
+                        <div></div>
+                    </div>
+                <!-- </div> -->
+            </ng-template>
+        </ng-container>
+    </owl-carousel-o>
+</div>

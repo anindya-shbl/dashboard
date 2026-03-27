@@ -1,0 +1,274 @@
+.ssbody {
+    width: 100%;
+    @media only screen and (min-width: 900px) and (max-width: 5000px) {
+    min-width: 860px;
+    }
+    @media only screen and (min-width: 0px) and (max-width: 899px) {
+    max-width: 100%;
+    width: 100%;
+    }
+    font-family: "Inter", sans-serif;
+    &.bg1 {
+        background-color: #eff7ff;
+    }
+    &.bg2 {
+        background-color: #f9fafb;
+    }
+    &.bg3 {
+        background-color: #3c83f6;
+    }
+    &.bg4 {
+        background-color: #111827;
+    }
+    & .body-container {
+        margin: 0 auto;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 50px 1.5rem;
+         @media only screen and (min-width: 900px) and (max-width: 5000px) {
+            max-width: 1400px;
+        }
+         @media only screen and (min-width: 0px) and (max-width: 899px) {
+            max-width: 100%;
+            width: 100%;
+         }
+    }
+
+    & .slider-container{
+        @media only screen and (min-width: 900px) and (max-width: 5000px) {
+            max-width: 1400px;
+        }
+         @media only screen and (min-width: 0px) and (max-width: 899px) {
+            max-width: 100%;
+            width: 100%;
+         }
+        margin: 0 auto;
+        padding: 1rem 1rem 50px 1rem;
+    }
+}
+
+.min-hgt1{
+    background-color: white;
+    height: 100%;
+    position: relative;
+    display: flex;
+    align-items: center;
+    //border: 1px solid rgb(223, 223, 223);
+    border-radius: 10px;
+    padding:  1rem;
+    box-shadow: 1px 3px 10px 0px rgba(179,179,179,0.1);
+}
+
+.min-hgt2{
+    background-color: white;
+    height: 100%;
+    min-height: 210px;
+    position: relative;
+    // display: flex;
+    //border: 1px solid rgb(223, 223, 223);
+    box-shadow: 1px 3px 10px 0px rgba(179,179,179,0.1);
+    border-radius: 10px;
+    padding: 1.25rem;
+    &:hover {
+        box-shadow: 1px 5px 10px 0px rgba(179,179,179,0.3);
+    }
+}
+
+::ng-deep .searchBox .form-control {
+    background-color: white !important;
+    height: 56px !important;
+    padding: 10px 42px 10px 24px !important;
+}
+
+::ng-deep .searchBox .icon-search-ss{
+    right: 16px !important;
+    top: 11px !important;
+}
+
+.round-block {
+    border-radius: 50px;
+    background-color: #dbeafe;
+    color: #2563eb;
+    line-height: 27px;
+    font-size: 17px;
+    text-align: center;
+    padding: 10px;
+    min-height: 48px;
+    min-width: 48px;
+}
+.rounded-block {
+    border-radius: 10px;
+    background-color: #f3f4f6;
+    color: #464646;
+    line-height: 27px;
+    font-size: 17px;
+    text-align: center;
+    padding: 10px;
+    min-height: 48px;
+    min-width: 48px;
+    &.green {
+        color: #16a34a;
+    }
+    &.blue  {
+        color: #2563eb;
+    }
+    &.purple  {
+        color: #9332ea;
+    }
+    &.orange  {
+        color: #ea580c;
+    }
+    &.purplyblue  {
+        color: #4f46e5;
+    }
+    &.red  {
+        color: #dc2626;
+    }
+}
+.tcolor-dark {
+    color: #111827;
+}
+.tcolor-light {
+    color: #4b5563;
+}
+.text-6xl {
+    font-size: 2.75rem;
+    @media only screen and (max-width: 767px) {
+        font-size: 2rem;
+    }
+}
+.text-5xl {
+    font-size: 1.75rem;
+}
+.text-5lg {
+    font-size: 2rem;
+}
+
+.tab-icon{
+   display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 42px 54px;
+    border-radius: 10px;
+    font-size: 100px;
+    color: white;
+    background-color: #8bb5fb80;
+}
+
+.pad-10{
+    padding: 10px;
+    width: 250px;
+}
+.pad-10:hover {
+    box-shadow: 1px 5px 10px 0px rgba(179,179,179,0.3);
+    color: #0348ad;
+}
+
+@media only screen and (max-width: 549px) {
+    .mob-center {
+        text-align: center;
+    };
+}
+
+@media only screen and (max-width: 768px) {
+    .tab-icon{
+        display: none;
+    }
+}
+
+.form-control {
+    padding: 0.7rem 2.5rem .7rem 1.2rem;
+    height: 58px;
+    border-radius: 30px;
+    font-size: 14px;
+    // background-color: #f0f0f0;
+}
+
+.search-icon{
+    position: absolute;
+    top: 20px; 
+    right: 16px; 
+    color:#78819B; 
+    // font-size: 16px; 
+    z-index: 6;
+}
+
+.extraSearch {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 100;
+    width: 100%;
+}
+.relativeblock {
+    position: relative;
+    width: 100%;
+    display: inline-block;
+    padding-top: 25px;
+    & .backpage {
+        position: fixed;
+        top: 35px;
+        left: 32px;
+        z-index: 11;
+        cursor: pointer;
+        color: #000;
+        font-size: 16px;
+    }
+}
+
+    @media only screen and (min-width: 900px) and (max-width: 5000px) {
+        .mobileSearch {
+            display: none;
+        }
+    }
+    @media only screen and (min-width: 0px) and (max-width: 899px) {
+        .mobileSearch {
+            display: block;
+            & .form-control {
+                 border:1px solid #3661a6;
+            }
+            & input:placeholder-shown {
+            text-overflow: ellipsis;
+            }
+        }
+        .desktopSearch {
+            display: none;
+        }
+    }   
+
+.pad50 {
+    padding: 50px 1.5rem;
+}
+.btnsec {
+  display: flex;
+  align-items: center;
+  column-gap: 10px;
+  & img {
+    width: 160px;
+  }
+}
+.img-custom {
+    max-width: 100%;
+    height: 100%;
+    @media screen and (max-width: 991px) { 
+        display: none;
+    }
+}
+::ng-deep {
+.input-box {
+    & input {
+    border:1px solid #3661a6 !important;
+    }
+}
+}
+.textline {
+    h1{
+    font-size: 1.3rem !important;
+    font-weight: 600 !important;
+    @media screen and (max-width: 768px) { 
+    font-size: 1rem !important;
+    }
+    }
+    
+}

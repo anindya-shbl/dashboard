@@ -1,0 +1,26 @@
+<ng-container>
+    <div *ngIf="ctgryList.length > 0" class="p-3">
+        <div class="article-heading mb-4">All Categories</div>
+        <div class="ctgr-grid">            
+            <ng-container *ngFor="let item of ctgryList">
+                <div class="border rounded item-shadow">
+                    <div class="ct-name hvr" (click)="seturl(item.ActionUrl)">
+                        <a class="text-decoration-none text-dark-emphasis" >{{item.CategoryName}}</a>
+                    </div>
+                    <div class="cat-img">
+                        <img src="https://asset.sastasundar.com/incom/images/category/web_all_category/{{item.WebAllCategoryImage}}"
+                            alt="">
+                    </div>
+                    <div *ngIf="item.subcategory_data.length > 0" class="p-3 mt-3">
+                        <ng-container *ngFor="let sbct of item.subcategory_data">
+                            <div class="mb-2 d-flex hvr" (click)="seturl(sbct.ActionUrl)">
+                                <span class="me-2 pt-1" style="font-size: 10px;"><i class="fa-solid fa-caret-right"></i></span>
+                                <span>{{sbct.CategoryName}}</span>
+                            </div>
+                        </ng-container>
+                    </div>
+                </div>
+            </ng-container>
+        </div>
+    </div>
+</ng-container>

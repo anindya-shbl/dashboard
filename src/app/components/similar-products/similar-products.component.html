@@ -1,0 +1,147 @@
+<!-- <div *ngIf="searchList.length > 0" class="p-3">
+    <div class="d-flex justify-content-between mb-3">
+        <span class="fs-20 fw-7">Similar Products</span>
+    </div>
+    <owl-carousel-o [options]="customOptions">
+        <ng-container *ngFor="let item of searchList">
+            <ng-template carouselSlide [id]="item.ProductId">
+                <div class="p-2 ">
+                    <div class="rounded position-relative item-shadow p-3">
+                        <div *ngIf="item.DiscountPercent > 0" class="ofr-price">
+                            {{item.DiscountPercent}}% &nbsp;Off
+                        </div>
+                        <div class="hg-prd hvr"
+                            (click)="selectSimilar(item)">
+
+                            <div class="tst-img py-3">
+                                <div *ngIf="item.PrescriptionOTC == 'P'" class="rx-icon">&#8478;</div>
+                                <ng-container *ngIf="item.ProductImage != '' && item.ProductImage != null">
+                                    <img src="https://asset.sastasundar.com/incom/images/product/thumb/{{item.ProductImage}}"
+                                        alt >
+                                </ng-container>
+                                <ng-container *ngIf="item.ProductImage == '' || item.ProductImage == null">
+                                    <img *ngIf="item.PrescriptionOTC == 'P' || item.PrescriptionOTC == 'M'"
+                                        src="https://asset.sastasundar.com/incom/images/product/thumb/Med.svg" alt=""
+                                        >
+                                    <img *ngIf="item.PrescriptionOTC == 'O'"
+                                        src="https://asset.sastasundar.com/incom/images/product/thumb/Household.svg"
+                                        alt="" >
+                                </ng-container>
+                            </div>
+                            <div class="fw-5 text-center line-clamp-2 mb-2">{{item.DisplayName}}</div>
+                        </div>
+                        <div class="d-flex w-100 justify-content-between">
+                            <div class="w-100 hvr">
+                                <ng-container *ngIf="item.IsOutOfStock == 'N'">
+                                    <div class="me-2 fw-5 fs-5" *ngIf="item.OfferPrice > 0">
+                                        {{item.OfferPrice | currency: 'INR'}}
+                                    </div>
+                                    <div class="me-2 text-decoration-line-through text-secondary" *ngIf="item.MRP > item.OfferPrice">
+                                        {{item.MRP | currency: 'INR'}}
+                                    </div>
+                                </ng-container>
+                                <ng-container *ngIf="item.IsOutOfStock == 'Y'">
+                                    <div class="text-secondary mb-1">Out Of Stock</div>
+                                </ng-container>
+                            </div>
+                            <div class="ms-3">
+                                <ng-container *ngIf="item.IsOutOfStock == 'N'">
+                                    <div *ngIf="item.addedQty == 0" class="action-btn  hvr"
+                                        (click)="addToCart(item, 1);">
+                                        <span class="action-btn addbutton-color">ADD</span>
+                                    </div>
+                                    <div *ngIf="item.addedQty > 0" class="action-btn action-add">
+                                        <span class="item-action" (click)="cartAddMinus(item)">&#8722;</span>
+                                        <span class="item-text">{{item.addedQty}}</span>
+                                        <span class="item-action" (click)="cartAddPlus(item)">&#43;</span>
+                                    </div>
+                                </ng-container>
+
+                                <ng-container *ngIf="item.IsOutOfStock == 'Y'">
+                                    <div class="notify-btn  hvr" (click)="requestNotify(item)">
+                                        <span class="fw-5">Notify</span>
+                                    </div>
+                                </ng-container>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </ng-template>
+        </ng-container>
+    </owl-carousel-o>
+</div> -->
+
+<div *ngIf="searchList.length > 0" class="border rounded item-shadow fxd-top">
+    <div class="border-bottom p-3">
+        <span class="fs-8 fw-6">Similar Products</span>
+    </div>
+    <div class="sclr-div">
+        <ng-container *ngFor="let item of searchList">
+            <div class="border-bottom p-3">
+
+                <div class="d-flex">
+                    <div class=" position-relative me-3 hvr" (click)="selectSimilar(item)">
+                        <div class="smlr-img border rounded">
+                            <div *ngIf="item.PrescriptionOTC == 'P'" class="rx-icn">&#8478;</div>
+                            <ng-container *ngIf="item.ProductImage != '' && item.ProductImage != null">
+                                <img src="https://asset.sastasundar.com/incom/images/product/thumb/{{item.ProductImage}}"
+                                    alt>
+                            </ng-container>
+                            <ng-container *ngIf="item.ProductImage == '' || item.ProductImage == null">
+                                <img *ngIf="item.PrescriptionOTC == 'P' || item.PrescriptionOTC == 'M'"
+                                    src="https://asset.sastasundar.com/incom/images/product/thumb/Med.svg" alt="">
+                                <img *ngIf="item.PrescriptionOTC == 'O'"
+                                    src="https://asset.sastasundar.com/incom/images/product/thumb/Household.svg" alt="">
+                            </ng-container>
+                        </div>
+                    </div>
+                    <div class="w-100">
+                        <div class="line-clamp-2 mb-3 hvr" (click)="selectSimilar(item)">{{item.DisplayName}}</div>
+                        <div class="d-flex w-100 justify-content-between">
+                            <div class="w-100 hvr">
+                                <ng-container *ngIf="item.IsOutOfStock == 'N'">
+                                    <div class="me-2 fw-5 fs-5" *ngIf="item.OfferPrice > 0">
+                                        {{item.OfferPrice | currency: 'INR'}}
+                                    </div>
+                                    <div class="d-flex">
+                                        <div class="me-2 text-decoration-line-through text-secondary"
+                                            *ngIf="item.MRP > item.OfferPrice">
+                                            {{item.MRP | currency: 'INR'}}
+                                        </div>
+                                        <div *ngIf="item.DiscountPercent > 0" class="" style="color: #f46a12;">
+                                            {{item.DiscountPercent}}% Off
+                                        </div>
+                                    </div>
+                                </ng-container>
+                                <ng-container *ngIf="item.IsOutOfStock == 'Y'">
+                                    <div class="text-secondary mb-1">Out Of Stock</div>
+                                </ng-container>
+                            </div>
+                            <div class="ms-3">
+                                <ng-container *ngIf="item.IsOutOfStock == 'N'">
+                                    <div *ngIf="item.addedQty == 0" class="action-btn  hvr"
+                                        (click)="addToCart(item, 1);">
+                                        <span class="action-btn addbutton-color">ADD</span>
+                                    </div>
+                                    <div *ngIf="item.addedQty > 0" class="action-btn action-add">
+                                        <span class="item-action" (click)="cartAddMinus(item)">&#8722;</span>
+                                        <span class="item-text">{{item.addedQty}}</span>
+                                        <span class="item-action" (click)="cartAddPlus(item)">&#43;</span>
+                                    </div>
+                                </ng-container>
+
+                                <ng-container *ngIf="item.IsOutOfStock == 'Y'">
+                                    <div class="notify-btn  hvr" (click)="requestNotify(item)">
+                                        <span class="fw-5">Notify</span>
+                                    </div>
+                                </ng-container>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </ng-container>
+    </div>
+</div>

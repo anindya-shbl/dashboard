@@ -1,0 +1,16 @@
+<div *ngIf="filteredArr.length > 0" class="mb-5">
+    <div class="fs-20 fw-7 mb-2">Popoular Health Packages</div>
+    <div class="">
+        <owl-carousel-o [options]="customOptions">
+            <ng-container *ngFor="let item of filteredArr">
+                <ng-template carouselSlide [id]="item.id">
+                    <div class="p-2">
+                        <div class="rounded item-shadow hvr mx-320" (click)="viewPckgDtls(item.PermalinkNew)">
+                            <img [src]="item.PkgAppServiceImage" alt="" class="rounded">
+                        </div>
+                    </div>
+                </ng-template>
+            </ng-container>
+        </owl-carousel-o>
+    </div>
+</div>

@@ -1,0 +1,235 @@
+<div class="commonngwhite">
+
+    <div class="p-3 pb-1 mb-1"><app-route-path></app-route-path></div>
+    <div class="commonHeadertitleSec border-bottom p-3 pt-0 mt-0 mb-0" style="display: flex; align-items: center; justify-content: space-between;">
+        <div class="custNameSec">
+            <strong>Manage Family Members</strong>
+        </div>
+
+        <button class="btnSubmitOutline" type="button" data-bs-toggle="modal" data-bs-target="#ReceipentModal" (click)="addPatientWebEngage()">Add New Member</button>
+    </div>
+
+
+
+    <div class="p-3 w-100 bg-white">
+        
+        
+       
+            <div class="fs-6 fw-6 mb-3">All Members ({{familyMemberList.length}})</div>
+            <div *ngIf="!isloading && familyMemberList.length > 0" class="grid-view">
+                <ng-container *ngFor="let member of familyMemberList">
+                    <div class="border rounded bx-shdw p-3 mb-2">
+                        <div class="">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div class="fw-6" style="color: #344054; font-weight: 600; font-size: 16px; line-height: 28px;">{{member.Name}} &nbsp; <span *ngIf="member.IsMobileVerified == 1"><i class="icon-lab_check_round text-success"></i></span></div>
+                                <div class="btnSec" style="justify-content: flex-start;">
+                                    <div *ngIf="member.IsMobileVerified != 1 && member.MobileNo != null && member.MobileNo != ''" class="hvr btnsubmit" style="font-size: 11px; padding-left: 10px; padding-right: 10px; white-space: nowrap; " (click)="getFmOTP(member)">Verify Contact</div>
+                                                  
+                                    <button type="button" class="btnsubmit btnSubmitLink" (click)="editMember(member.MyFamilyId)" data-bs-toggle="modal" data-bs-target="#ReceipentModal" title="Edit"><i class=" icon-edit"></i></button>
+                                    <button type="button" class="btnsubmit delete btnRemovetLink" data-bs-toggle="modal" data-bs-target="#deleteModal" (click)="setDeleteModal(member)" title="Delete"><i class="icon-delete"></i></button>
+                                </div>
+                                
+                            </div>
+                        </div>
+                        <div class="pb-3 pt-2" style="display: flex; align-items: center; justify-content: flex-start; column-gap: 12px; color: #667085; font-size: 14px; line-height: 20px; font-weight: 400;">
+
+                           <div style="background-color: #FDF8F6; color: #E9640D; font-weight: 600; padding: 2px 6px;">{{member.Relationship}}</div>
+                           <div>
+                            <span *ngIf="member.Gender == 'M'">Male</span>
+                            <span *ngIf="member.Gender == 'F'">Female</span>
+                            <span *ngIf="member.Gender == 'O'">Others</span>
+                            </div>
+                            <span>{{member.Age}}</span>
+                            <span>{{member.MobileNo}}</span>
+
+
+                        </div>
+                        <!-- <div class="p-3" style="min-height: 144px;">
+                            <div class="d-flex mb-2">
+                                <span style="min-width: 100px;">Relationship</span>
+                                <span class="text-success fw-5">: &nbsp;{{member.Relationship}}</span>
+                            </div>
+                            <div class="d-flex mb-2">
+                                <span style="min-width: 100px;">Gender</span>
+                                <span class="fw-5" *ngIf="member.Gender == 'M'">: &nbsp; Male</span>
+                                <span class="fw-5" *ngIf="member.Gender == 'F'">: &nbsp; Female</span>
+                                <span class="fw-5" *ngIf="member.Gender == 'O'">: &nbsp; Others</span>
+                            </div>
+                            <div class="d-flex mb-2">
+                                <span style="min-width: 100px;">Age</span>
+                                <span class="fw-5">: &nbsp; {{member.Age}} <span class="fs-4">&nbsp;yrs.</span></span>
+                            </div>
+                            <div *ngIf="member.MobileNo != null" class="d-flex mb-1">
+                                <span style="min-width: 100px;">Contact</span>
+                                <span class="fw-5">: &nbsp; {{member.MobileNo}}</span>
+                            </div>
+                        </div> -->
+                                               
+                        
+                    </div>
+                </ng-container>
+            </div>
+            <ng-container *ngIf="!isloading && familyMemberList.length == 0">
+                <div class="notfoundbox mt-3">
+                    <ng-container >
+                        <!-- <i class="fa fa-frown-o mb-3" style="font-size:48px; color:#4775d1"></i> -->
+                        <div class="fw-5">No Record Found...</div>
+                    </ng-container>
+                </div>
+            </ng-container>
+    
+    </div>
+</div>
+
+
+<div class="modal fade" id="ReceipentModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="ReceipentModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h6 *ngIf="actionType == 'add'" class="modal-title mb-0" id="ReceipentModalLabel">Add Receipent</h6>
+          <h6 *ngIf="actionType == 'edit'" class="modal-title mb-0" id="ReceipentModalLabel">Edit Receipent</h6>
+          <!-- <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" (click)="onReset()"></button> -->
+        </div>
+        <div class="modal-body">
+            <form class="family-form" [formGroup]="RecepentForm" (ngSubmit)="onSubmit()">
+
+                <div class="ac-grid mb-2">
+                    <div class="mb-3">
+                        <label for="Name" class="form-label">Name<span class="text-danger"> *</span></label>
+                        <input type="text" class="form-control" id="Name" formControlName="Name" (keypress)="alphaOnly($event)">
+                        <div *ngIf="submitted && f['Name'].errors" class="error-text">
+                            <div *ngIf="f['Name'].errors['required']">* Name is required</div>
+                        </div>                    
+                    </div>
+    
+                    <div class="mb-3">
+                        <label for="Relationship" class="form-label">Relationship <span class="text-danger"> *</span></label>
+                        <select id="Relationship" class="form-select" formControlName="Relationship">
+                            <option value="">Select Relationship</option>
+                            <option value="Self">Self</option>
+                            <option value="Parent">Parent</option>
+                            <option value="Spouse">Spouse</option>
+                            <option value="Sibling">Sibling</option>
+                            <option value="Chidren">Chidren</option>
+                            <option value="Friend">Friend</option>
+                            <option value="Relative">Relative</option>
+                            <option value="Other">Other</option>
+                        </select>
+                        <div *ngIf="submitted && f['Relationship'].errors" class="error-text">
+                            <div *ngIf="f['Relationship'].errors['required']">* Relationship is required</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="ac-grid mb-2">
+                    <div class="mb-3">
+                        <label for="Gender" class="form-label">Gender <span class="text-danger"> *</span></label>
+                        <select id="Gender" class="form-select" formControlName="Gender">
+                            <option value="">Select Gender</option>
+                            <option value="M">Male</option>
+                            <option value="F">Female</option>
+                            <option value="O">Others</option>
+                        </select>
+                        <div *ngIf="submitted && f['Gender'].errors" class="error-text">
+                            <div *ngIf="f['Gender'].errors['required']">* Gender is required</div>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="Dob" class="form-label">Date of Birth <span class="text-danger"> *</span></label>
+                        <input type="date" class="form-control" id="Dob" formControlName="BirthDay" [max]="maxdate" onkeydown="return false">
+                        <div *ngIf="submitted && f['BirthDay'].errors" class="error-text">
+                            <div *ngIf="f['BirthDay'].errors['required']">* Date of Birth is required</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="ac-grid mb-2">
+                    <div class="mb-3">
+                        <label for="MobileNo" class="form-label">Mobile No <span class="text-danger"> *</span></label>
+                        <input type="phone" class="form-control" id="MobileNo" formControlName="MobileNo" maxlength="10" pattern="[5-9]{1}[0-9]{9}" (keypress)="numCheck($event)">
+                        <div *ngIf="submitted && f['MobileNo'].errors" class="error-text">
+                            <div *ngIf="f['MobileNo'].errors['required']">* Mobile No Required</div>
+                        </div>
+                        <div *ngIf="submitted && f['MobileNo'].errors" class="error-text">
+                            <div *ngIf="f['MobileNo'].errors['pattern']">*Invalid mobile no</div>
+                        </div>
+                    </div>
+    
+                    <div class="mb-3">
+                        <label for="Email" class="form-label">Email Address</label>
+                        <input type="email" class="form-control" id="Email" formControlName="Email" pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}">
+                        <div *ngIf="submitted && f['Email'].errors" class="error-text">
+                            <div *ngIf="f['Email'].errors['pattern']">*Invalid email id</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="btnSec">
+                        <button class="btnCancel" type="button" #closebutton data-bs-dismiss="modal" aria-label="Close"  (click)="onReset()">Cancel</button>                        
+                        <button *ngIf="actionType == 'add'" type="submit" class="btnSubmit" >Add Member</button>
+                        <button *ngIf="actionType == 'edit'" type="submit" class="btnSubmit" >Submit</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+      </div>
+    </div>
+</div>
+
+<div class="modal fade" id="deleteModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h6 class="modal-title mb-0" id="deleteModalLabel">Do you want to delete {{deleteMember.Name}}?</h6>
+          <!-- <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" (click)="onReset()"></button> -->
+        </div>
+        <div class="modal-body">
+            <!-- <div class="mb-3 fw-6 fs-6">Do you want to delete {{deleteMember.Name}}?</div> -->
+            <div class="btnSec">
+                <button class="btnCancel" type="button" data-bs-dismiss="modal" (click)="onReset()">Cancel</button>                        
+                <button type="submit" class="btnSubmit" data-bs-dismiss="modal" (click)="removeReceipent(deleteMember.MyFamilyId)">Submit</button>
+            </div>
+        </div>
+      </div>
+    </div>
+</div>
+
+<button #otpModal data-bs-toggle="modal" data-bs-target="#otpModal" class="d-none"></button>
+<div *ngIf="selectedMember.length > 0" class="modal fade" id="otpModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="otpModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <div class="fw-6 mb-0" id="otpModalLabel">Enter your Verification Code</div>
+          <button #closeotpModal type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" (click)="skipOTP()"></button>
+        </div>
+        <div class="modal-body">
+            <form (ngSubmit)="submitOTP()" [formGroup]="otpForm">
+                <div class="mb-3">Verification Code sent to {{selectedMember[0].MobileNo}}</div>
+                <div class="d-flex justify-content-between mb-3">
+                    <div class="form-group" *ngFor="let input of formInput;  index as i">
+                        <input #formRow type="text" formControlName="{{input}}" class="form-control fmOtp" maxlength="1"
+                            (keyup)="keyUpEvent($event, i)">
+                    </div>
+                </div>
+                <div class="btnSec">
+                    <button type="submit" class="btnSubmit" [disabled]="!otpForm.valid">Submit</button>
+                </div>
+            </form>          
+        </div>
+      </div>
+    </div>
+</div>
+
+<button #familyModalbtn data-bs-toggle="modal" data-bs-target="#familyModal" class="d-none"></button>
+<div class="modal fade" id="familyModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="familyModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-body">            
+            <div class="d-flex w-100 my-3 fw-5">{{respMsg}}</div>
+            <div class="btnSec">
+                <button type="button" class="btnSubmit" data-bs-dismiss="modal" aria-label="Close" (click)="onReset()">Ok</button>
+            </div>
+        </div>
+      </div>
+    </div>
+</div>

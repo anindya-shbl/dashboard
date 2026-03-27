@@ -1,0 +1,25 @@
+.ac-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    grid-gap: 1rem;
+}
+
+.buyagnImg {
+    width: 150px;
+    height: 150px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: auto;
+}
+.text-orange {
+    color: #e9640d;
+  }
+  .rxblock {
+    position: absolute;
+    top: 0px;
+    right: 5px;
+    z-index: 1;
+    color: #EC4A0A;
+    font-size: 16px;
+  }

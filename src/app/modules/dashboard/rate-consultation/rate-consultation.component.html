@@ -1,0 +1,30 @@
+
+<div class="rating-container">
+    <div class="text-center">How was your Consultation with <span class="fs-5 fw-6">Dr. {{consultant}}</span> </div>
+
+    <div class="stars">
+        <i *ngFor="let star of [1,2,3,4,5]" class="fa" [ngClass]="star <= rating ? 'fa-star checked' : 'fa-star'"
+            (click)="setRating(star)">
+        </i>
+    </div>
+
+    <div class="text-center fs-5 fw-6">What went well ?</div>
+    <div class="mb-3 text-center">Optional (Select all that apply)</div>
+
+    <div class="options">
+        <!-- <label *ngFor="let item of feedbackOptions">
+            <input type="checkbox" [checked]="RatingData[item.key] == 1" (change)="toggleOption(item.key)" />
+            {{ item.label }}
+        </label> -->
+        <ng-container *ngFor="let item of feedbackOptions">
+            <div class="active" [ngClass]="RatingData[item.key] == 1?'':'inactive'" (click)="toggleOption(item.key)">{{ item.label }}</div>
+        </ng-container>
+    </div>
+
+    <div>
+        <div class="fs-5 fw-5">Additional Comments</div>
+        <div><textarea [(ngModel)]="comment" placeholder="Write your feedback..." class="comment-box"></textarea></div>
+    </div>
+
+    <button (click)="submit()" class="submit-btn">Submit Feedback</button>
+</div>

@@ -1,0 +1,145 @@
+<div *ngIf="!isLoading" class="mx-auto p-3" style="max-width: 1200px;">
+    <div class="mb-4 mt-1">
+        <span><a href={{CommonService.baseurl}}>Home</a></span>
+        <span><a routerLink='/jito-generics'> &nbsp; > &nbsp; Jito Generics</a></span>
+    </div>
+
+    <div *ngIf="finalList.length > 0" class="">
+        <ng-container *ngFor="let item of finalList">
+            <div class="gen-blck bx-shdw border rounded mb-3 bg-white p-3">
+                <div *ngIf="item.ProductImage != '' && item.ProductImage != null" class="p-3">
+                    <img class="p-img" src="https://asset.sastasundar.com/incom/images/product/thumb/{{item.maimPrd.ProductImage}}" alt="">
+                </div>
+                <div *ngIf="item.ProductImage == '' || item.ProductImage == null" class="p-3">
+                    <img class="p-img" *ngIf="item.maimPrd.PrescriptionOTC == 'P' || item.maimPrd.PrescriptionOTC == 'M'" src="https://asset.sastasundar.com/incom/images/product/thumb/Med.svg" alt="">
+                    <img class="p-img" *ngIf="item.maimPrd.PrescriptionOTC == 'O'" src="https://asset.sastasundar.com/incom/images/product/thumb/Household.svg" alt="">
+                </div>
+                <div class="p-3 ">
+                    <div class="mb-2 fw-6 fs-6" (click)="CommonService.getProductDetailsPageURL(item.maimPrd.ProductId, item.maimPrd.DisplayName, item.maimPrd.PrescriptionOTC)">
+                        {{item.maimPrd.DisplayName}}
+                    </div>
+                    <div class="row g-0">
+                        <div class="col-md-8">
+                            <div class="mb-1 text-secondary fs-3">
+                                {{item.maimPrd.MfgGroup}}
+                            </div>
+                            <div class="mb-1 text-secondary fs-3">
+                                STRIP of 10 Capsule
+                            </div>                            
+                            <div class="mb-3 text-secondary fs-3">
+                                Exp Dt. <b>{{item.maimPrd.ExpiryDate | date : "dd MMM yyyy"}}</b>
+                            </div>
+                            <div class="">
+                                <span class="pe-3 fw-5 fs-5">{{item.maimPrd.CustOfferPrice | currency : "INR"}}</span>
+                                <span class="text-secondary fs-3">{{item.maimPrd.pricePerUnit | currency: 'INR'}}/Unit</span>
+                            </div>
+                        </div>
+                        <div *ngIf="item.maimPrd.addedQty == 0" class="col-md-4">
+                            <button class="action-btn mt-2" type="button" (click)="addToLocalCart(item.maimPrd, 1);">ADD</button>
+                        </div>
+                        <div *ngIf="item.maimPrd.addedQty > 0" class="col-md-4">
+                            <div class="action-btn action-add mt-2">
+                                <span class="item-action" (click)="cartAddMinus(item.maimPrd)"><i>-</i></span>
+                                <span class="item-text">{{ item.maimPrd.addedQty }}</span>
+                                <span class="item-action" (click)="cartAddPlus(item.maimPrd)"><i>+</i></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="px-3 py-2 bg-secondary-subtle d-flex justify-content-between align-items-center">
+                <div>MEDICINE COMPARISION</div>                
+                <div class="pricetag">save <strong>{{item.maimPrd.savingsPercent}}%</strong> more</div>
+            </div>
+            <div class="comp-cont bg-white">
+                <div class="text-center">
+                    <!-- <div class="p-3 bx-shdw bg-secondary-subtle text-secondary-emphasis fw-5 fs-5">
+                        You Searched
+                    </div> -->
+                    <div class="p-3 bx-shdw mb-2 hvr" (click)="CommonService.getProductDetailsPageURL(item.ProductId, item.DisplayName, item.PrescriptionOTC)">
+                        <ng-container *ngIf="item.ProductImage != '' && item.ProductImage != null">
+                            <img class="p-img" src="https://asset.sastasundar.com/incom/images/product/thumb/{{item.ProductImage}}"  alt="">
+                        </ng-container>
+                        <ng-container *ngIf="item.ProductImage == '' || item.ProductImage == null">
+                            <img class="p-img" *ngIf="item.PrescriptionOTC == 'P' || item.PrescriptionOTC == 'M'" src="https://asset.sastasundar.com/incom/images/product/thumb/Med.svg" alt="">
+                            <img class="p-img" *ngIf="item.PrescriptionOTC == 'O'" src="https://asset.sastasundar.com/incom/images/product/thumb/Household.svg" alt="">
+                        </ng-container>
+                    </div>
+                    <div class="p-3 bx-shdw bg-mp mb-2 fs-5 fw-5 hvr" (click)="CommonService.getProductDetailsPageURL(item.ProductId, item.DisplayName, item.PrescriptionOTC)">
+                        <span class="line-clamp-1">{{item.DisplayName}}</span>
+                    </div>
+                    <div class="p-3 bx-shdw bg-mp mb-2">
+                        {{item.pricePerUnit | currency: 'INR'}}/Unit
+                    </div>
+                    <div class="p-3 bx-shdw bg-mp mb-2">
+                        {{item.maimPrd.Unit1}} of {{item.Size}} {{item.maimPrd.Unit}}
+                    </div>
+                    <div class="p-3 bx-shdw bg-mp mb-2">
+                        <span class="line-clamp-1">{{item.MfgGroup}}</span>
+                    </div>
+                    <div class="p-3 bx-shdw bg-mp mb-2">
+                        <span class="line-clamp-2">{{item.maimPrd.Salts['Name']}}</span>
+                    </div>
+
+                </div>
+                <div *ngIf="mediCompText.length > 0" class="border bx-shdw text-center p-3">
+                    <div class="mb-3">
+                        <div class="">
+                            <img src="https://asset.sastasundar.com/incom/jito-health/assets/Images/100-match.png" alt="">
+                        </div>
+                        <div class="pt-2 fs-2 text-secondary">Exact Salt Composition</div>
+                    </div>
+                    <!-- <div class="mb-3">
+                        <div class="pricetag">Save <strong>{{item.maimPrd.savingsPercent}}%</strong> more</div>
+                        <div class="pt-2 fs-2 text-secondary">With Jito Alternative</div>
+                    </div> -->
+                    <ng-container *ngTemplateOutlet="myTemplate"></ng-container>
+                </div>
+                <div class="text-center">
+                    <!-- <div class="p-3 bx-shdw bg-success-subtle text-success-emphasis fw-5 fs-5">
+                        Jito Recommended
+                    </div> -->
+                    <div class="p-3 bx-shdw mb-2 hvr" (click)="CommonService.getProductDetailsPageURL(item.maimPrd.PreferredProductId, item.maimPrd.DisplayName, item.PrescriptionOTC)">
+                        <ng-container *ngIf="item.maimPrd.ProductImage != '' && item.maimPrd.ProductImage != null">
+                            <img class="p-img" src="https://asset.sastasundar.com/incom/images/product/thumb/{{item.maimPrd.ProductImage}}" alt="">
+                        </ng-container>
+                        <ng-container *ngIf="item.maimPrd.ProductImage == '' || item.maimPrd.ProductImage == null">
+                            <img class="p-img" *ngIf="item.maimPrd.PrescriptionOTC == 'P' || item.maimPrd.PrescriptionOTC == 'M'" src="https://asset.sastasundar.com/incom/images/product/thumb/Med.svg" alt="">
+                            <img class="p-img" *ngIf="item.maimPrd.PrescriptionOTC == 'O'" src="https://asset.sastasundar.com/incom/images/product/thumb/Household.svg" alt="">
+                        </ng-container>
+                    </div>
+                    <div class="p-3 bx-shdw mb-2 bg-jtp fs-5 fw-5 hvr" (click)="CommonService.getProductDetailsPageURL(item.maimPrd.PreferredProductId, item.maimPrds.DisplayName, item.PrescriptionOTC)">
+                        <span class="line-clamp-1">{{item.maimPrd.DisplayName}}</span>
+                    </div>
+                    <div class="p-3 bx-shdw mb-2 bg-jtp">
+                        {{item.maimPrd.pricePerUnit | currency: 'INR'}}/Unit
+                    </div>
+                    <div class="p-3 bx-shdw mb-2 bg-jtp">
+                        {{item.maimPrd.Unit1}} of {{item.maimPrd.Size}} {{item.maimPrd.Unit}}
+                    </div>
+                    <div class="p-3 bx-shdw mb-2 bg-jtp">
+                        <span class="line-clamp-1">{{item.maimPrd.MfgGroup}}</span>
+                    </div>
+                    <div class="p-3 bx-shdw mb-2 bg-jtp">
+                        <span class="line-clamp-2">{{item.maimPrd.Salts['Name']}}</span>
+                    </div>
+                </div>
+            </div>
+        </ng-container>
+    </div>
+</div>
+
+<ng-template #myTemplate>
+    <div class="mb-3">
+        <div class=""><img [src]="mediCompText[0].imageUrl" alt=""></div>
+        <div class="pt-2 fs-2 text-secondary">{{mediCompText[0].title}}</div>
+    </div>
+    <div class="mb-3">
+        <div class=""><img [src]="mediCompText[1].imageUrl" alt=""></div>
+        <div class="pt-2 fs-2 text-secondary">{{mediCompText[1].title}}</div>
+    </div>
+    <div class="">
+        <div class=""><img [src]="mediCompText[2].imageUrl" alt=""></div>
+        <div class="pt-2 fs-2 text-secondary">{{mediCompText[2].title}}</div>
+    </div>
+</ng-template>

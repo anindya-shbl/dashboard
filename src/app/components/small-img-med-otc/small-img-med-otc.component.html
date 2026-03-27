@@ -1,0 +1,44 @@
+<div *ngIf="prodImages.length > 0" class="border rounded item-shadow p-4 fxd-top">
+  <div *ngIf="veganType != null && veganType != '' && veganType != undefined"
+        class="vegan">
+        <div *ngIf="veganType == 'Veg'">
+            <img src="https://asset.sastasundar.com/incom/incom_images/veg.png" alt="">
+        </div>
+        <div *ngIf="veganType == 'Non-Veg'">
+            <img src="https://asset.sastasundar.com/incom/incom_images/non-veg.png" alt="">
+        </div>
+    </div>
+  <div class="d-flex w-100">
+
+    <div class="position-relative me-3">
+      
+      <!-- Up arrow -->
+      <div *ngIf="currentIndex > 0" class="arow-cont-top hvr" (click)="scrollUp()">
+        <i class="fa-solid fa-angle-up"></i>
+      </div>
+
+      <!-- Thumbnail container -->
+      <div #widgetsContent class="img-smallCont">
+        <ng-container *ngFor="let img of prodImages">
+          <img
+            (click)="setImg(img.DisplaySeq)"
+            [src]="img.ProductBigImageUrl"
+            [ngClass]="showImg.DisplaySeq == img.DisplaySeq ? 'border-primary' : ''"
+            alt=""
+          />
+        </ng-container>
+      </div>
+
+      <!-- Down arrow -->
+      <div *ngIf="currentIndex < prodImages.length - 4" class="arow-cont-btm hvr" (click)="scrollDown()">
+        <i class="fa-solid fa-angle-down"></i>
+      </div>
+    </div>
+
+    <!-- Large Display Image -->
+    <div class="display-img w-100" (mousemove)="onMouseMove($event)" (mouseleave)="onMouseLeave()">
+      <img #zoomImg [src]="showImg.ProductBigImageUrl" alt="">
+    </div>
+
+  </div>
+</div>

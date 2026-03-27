@@ -1,0 +1,79 @@
+<!-- <div *ngIf="trendingData.length > 0" class="">
+    <ng-container *ngFor="let trnd of trendingData">
+        <div class="d-flex justify-content-between mb-3 hvr" (click)="viewArtical(trnd.Permalink)">
+            <div class="pe-3">
+                <div class="fw-5 line-clamp-2 mb-3">{{trnd.Content.Title}}</div>
+                <div class="text-secondary">In {{trnd.CategoryName}}</div>
+                <div class="text-secondary">
+                    <span class="pe-3">
+                        <span *ngIf="!trnd.IsLiked" (click)="likeArticle(trnd)" class="hvr"><i class="fa-regular fa-heart"></i></span>
+                        <span *ngIf="trnd.IsLiked" (click)="likeArticle(trnd)" class="hvr"><i class="fa-solid fa-heart text-danger"></i></span>
+                        {{trnd.LikeCount}}
+                    </span>
+                    <span class="pe-3">
+                        <span class="hvr"><i class="fa-regular fa-eye"></i></span>
+                        {{trnd.Viewcount}}
+                    </span>
+                    <span class="pe-3 hvr">
+                        <span *ngIf="!trnd.IsBookmarked" (click)="bookmarkArticle(trnd)"><i class="fa-regular fa-bookmark"></i></span>
+                        <span *ngIf="trnd.IsBookmarked" (click)="bookmarkArticle(trnd)"><i class="fa-solid fa-bookmark text-success"></i></span>
+                    </span>
+                </div>
+            </div>
+            <div class="trnd-img">
+                <img [src]="trnd.HomePageSmallBanner" alt="" width="100%" class="rounded">
+            </div>
+        </div>
+    </ng-container>
+    <div routerLink="trending" class="mb-3 fw-5 hvr text-primary">View All Trending Articles</div>
+</div> -->
+
+
+<ng-container *ngIf="trendingData.length > 0">
+    <div class="fw-7 p-3 text-center" style="font-size: 22px;">
+        <span class="me-3" style="color: orangered;"><i class="fa-solid fa-arrow-trend-up"></i></span>
+        <span>Trending Health Articles</span> 
+    </div>
+    <div class="p-2">
+        <owl-carousel-o [options]="customOptions">
+        <ng-container *ngFor="let trnd of trendingData">
+            <ng-template carouselSlide [id]="trnd.id">
+                <div class="p-2">
+                    <div class="border rounded bg-white position-relative">
+                        <div class="tag" [style.background-color]="trnd.ColorCode">{{trnd.CategoryName}}</div>
+                        <div (click)="viewArtical(trnd.Permalink)" class="hvr">
+                            <div class="">
+                                <!-- <img [src]="trnd.HomePageSmallBanner" alt="" class="img-fluid rounded-top"> -->
+                                <img [src]="trnd.Content.Thumbnail" alt="" class="img-fluid rounded-top">
+                            </div>
+                            <div class="p-3">
+                                <div class="mb-3 fs-5 fw-6 line-clamp-2" style="height: 44px;">{{trnd.Content.Title}}</div>
+                                <div class="d-flex justify-content-between align-items-center text-secondary">
+                                    <div class="fs-3">
+                                        <span class="pe-3">{{trnd.UpdatedDate | date : "MMM yy"}}</span>
+                                    </div>
+                                    <div class="fs-3">
+                                        <span class="pe-3">
+                                            <span *ngIf="!trnd.IsLiked" class=""><i class="fa-regular fa-heart"></i></span>
+                                            <span *ngIf="trnd.IsLiked" class=""><i class="fa-solid fa-heart text-danger"></i></span>
+                                            {{trnd.LikeCount}}
+                                        </span>
+                                        <span class="pe-3">
+                                            <span class="hvr"><i class="fa-regular fa-eye fs-7"></i></span>
+                                            {{trnd.Viewcount}}
+                                        </span>
+                                        <span class="hvr">
+                                            <span *ngIf="!trnd.IsBookmarked"><i class="fa-regular fa-bookmark"></i></span>
+                                            <span *ngIf="trnd.IsBookmarked"><i class="fa-solid fa-bookmark text-success"></i></span>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </ng-template>
+        </ng-container>
+    </owl-carousel-o>
+    </div>
+</ng-container>

@@ -1,0 +1,84 @@
+<div class="px-3 pt-3">
+    <app-article-path></app-article-path>
+</div>
+<div *ngIf="!isloading" class="p-3">
+    <div class="article-heading mb-4">Bookmarked Articles</div>
+    <ng-container *ngIf="bookMarkData.length>0">
+        <div class="load-more-cont">
+            <div class="bkmrk-grid">
+                <ng-container *ngFor="let bmd of bookMarkData">
+                    <div class="border rounded bg-white bx-shdw position-relative">
+                        <div class="rmv">
+                            <span class="hvr" (click)="un_bookmarkArticle(bmd)"><i class="fa-solid fa-xmark"></i></span>
+                        </div>
+                        <div class="tag" [style.background-color]="bmd.ColorCode">{{bmd.CategoryName}}</div>
+                        <div class="hvr" (click)="viewArtical(bmd.Permalink)">
+                            <div class="bkimg-cont hvr mb-3">
+                                <!-- <img [src]="bmd.HomePageSmallBanner" width="100%" class="rounded-top" alt="..."> -->
+                                <img [src]="bmd.Content.Thumbnail" width="100%" class="rounded-top" alt="...">
+                            </div>
+                            <div class="fs-6 fw-6 line-clamp-2 px-3 mb-3 h-46">{{bmd.Content.Title}}</div>
+                            <div class="d-flex justify-content-between text-secondary mb-3 px-3">
+                                <div>
+                                    <span class="pe-3">{{bmd.UpdatedDate | date : "MMM yy"}}</span>
+                                </div>
+                                <div>
+                                    <span class="pe-3">
+                                        <span *ngIf="!bmd.IsLiked"><i class="fa-regular fa-heart pe-1"></i> </span>
+                                        <span *ngIf="bmd.IsLiked"><i class="fa-solid fa-heart text-danger"></i></span>
+                                    {{bmd.LikeCount}}
+                                    </span>
+                                    <span class="">
+                                        <i class="fa-regular fa-eye pe-1"></i> {{bmd.Viewcount}}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- <div class="">
+                            <div class="bkimg-cont hvr">
+                                <img [src]="bmd.HomePageSmallBanner" width="100%" class="rounded" alt="..." (click)="viewArtical(bmd.Permalink)">
+                            </div>
+                        </div> -->
+                    </div>
+                </ng-container>
+            </div>
+        </div>
+        <div *ngIf="totalCount > bookMarkData.length" class="load-more-btn mt-3" (click)="loadMore()">
+            <span >Load More</span>
+        </div>
+    </ng-container>
+
+    <ng-container *ngIf="bookMarkData.length == 0">
+        <app-not-found></app-not-found>
+    </ng-container>
+</div>
+
+
+<!-- <div class="bkmrk-grid">
+    <ng-container *ngFor="let bmd of bookMarkData">
+        <div class="d-flex">
+            <div class="bkimg-cont">
+                <img [src]="bmd.Content.Thumbnail" class="img-fluid rounded" alt="..."
+                    (click)="viewArtical(bmd.Permalink)">
+            </div>
+            <div class="ms-3 w-100 position-relative">
+                <div class="fs-5 fw-6 line-clamp-2 hvr" (click)="viewArtical(bmd.Permalink)">
+                    {{bmd.Content.Title}}
+                </div>
+                <div class="mt-2 text-secondary hvr fs-3">
+                    {{bmd.CategoryName}}
+                </div>
+                <div class="position-absolute bottom-0 start-0 text-secondary w-100">
+                    <div class="d-flex w-100 justify-content-between align-items-center">
+                        <span class="pe-3">{{bmd.CategoryName}}</span>
+                        <div><i class="fa-solid fa-calendar-check"></i> {{bmd.UpdatedDate | date : "dd MMM yyyy"}}</div>
+                        <div class="fs-2 mt-2 hvr" (click)="un_bookmarkArticle(bmd)">
+                            <span><i class="fa-solid fa-bookmark text-success"></i></span>
+                            <span class="text-danger ps-2">Remove</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </ng-container>
+</div> -->

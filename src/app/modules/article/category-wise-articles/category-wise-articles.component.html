@@ -1,0 +1,100 @@
+<div class="px-3 pt-3">
+    <app-article-path></app-article-path>
+</div>
+<div *ngIf="!isLoading" class="p-3">
+    <div class="article-heading mb-3"><span class="text-secondary">Health Topic :</span> &nbsp;{{categoryDetails.CategoryName}}</div>
+    <ng-container *ngIf="detailsList.length>0">
+        <div class="load-more-cont">
+            <div class="cts-grid">
+                <ng-container *ngFor="let cts of detailsList">
+                    <div class="border rounded bx-shdw hvr bg-white" (click)="viewArtical(cts.Permalink)">
+                        <div class="position-relative">
+                            <div class="tag" [style.background-color]="categoryDetails.ColorCode">{{categoryDetails.CategoryName}}</div>
+                            <div class="imgCont mb-3">
+                                <!-- <img [src]="cts.HomePageSmallBanner" alt="" width="100%" class="rounded-top"> -->
+                                <img [src]="cts.Content.Thumbnail" alt="" width="100%" class="rounded-top">
+                            </div>
+                            <div class="mh-1 px-3">
+                                <div class="mb-3 fs-6 fw-6 line-clamp-2 h-46">{{cts.Content.Title}}</div>
+                                <div class="mb-3 fs-3 text-secondary line-clamp-2">{{cts.Content.ShortDescription}}</div>
+                            </div>
+                            <div class="text-secondary d-flex justify-content-between mb-3 px-3">
+                                <div class="">
+                                    <span class="">{{cts.UpdatedDate | date : "MMM yy"}}</span>
+                                </div>
+                                <div>
+                                    <span class="pe-3">
+                                        <span *ngIf="!cts.IsLiked"><i class="fa-regular fa-heart"></i></span>
+                                        <span *ngIf="cts.IsLiked"><i class="fa-solid fa-heart text-danger"></i></span>
+                                        {{cts.LikeCount}}
+                                    </span>
+                                    <span class="pe-3">
+                                        <i class="fa-regular fa-eye fs-7"></i> {{cts.Viewcount}}
+                                    </span>
+                                    <span class="">
+                                        <span *ngIf="!cts.IsBookmarked"><i class="fa-regular fa-bookmark"></i></span>
+                                        <span *ngIf="cts.IsBookmarked"><i class="fa-solid fa-bookmark text-success"></i></span>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- <div class="imgCont">
+                            <img [src]="cts.HomePageSmallBanner" alt="" width="100%" class="rounded">
+                        </div> -->
+                    </div>
+                </ng-container>
+            </div>
+        </div>
+        <!-- <div *ngIf="totalCount > detailsList.length" class="load-more-btn mt-3" (click)="loadMore()">
+            <span>Load More</span>
+        </div> -->
+    </ng-container>
+    <ng-container *ngIf="detailsList.length==0">
+        <div>
+            <app-not-found></app-not-found>
+        </div>
+    </ng-container>
+</div>
+
+
+<!-- <ng-container *ngIf="detailsList.length>0">
+    <div class="load-more-cont">
+        <div class="cts-grid">
+            <ng-container *ngFor="let cts of detailsList">
+                <div class="hvr">
+                    <div (click)="viewArtical(cts.Permalink)">
+                        <div class="imgCont">
+                            <img [src]="cts.Thumbnail" alt="" class="img-fluid rounded">
+                        </div>
+                        <div class="my-3 fs-5 fw-6 text-truncate">{{cts.Content.Title}}</div>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center fs-3 text-secondary">
+                        <div class="pe-2">{{categoryDetails.CategoryName}}</div>
+                        <div>
+                            <span class="px-1">
+                                <span *ngIf="!cts.IsLiked" (click)="likeArticle(cts)" class="hvr"><i
+                                        class="fa-regular fa-heart fs-7"></i></span>
+                                <span *ngIf="cts.IsLiked" (click)="likeArticle(cts)" class="hvr"><i
+                                        class="fa-solid fa-heart fs-7 text-danger"></i></span>
+                                {{cts.LikeCount}}
+                            </span>
+                            <span class="px-1">
+                                <span class="hvr"><i class="fa-regular fa-eye fs-7"></i></span>
+                                {{cts.Viewcount}}
+                            </span>
+                            <span class="px-1 hvr">
+                                <span *ngIf="!cts.IsBookmarked" (click)="bookmarkArticle(cts)"><i
+                                        class="fa-regular fa-bookmark fs-7"></i></span>
+                                <span *ngIf="cts.IsBookmarked" (click)="bookmarkArticle(cts)"><i
+                                        class="fa-solid fa-bookmark fs-7 text-success"></i></span>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </ng-container>
+        </div>
+    </div>
+    <div *ngIf="totalCount > detailsList.length" class="load-more-btn mt-3" (click)="loadMore()">
+            <span>Load More</span>
+    </div>
+</ng-container> -->

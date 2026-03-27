@@ -1,0 +1,59 @@
+.ac-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(420px, 1fr));
+    grid-gap: 1rem;
+}
+
+.buyagnImg {
+    // border: 1px solid #E4E7EC;
+    // border-radius: 6px;
+    padding-top: 4px;
+}
+
+img {
+    width: 60px;
+    height: 60px;
+}
+.border-bottom-shadow {
+    border-bottom: 7px solid #f2f4f7;
+    position: relative;
+    &::after {
+        content: '';
+        position: absolute;
+        left: -3px;
+        bottom: -7px;
+        width: 8px;
+        height: 7px;
+        background-color: #f2f4f7;
+        display: block;
+    }
+    &::before {
+        content: '';
+        position: absolute;
+        right: -3px;
+        bottom: -7px;
+        width: 8px;
+        height: 7px;
+        background-color: #f2f4f7;
+        display: block;
+    }
+}
+
+.border-bottom:last-child .border-bottom-shadow {
+    border-bottom: none;
+    &::after,  &::before {
+        display: none;
+    }
+}
+.text-orange {
+    color: #e9640d;
+}
+
+.rxblock {
+    position: absolute;
+    top: -4px;
+    right: -4px;
+    z-index: 1;
+    color: #EC4A0A;
+    font-size: 12px;
+  }

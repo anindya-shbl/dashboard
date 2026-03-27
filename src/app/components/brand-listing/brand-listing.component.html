@@ -1,0 +1,126 @@
+    <div class="lab-body">
+        <div class="d-flex p-3">
+            <div class="lft-pnl border item-shadow rounded me-3">
+                <div class="p-3 fw-6 fs-6">All Brands</div>
+                <!-- <div *ngIf="responseList.length > 0" class="p-3 border-top">
+                    <ng-container *ngFor="let typ of responseList">
+                        <div class="p-2 d-flex hvr" >
+                            <span class="me-2 pt-1" style="font-size: 10px;"><i
+                                    class="fa-solid fa-caret-right"></i></span>
+                            <span>{{typ.ProductType}}</span>
+                        </div>
+                    </ng-container>
+                </div> -->
+
+                <div *ngIf="brandList.length>0" class="p-3 border-top">
+                    <ng-container *ngFor="let tab of brandList">
+                        <div class="p-2 d-flex hvr" [ngClass]="tab.Brand == title?'text-primary':''" (click)="changeBrand(tab.Brand)">
+                            <span class="me-2 pt-1" style="font-size: 10px;"><i
+                                    class="fa-solid fa-caret-right"></i></span>
+                            <span>{{tab.Brand}}</span>
+                        </div>
+                    </ng-container>
+                </div>
+            </div>
+            <div class="w-100">
+                
+                <div *ngIf="!isLoading" class="">
+                    <div class="article-heading p-3 d-flex justify-content-between bg-light mb-3">
+                        <div class="">{{title}}</div>
+                        <div *ngIf="responseList.length > 0">
+                            <select class="form-select form-select-sm" (change)="onSortChange($event)">
+                                <option *ngFor="let option of responseList; let i = index" [value]="option.ProductType">
+                                    {{ option.ProductType }}
+                                </option>
+                            </select>
+                        </div>
+                    </div>
+                    <div *ngIf="searchList.length > 0" class="pckg-grid">
+                        <ng-container *ngFor="let item of searchList">
+                            <div class="border rounded position-relative item-shadow p-3">
+                                <div *ngIf="item.discountpercentage > 0" class="discount">
+                                        {{item.discountpercentage}}% &nbsp;Off
+                                </div>
+                                 <div *ngIf="item.PrescriptionOTC == 'P'" class="rx-icon-rgt">&#8478;</div>
+                                <!-- <div class="hg-prd  hvr" (click)="CommonService.getProductDetailsPageURL(item.ProductId, item.DisplayName, item.PrescriptionOTC)"> -->
+                                <div class="hg-prd  hvr" (click)="viewProductDetails(item.EncodeProdId, item.displayname, item.PrescriptionOTC)">
+                                    
+                                    <div class="tst-img py-4">
+                                       
+                                        <ng-container *ngIf="item.productimage != '' && item.productimage != null">
+                                            <img src="https://asset.sastasundar.com/incom/images/product/thumb/{{item.productimage}}"
+                                                alt width="100%">
+                                        </ng-container>
+                                        <ng-container *ngIf="item.productimage == '' || item.productimage == null">
+                                            <img *ngIf="item.PrescriptionOTC == 'P' || item.PrescriptionOTC == 'M'"
+                                                src="https://asset.sastasundar.com/incom/images/product/thumb/Med.svg"
+                                                alt="" width="90px">
+                                            <img *ngIf="item.PrescriptionOTC == 'O'"
+                                                src="https://asset.sastasundar.com/incom/images/product/thumb/Household.svg"
+                                                alt="" width="90px">
+                                        </ng-container>
+                                    </div>
+                                    <div class="fs-5 fw-5 text-center line-clamp-2 mb-2">{{item.displayname}}</div>
+                                    <!-- <div class="text-secondary text-center line-clamp-1 mb-1">{{item.MfgGroup}}</div> -->
+
+                                </div>
+                                <div class="d-flex w-100 justify-content-between">
+                                    <div class="w-100 hvr">
+                                        <!-- <div class="fw-5 fs-5 mb-2 line-clamp-2">{{item.DisplayName}}</div> -->
+                                        
+                                        <ng-container *ngIf="item.offerprice > 0 && item.offerprice != '' && item.offerprice != undefined">
+                                            
+                                                <div class="me-2 fw-6 fs-6">
+                                                    {{item.offerprice | currency: 'INR'}}
+                                                </div>
+                                                <div class="me-2 text-decoration-line-through text-secondary"
+                                                    *ngIf="item.mrp > item.offerprice">
+                                                    {{item.mrp | currency: 'INR'}}
+                                                </div>
+                                                
+                                        </ng-container>
+                                        <ng-container *ngIf="item.offerprice == 0 || item.offerprice == '' || item.offerprice == undefined">
+                                            <div class="text-secondary mb-1">Out Of Stock</div>
+                                        </ng-container>
+                                    </div>
+                                    <div class="ms-3">
+                                        <ng-container *ngIf="item.offerprice > 0 && item.offerprice != '' && item.offerprice != undefined">
+                                            <div *ngIf="item.addedQty == 0" class="action-btn  hvr"
+                                                (click)="addToCart(item, 1);">
+                                                <span class="action-btn addbutton-color">ADD</span>
+                                            </div>
+                                            <div *ngIf="item.addedQty > 0" class="action-btn action-add">
+                                                <span class="item-action" (click)="cartAddMinus(item)">&#8722;</span>
+                                                <span class="item-text">{{item.addedQty}}</span>
+                                                <span class="item-action" (click)="cartAddPlus(item)">&#43;</span>
+                                            </div>
+                                        </ng-container>
+
+                                        <ng-container *ngIf="item.offerprice == 0 || item.offerprice == '' || item.offerprice == undefined">
+                                            <div class="notify-btn  hvr" (click)="requestNotify(item)">
+                                                <span class="fw-5">Notify</span>
+                                            </div>
+                                        </ng-container>
+                                    </div>
+                                </div>
+                            </div>
+                        </ng-container>
+                       
+                        
+                    </div>
+                    <div *ngIf="searchList.length == 0" class="d-flex justify-content-center p-3 w-100 mt-3">
+                        <div class="fs-5 fw-5 my-3">No record found</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div>
+        <app-download-app></app-download-app>
+    </div>
+    <div>
+        <app-sub-footer></app-sub-footer>
+    </div>
+    <div class="border-top">
+        <app-footer></app-footer>
+    </div>

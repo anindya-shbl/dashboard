@@ -1,0 +1,79 @@
+<div class="p-3">
+    <div class="mb-3">
+        <app-route-path></app-route-path>
+    </div>
+    <!-- <div class="fs-7 fw-7 mb-3">My Orders</div> -->
+    <div class="commonHeadertitleSec">
+        <div class="custNameSec">
+            <strong>Book Again</strong>
+        </div>
+    </div>
+    
+    <div *ngIf="!isloading && serviceItems.length > 0" class="border rounded bx-shdw">
+        <div class="p-3 border-bottom">
+            <div class="row mx-0 fw-5 fs-5"> 
+                <div *ngIf="!allSelected" class="col" (click)="selectAll()"><i class="fa-regular fa-square me-3 fs-8"></i> Select All</div>
+                <div *ngIf="allSelected" class="col" (click)="removeAll()"><i class="fa-regular fa-square-check text-success fs-8 me-3"></i>Unselect All</div>
+            </div>
+        </div>
+        <ng-container *ngFor="let item of serviceItems">
+            <div *ngIf="item.PkgServiceId == null" class="border-bottom  p-3">
+                <div class="row mx-0">
+                    <div class="col-md-6">
+                        <div class="d-flex">
+                            <div class="me-3" (click)="selectTest(item)"> 
+                                <div *ngIf="!item.selected" class="fs-8"><i class="fa-regular fa-square"></i></div>
+                                <div *ngIf="item.selected" class="fs-8 text-success"><i class="fa-regular fa-square-check"></i></div>
+                            </div>
+                            <!-- <div class="hvr" (click)="CommonService.getLabTestDetailsPageURL(item.ServiceId, item.ServiceName, item.IsPackage)"> -->
+                            <div class="hvr" (click)="CommonService.getLabTestDetailsPageURL(item.PermalinkNew)">
+                                <div class="mb-2 fs-5 fw-5">{{item.ServiceName}}</div>
+                                <div class="light-text mb-2 fw-5">{{item.ServicePreparation}}</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="mb-1 fs-4 light-text">
+                            <ng-container *ngIf="item.IsHomeCollectionAvailable">Home Collection Available</ng-container>
+                            <ng-container *ngIf="!item.IsHomeCollectionAvailable">Lab Visit Only</ng-container>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="mb-2"  *ngIf="(item.DiscountedFees > 0 && item.InitialFees > item.DiscountedFees) else showmrp">
+                            <span class="fw-6 fs-6 me-2">{{item.DiscountedFees | currency: 'INR'}}</span>
+                        </div>
+                        
+                        <ng-template #showmrp>
+                          <div class="fw-6 fs-6" *ngIf="item.InitialFees > 0">{{item.InitialFees | currency: 'INR'}}</div>
+                        </ng-template>
+                        <div> 
+                            <span class="light-text pe-2 text-line-through fw-5 fs-5" *ngIf="item.DiscountedFees > 0 && item.InitialFees > item.DiscountedFees">{{item.InitialFees | currency: 'INR'}}</span>                             
+                          <!-- <span class="fw-7 fs-4 discount" *ngIf="item.DiscPercent > 0">{{item.DiscPercent}}% Off</span> -->
+                        </div>
+                    </div>
+                </div>
+                
+                
+                
+                <!-- <div class="hvr pt-3 text-primary fs-3" *ngIf="item.IsPackage == 1" (click)="viewPackageDetails(item)">
+                    View Package Details
+                </div> -->
+            </div>
+        </ng-container>
+
+        <div class="btnSec p-3">
+            <button *ngIf="selectedItems.length == 0" type="button" class="btnCancel" >Submit</button>
+            <button *ngIf="selectedItems.length > 0" type="button" class="btnSubmit" (click)="proceedCart()">Submit</button>
+        </div>
+
+    </div>
+
+    <ng-container *ngIf="!isloading && bookingDetails == ''">
+        <div class="notfoundbox">
+            <ng-container >
+                <!-- <i class="fa fa-frown-o mb-3" style="font-size:48px; color:#4775d1"></i> -->
+                <div class="fw-5">Unable to process your request.</div>
+            </ng-container>
+        </div>
+    </ng-container>
+</div>

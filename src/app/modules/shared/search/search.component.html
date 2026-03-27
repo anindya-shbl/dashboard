@@ -1,0 +1,296 @@
+
+<div class="ssbody">
+<div class="header-sec">
+        <div class="me-3">
+            <app-logo></app-logo>
+        </div>      
+        <div class="search-top">
+            <span *ngIf="!showSearchArea" class="search-icon">
+                <i class="fa fa-search" style="font-size: 24px;"></i>
+            </span>
+            <span *ngIf="showSearchArea" class="search-icon hvr" (click)="cleareSearch()">
+                <i class="fa-regular fa-circle-xmark" style="font-size: 24px;"></i>
+            </span>
+            <input #srchInput type="text" class="form-control" placeholder="Search for Medicines, Household Supplies, Tests & Health Packages"
+                aria-label="Recipient's username" [(ngModel)]="searchText" (keyup)="onSearchChange($event)"
+                (keydown)="onKeydown()">
+        </div>
+</div> 
+
+
+<div class="body-container"> 
+    <div *ngIf="showSearchArea" class="p-3">
+        <div *ngIf="!labLoading">
+            <div *ngIf="labtestList.length > 0" class="overflow-x-auto mb-3">
+                <div class="lab-cont">
+                    <ng-container *ngFor="let product of labtestList">
+                        <div class="lab-block">
+                            <div class="mb-2 d-flex hvr" (click)="CommonService.getLabTestDetailsPageURL(product.PermalinkNew)">
+                                <div class="lab-img">
+                                    <img src="https://asset.sastasundar.com/incom/sspl_website/images/labicon.png"  alt="" width="30px">
+                                </div>
+                                <div class="">
+                                    <div class="fw-5 mb-2 text-truncate" style="width: 256px;">
+                                        {{product.ServiceName}}
+                                    </div>
+                                    <div class="fs-3 orange-red">
+                                        {{product.ReportText}}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class=" d-flex justify-content-between align-items-center">
+                                <div class="pe-2 w-100">
+                                    <!-- <div class="fs-3 mb-1">
+                                            <span *ngIf="product.IsHomeCollectionAvailable">Home Collection Available</span>
+                                            <span *ngIf="!product.IsHomeCollectionAvailable">Lab Visit Only</span>
+                                        </div> -->
+                                    <div class="newCssPrice_add">
+                                        <span class="mb-1 fw-5 fs-5" *ngIf="product.OfferFees > 0">
+                                            {{product.OfferFees | currency: 'INR'}}
+                                        </span>
+                                    </div>
+                                    <div class="newCssPrice_add">
+                                        <span class="me-2 text-decoration-line-through text-secondary" *ngIf="product.Fees > product.OfferFees">
+                                            {{product.Fees | currency: 'INR'}}
+                                        </span>
+                                        <span *ngIf="product.DiscPercent > 0" class="orange-red">
+                                            {{product.DiscPercent}}% Off
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="">
+                                    <ng-container *ngIf="product.IsActive">
+                                        <div *ngIf="product.IsAdded == false" class="action-btn  hvr btnS">
+                                            <span class="addbutton-color fs-3" (click)="addLabTest(product)">BOOK NOW</span>
+                                        </div>
+                                        <div *ngIf="product.IsAdded == true" class="action-btn action-add btnS">
+                                            <span class="item-text fs-3" (click)="deleteLabTest(product)">REMOVE</span>
+                                        </div>
+                                    </ng-container>
+                                    <div *ngIf="!product.IsActive" class="text-lite fs-3">Discontinued</div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                    </ng-container>
+                </div>
+            </div>
+        </div>
+
+        <div *ngIf="!isLoading" class="">
+            <div *ngIf="searchList.length > 0" class="">
+                <ng-container *ngFor="let item of searchList">
+                    <div class="border-bottom">
+                        <div class="d-flex hvr py-3 w-100">
+                            <div class="img-cont" (click)="CommonService.getProductDetailsPageURL(item.ProductId, item.DisplayName, item.PrescriptionOTC)">
+                                <div *ngIf="item.PrescriptionOTC == 'P'" class="rx-icon">&#8478;</div>
+                                <ng-container *ngIf="item.ProductImage != '' && item.ProductImage != null">
+                                    <img src="https://asset.sastasundar.com/incom/images/product/thumb/{{item.ProductImage}}" alt width="100%">
+                                </ng-container>
+                                <ng-container *ngIf="item.ProductImage == '' || item.ProductImage == null">
+                                    <img *ngIf="item.PrescriptionOTC == 'P' || item.PrescriptionOTC == 'M'" src="https://asset.sastasundar.com/incom/images/product/thumb/Med.svg" alt="" width="90px">
+                                    <img *ngIf="item.PrescriptionOTC == 'O'" src="https://asset.sastasundar.com/incom/images/product/thumb/Household.svg" alt="" width="90px">
+                                </ng-container>
+                            </div>
+                            <div class="d-flex w-100 justify-content-between">
+                                <div class="w-100 hvr" (click)="CommonService.getProductDetailsPageURL(item.ProductId, item.DisplayName, item.PrescriptionOTC)">
+                                    <div class="fw-5 fs-5 mb-2 line-clamp-2">{{item.DisplayName}}</div>
+                                    <div class="text-secondary mb-2">{{item.MfgGroup}}</div>
+                                    <ng-container *ngIf="item.IsOutOfStock == 'N'">                                        
+                                        <div class="text-secondary mb-2">
+                                            <span>Best Before: </span>
+                                            <span>{{item.ExpiryDate | date: 'MMM yyyy'}}</span>
+                                        </div>
+                                        <div>
+                                            <span class="me-2 fw-5 fs-5" *ngIf="item.OfferPrice > 0">
+                                                {{item.OfferPrice | currency: 'INR'}}
+                                            </span>
+                                            <span class="me-2 text-decoration-line-through text-secondary" *ngIf="item.MRP > item.OfferPrice">
+                                                {{item.MRP | currency: 'INR'}}
+                                            </span>
+                                            <span *ngIf="item.DiscountPercent > 0" class="orange-red fw-5">
+                                                {{item.DiscountPercent}}% Off
+                                            </span>
+                                        </div>
+                                    </ng-container>
+                                    <ng-container *ngIf="item.IsOutOfStock == 'Y'">
+                                        <div class="text-secondary mb-1">Out Of Stock</div>
+                                    </ng-container>
+                                </div>
+                                <div class="p-3">
+                                    <ng-container *ngIf="item.IsOutOfStock == 'N'">
+                                        <div *ngIf="item.addedQty == 0" class="action-btn  hvr" (click)="addToCart(item, 1);">
+                                            <span class="action-btn addbutton-color">ADD</span>
+                                        </div>
+                                        <div *ngIf="item.addedQty > 0" class="action-btn action-add">
+                                            <span class="item-action" (click)="cartAddMinus(item)">&#8722;</span>
+                                            <span class="item-text">{{item.addedQty}}</span>
+                                            <span class="item-action" (click)="cartAddPlus(item)">&#43;</span>
+                                        </div>
+                                    </ng-container>
+
+                                    <ng-container *ngIf="item.IsOutOfStock == 'Y'">
+                                        <div class="notify-btn  hvr" (click)="requestNotify(item)">
+                                            <span class="fw-5">Notify</span>
+                                        </div>
+                                    </ng-container>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div *ngIf="item.PreferredSubtitute.length>0" class="bg-info-subtle lr-gap p-3">
+
+                            <div *ngIf="showSubs != item.ProductId" class="d-flex justify-content-between align-items-center text-success hvr" (click)="displaySubs(item)">
+                                <span class="pe-2">
+                                    <img src="https://asset.sastasundar.com/incom/jito-health/assets/Images/jito-favicon.png" alt=""  width="24px">
+                                </span>
+                                <span class="pe-2 w-100">
+                                    {{getMaxSavings(item.PreferredSubtitute)}}% lower price Alternative Available
+                                </span>
+                                <span class="pe-2"><i class="icon-angle-down"></i></span>
+                            </div>
+                            <div *ngIf="showSubs == item.ProductId" class="d-flex justify-content-between align-items-center text-success hvr" (click)="hideSub()">
+                                <span class="pe-2">
+                                    <img src="https://asset.sastasundar.com/incom/jito-health/assets/Images/jito-favicon.png" alt=""  width="24px">
+                                </span>
+                                <span class="pe-2 w-100">
+                                    {{getMaxSavings(item.PreferredSubtitute)}}% lower price Alternative Available
+                                </span>
+                                <span><i class="icon-angle-up"></i></span>
+                            </div>
+
+                            <div *ngIf="showSubs == item.ProductId" class="bg-white ">
+                                <ng-container *ngFor="let altr of item.PreferredSubtitute">
+                                    <div class="position-relative mt-4 p-3">
+                                        <div class="tagline">Save {{altr.savingsPercent}}%</div>
+
+                                        <div class="d-flex w-100 justify-content-between">
+                                            <div class="img-cont" (click)="CommonService.getProductDetailsPageURL(altr.PreferredProductId, altr.DisplayName, altr.PrescriptionOTC)">
+                                                <div *ngIf="item.PrescriptionOTC == 'P' || item.PrescriptionOTC == 'M'" class="rx-icon">&#8478;</div>
+                                                <ng-container *ngIf="altr.ProductImage != '' && altr.ProductImage != null">
+                                                    <img src="https://asset.sastasundar.com/incom/images/product/thumb/{{altr.ProductImage}}" alt="" width="100%">
+                                                </ng-container>
+                                                <ng-container *ngIf="altr.ProductImage == '' || altr.ProductImage == null">
+                                                    <img *ngIf="item.PrescriptionOTC == 'P' || item.PrescriptionOTC == 'M'" src="https://asset.sastasundar.com/incom/images/product/thumb/Med.svg" alt="" width="90px">
+                                                    <img *ngIf="item.PrescriptionOTC == 'O'" src="https://asset.sastasundar.com/incom/images/product/thumb/Household.svg" alt="" width="90px">
+                                                </ng-container>
+                                            </div>
+                                            <div class="hvr w-100"
+                                                (click)="CommonService.getProductDetailsPageURL(altr.PreferredProductId, altr.DisplayName, altr.PrescriptionOTC)">
+                                                <div class="mb-2 line-clamp-2 fw-5 fs-5">{{altr.DisplayName}}</div>
+                                                <div class="text-secondary mb-2">{{altr.MfgGroup}}</div>
+                                                <div class="text-secondary mb-2">
+                                                    <span>Best Before: </span>
+                                                    <span>{{altr.ExpiryDate | date: 'MMM yyyy'}}</span>
+                                                </div>
+                                                <div class="">
+                                                    <span class="me-2 fw-5 fs-5">{{altr.CustOfferPrice | currency: 'INR'}}</span>
+                                                    <span class="me-2 text-decoration-line-through text-secondary"
+                                                        *ngIf="altr.MRP > altr.CustOfferPrice">{{altr.MRP | currency: 'INR'}}
+                                                    </span>
+                                                    <span class="orange-red" *ngIf="altr.CustDiscPercent > 0">
+                                                        {{altr.CustDiscPercent}}% Off
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            <div class="p-3 pe-0">
+                                                <div *ngIf="altr.addedQty == 0 && item.addedQty == 0" class="action-btn hvr" (click)="addAlternative(altr, 1, item.PrescriptionOTC);">
+                                                    <span class="action-btn addbutton-color">ADD</span>
+                                                </div>
+                                                <div *ngIf="altr.addedQty == 0 && item.addedQty > 0" class="action-btn hvr" (click)="replaceAlternative(altr, item);">
+                                                    <span class="action-btn addbutton-color">Replace</span>
+                                                </div>
+                                                <div *ngIf="altr.addedQty > 0" class="action-btn action-add">
+                                                    <span class="item-action" (click)="subAddMinus(altr)">&#8722;</span>
+                                                    <span class="item-text">{{altr.addedQty}}</span>
+                                                    <span class="item-action" (click)="subAddPlus(altr)">&#43;</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </ng-container>
+                            </div>
+                        </div>
+                    </div>
+                </ng-container>
+                <ng-container *ngIf="totalcount > searchList.length">
+                    <div class="hvr text-primary text-center fw-5 p-3 bg-primary-subtle" (click)="loadMore()">Load More...</div>
+                </ng-container>
+            </div>
+            <div *ngIf="searchList.length == 0" class="d-flex border rounded p-3 w-100 mt-3">
+                <div class="px-3 me-3">
+                    <span style="font-size: 50px;"><i class="fa-regular fa-bell text-secondary"></i></span>
+                </div>
+                <div class="d-flex w-100">
+                    <div class="w-100">
+                        <div class="fw-6 fs-5 mb-2 text-capitalize">{{searchText}} &nbsp;</div>
+                        <div class="mb-2 text-secondary">New Product</div>
+                    </div>
+                    <div class="p-3">
+                        <div class="notify-btn hvr" (click)="requestAddNew()">Notify</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div *ngIf="isLoading" class="search-list">
+            <div class="text-center">
+                <div class="spinner-border" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div *ngIf="!showSearchArea" class="p-3">
+        <div class="mb-2 fw-7 text-6xl text-center mt-5">
+            Your Health, Our <span class="text-primary">Priority</span>
+        </div>
+        <div class="mb-4 fs-6 text-secondary text-center">
+            We Guarantee Accessible & Affordable Healthcare, Always
+        </div>
+
+        <div class="row g-3">
+            <div class="col-md-4">
+                <div class="min-hgt1">
+                    <div class="me-3">
+                        <i class="fa-solid fa-truck-fast round-block"></i>
+                    </div>
+                    <div>
+                        <div class="mb-2 fs-6 fw-6 ">Fast Delivery</div>
+                        <div class="text-secondary">Same day delivery available</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="min-hgt1">
+                    <div class="me-3">
+                        <i class="fa-solid fa-shield round-block"></i>
+                    </div>
+                    <div>
+                        <div class="mb-2 fs-6 fw-6 ">100% Genuine</div>
+                        <div class="text-secondary">Verified & authentic medicines</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="min-hgt1">
+                    <div class="me-3">
+                        <i class="fa-solid fa-clock round-block"></i>
+                    </div>
+                    <div>
+                        <div class="mb-2 fs-6 fw-6 ">24/7 Support</div>
+                        <div class="text-secondary">Expert consultation available</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="mt-5">
+            <img _ngcontent-ng-c3743347269="" src="https://asset.sastasundar.com/incom/incom_banner/home_banner/web/100__genuie_medicines_new.png" alt="..." class="img-fluid">
+        </div>
+
+    </div>
+</div>
+</div>

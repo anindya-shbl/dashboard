@@ -1,0 +1,48 @@
+.input-box {
+    position: relative;
+
+    &.searchBox {
+        width: 700px;
+
+        @media only screen and (min-width: 1200px) and (max-width: 1440px) {
+            width: 600px;
+        }
+
+        @media only screen and (max-width: 1199px) {
+            width: 380px;
+        }
+    }
+
+    & input {
+        border-radius: 32px;
+        border: none;
+        border: 1px solid #d0d5dd;
+        height: 46px;
+        padding: 6px 20px;
+        width: 100%;
+        box-shadow: none;
+        background-color: #e4e7ec;
+        color: #667085;
+        font-size: 14px;
+        font-weight: 400;
+
+        &::placeholder {
+            color: #9b9a99;
+            opacity: 1;
+            /* Firefox */
+        }
+
+        &::-ms-input-placeholder {
+            /* Edge 12 -18 */
+            color: #9b9a99;
+        }
+    }
+
+    & i {
+        position: absolute;
+        right: 15px;
+        top: 6px;
+        color: #5b5e66;
+        font-size: 22px;
+    }
+}

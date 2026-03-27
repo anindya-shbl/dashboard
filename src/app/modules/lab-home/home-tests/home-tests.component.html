@@ -1,0 +1,64 @@
+<div *ngIf="popularTests.length > 0" class="p-3">
+    <div class="d-flex justify-content-between mb-3">
+        <span class="fs-20 fw-6">Top Booked Tests</span>
+        <span class="text-primary hvr" (click)="viewAllTests()">View all Tests</span>
+    </div>
+    <owl-carousel-o [options]="customOptions">
+        <ng-container *ngFor="let item of popularTests">
+            <ng-template carouselSlide [id]="item.id">
+                <!-- <div class="" (click)="viewCategory(item.actionUrl)"> -->
+                    <div class="p-2">
+                        <div class="rounded item-shadow p-3 mx-320">
+                            <div class="hvr" (click)="viewPckgDtls(item.PermalinkNew)">
+                                <div class="tst-img mb-3" >
+                                    <img [src]="item.showImg" alt="">
+                                </div>
+                                <div class="fs-6 fw-5 text-center text-truncate mb-3">{{item.ServiceName}}</div>
+                                <div class="text-secondary text-center text-truncate mb-3">{{item.ReportText}}</div>
+                            </div>
+                            <div class="d-flex justify-content-between align-items-center pt-2 mb-2">
+                                <div>
+                                    <div class="mb-2 fw-5 fs-6">
+                                        <span *ngIf="(item.OfferFees > 0 && item.Fees > item.OfferFees) else showmrp">{{item.OfferFees | currency: 'INR'}}</span>
+                                        <ng-template #showmrp>
+                                            <span class="o-price" *ngIf="item.Fees > 0">{{item.Fees | currency: 'INR'}}</span>
+                                        </ng-template>
+                                    </div>
+                                    <div>
+                                        <span class="text-secondary text-decoration-line-through me-2" *ngIf="item.Fees > item.OfferFees">{{item.Fees | currency: 'INR'}}</span>
+                                        <span *ngIf="item.DiscPercent > 0" class="fw-7" style="color: #f46a12;">{{item.DiscPercent}}% Off</span>
+                                    </div>
+                                </div>
+                                <div class="">
+                                    <ng-container *ngIf="item.IsActive">
+                                        <div *ngIf="item.IsAdded == false" class="action-btn  hvr btnS" (click)="addLabTest(item)">
+                                            <span class="fw-5 addbutton-color">BOOK NOW</span>
+                                        </div>
+                                        <div *ngIf="item.IsAdded == true" class="action-btn action-add hvr btnS" (click)="deleteLabTest(item)">
+                                            <span class="fw-5 item-text">REMOVE</span>
+                                        </div>
+                                    </ng-container>
+                                    <div *ngIf="!item.IsActive" class="text-lite">Discontinued</div>                    
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                <!-- </div> -->
+            </ng-template>
+        </ng-container>
+    </owl-carousel-o>
+</div>
+
+<button #labAddInfoModal data-bs-toggle="modal" data-bs-target="#labAddInfoModal" class="d-none"></button>
+<div class="modal fade" id="labAddInfoModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="labAddInfoModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-body" style="background-color: #f6fcff; border-radius: 8px;">            
+            <div class="d-flex w-100 m-2 fw-5 text-danger" style="min-height: 60px;">{{alertMsg}}</div>
+            <div class="d-flex justify-content-end mx-2">
+                <button type="button" class="action-btn action-add" data-bs-dismiss="modal" aria-label="Close">Ok</button>
+            </div>
+        </div>
+      </div>
+    </div>
+</div>

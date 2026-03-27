@@ -1,0 +1,62 @@
+<div class="">
+    <div class="px-3 pt-3 border-bottom top-sticky">
+        <div class="mb-3"><app-route-path></app-route-path></div>
+        
+        <div class="commonHeadertitleSec">
+            <div class="custNameSec"><strong>Buy Again</strong></div>
+        </div>
+        <nav *ngIf="buyAgainList.length>0 && isResp" class="ordTabSec" aria-label="Page navigation">
+            <ul class="pagination mb-0">
+              <li class="page-item text-nowrap" (click)="showTab('patient')" [ngClass]="selectedTab == 'patient' ? 'tab-active':''"><a class="page-link">By Patient</a></li>
+              <li class="page-item text-nowrap" (click)="showTab('order')" [ngClass]="selectedTab == 'order' ? 'tab-active':''"><a class="page-link">By Order</a></li>
+              <li class="page-item text-nowrap" (click)="showTab('product')" [ngClass]="selectedTab == 'product' ? 'tab-active':''"><a class="page-link">By Product</a></li>
+            </ul>
+        </nav>
+    </div>
+    <!-- <div class="p-3 bg-light">
+        <ul class="nav nav-pills nav-justified">
+            <li class="nav-item">
+              <a class="nav-link hvr" (click)="showTab('patient')" [ngClass]="selectedTab == 'patient' ? 'active':''">By Patient</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link hvr" (click)="showTab('order')" [ngClass]="selectedTab == 'order' ? 'active':''">By Order</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link hvr" (click)="showTab('product')" [ngClass]="selectedTab == 'product' ? 'active':''">By Product</a>
+            </li>
+          </ul>
+    </div> -->
+
+    <div *ngIf="buyAgainList.length>0 && isResp">
+        <ng-container *ngIf="selectedTab == 'patient'">
+            <app-buy-again-patient [respData]="buyAgainList" (byagainOrder)="proceed_buyAgain($event)"></app-buy-again-patient>
+        </ng-container>
+
+        <ng-container *ngIf="selectedTab == 'order'">
+            <app-buy-again-order [respData]="buyAgainList" (byagainOrder)="proceed_buyAgain($event)"></app-buy-again-order>
+        </ng-container>
+
+        <ng-container *ngIf="selectedTab == 'product'">
+            <app-buy-again-product [respData]="buyAgainList" (byagainOrder)="proceed_buyAgain($event)"></app-buy-again-product>
+        </ng-container>
+    </div>
+
+    <div *ngIf="buyAgainList.length == 0 && isResp" class="p-3">
+       <div class="notfoundbox fw-5">No previous product available</div>
+    </div>
+</div>
+
+
+<button #buyagainModal data-bs-toggle="modal" data-bs-target="#buyagainModal" class="d-none"></button>
+<div class="modal fade" id="buyagainModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="buyagainModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-body">            
+            <div class="d-flex w-100 my-3 fw-5">{{respMsg}}</div>
+            <div class="">
+                <button type="button" class="btn btn-outline-primary btn-sm px-3" data-bs-dismiss="modal" aria-label="Close">Ok</button>
+            </div>
+        </div>
+      </div>
+    </div>
+</div>

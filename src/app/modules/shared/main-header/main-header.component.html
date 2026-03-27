@@ -1,0 +1,137 @@
+<header class="headerSec">
+<div class="headerTop" [ngClass]="{ border_btm: scrolled }">
+
+<div class="leftSec w-100">
+<div class="logoSec">
+    <app-logo></app-logo>
+</div>
+
+<ng-container *ngIf="authService.currentModule != 'OrderOnline' && authService.currentModule != 'Article'">
+    <div class="searchArea relative">
+        <div style="width: 100%; max-width: 700px;">
+            <app-header-search (newItemEvent)="count()"></app-header-search>
+        </div>
+    </div>
+
+    <div>
+        <div *ngIf="authService.LocationSkipped == 0 && authService.PinCode != ''" class="text-nowrap deliverySec">
+            <strong data-bs-toggle="modal" data-bs-target="#piChangeModal">{{CityName}}, {{PinCode}} <i class="icon-angle-down"></i> </strong>
+            <div class="padmar0 fontsize10" style="font-size: 12px; color: #1d2939; font-weight: 400; white-space: nowrap;">{{this.DlMsg}}</div>
+        </div>
+        <div *ngIf="authService.LocationSkipped == 1 || (authService.LocationSkipped == 0 && authService.PinCode == '')" class="text-nowrap deliverySec">
+            <small>Service Pincode</small>
+            <strong data-bs-toggle="modal" data-bs-target="#piChangeModal">Select Pincode <i class="icon-angle-down"></i></strong>
+            <div class="padmar0" style="font-size: 12px; color: #1d2939; font-weight: 400; white-space: nowrap;"></div>
+        </div>
+    </div>
+</ng-container>
+
+</div>
+
+<div class="rightSec">
+    <div *ngIf="authService.currentModule == 'OrderOnline'" class="userSec">
+        <!-- <a  href="https://play.google.com/store/apps/details?id=com.shtpl.sastasundar&hl=en_IN"><span class="m-1"><i class="fa-solid fa-mobile-screen" style="font-size: 21px;"></i></span><span class="mob-off text-nowrap">Download App</span></a> -->
+        <a  href="http://sndr.in/hGR1sH"><span class="m-1"><i class="fa-solid fa-mobile-screen" style="font-size: 21px;"></i></span><span class="mob-off text-nowrap">Download App</span></a>
+    </div>
+    <div *ngIf="authService.currentModule == 'Article'" class="userSec">
+        <a routerLink="/healtharticle/bookmark"><span class="m-1"><i class="fa-regular fa-bookmark"></i></span><span class="mob-off text-nowrap">Saved Articles</span></a>
+    </div>
+    <div *ngIf="labTestCount == 0" class="cartSec">
+        <a  (click)="gotoCart()"><span class="m-1"><i class="icon-cart"></i></span><span class="mob-off">Cart</span>
+            <span class="badge">{{totalCount}}</span></a>  
+    </div>
+    <div *ngIf="labTestCount > 0" class="dropdown2 cartSec" role="button">
+        <a class="cartSec">
+            <span class="m-1"><i class="icon-cart"></i></span>
+            <span class="mob-off">Cart</span>
+            <span class="badge">{{allCount}}</span>
+            <span><i class="icon-angle-down p-1 fs-7 mob-off"></i></span>
+        </a>
+        <div class="cartlist fade-animation ">
+            <ul>
+                <li><a (click)="gotoCart()"><i class="icon-cart"></i> <span class="t-item">Products</span><span *ngIf="totalCount >0" class="cartvalue">{{totalCount}} item(s)</span><span *ngIf="totalCount == 0" class="cartvalue">No item(s)</span></a></li>
+                <li><a (click)="gotoLab()"><i class="icon-lab_instrument_test"></i> <span class="t-item">Lab Tests</span><span class="cartvalue">{{labTestCount}} item(s)</span></a> </li>
+            </ul>
+        </div>
+    </div>
+
+    <div *ngIf="isLoggedIn =='true'" class="dropdown2" role="button">
+        <div class="userSec">
+            <span class="m-1"><i class="icon-user-circle-blank useri"></i></span><span class="text-truncate mob-off" style="max-width: 95px; margin-right: 6px;">{{UserName}}</span>
+            <span><i class="icon-angle-down p-1 mob-off"></i></span>
+        </div>
+       
+            <div class="w-user fade-animation">
+                <ul>
+                <li class="welcomeaf"><div class="text-truncate" style="max-width: 180px;">{{UserName}}</div></li>
+                <li><a routerLink="/customers/dashboard/profile"><i class="icon-settings"></i>My Profile</a></li>
+                <li><a routerLink="/customers/dashboard/orderlist"><i class="icon-all-articles"></i>My Orders</a></li>
+                <li><a routerLink="/customers/dashboard/myaccount"><i class="icon-my-account-rs"></i>My Account</a></li>
+                <li><a routerLink="/customers/dashboard/lab-bookings"><i class="icon-lab_instrument_1"></i>Lab Bookings</a></li>
+                <li><a (click)="logOut()" style="color:#ff0000 !important;"><i class="icon-switch fontsize17" style="color:#ff0000 !important;"></i>Logout</a></li>
+                <!-- <li><a href="#">Separated link</a></li> -->
+                </ul>
+            </div>
+    </div>
+
+    <div *ngIf="isLoggedIn =='false'" class="d-flex align-items-center hvr" (click)="login()">
+        <span class="ms-1 me-2" style="padding-top: 5px;"><i class="icon-user-circle-blank" style="font-size: 26px;"></i></span>
+        <span class="text-truncate fs-7 text-capitalize mob-off" style="max-width: 95px; margin-right: 6px;">Login</span>
+        <span><i class="icon-angle-down px-1 fs-7"></i></span>
+    </div>
+</div>
+</div>
+<div class="header-height"></div>
+
+<div class="bg-white subct">
+    <ng-container *ngIf="authService.currentModule!= 'Article' && authService.currentModule != 'OrderOnline'">
+        <app-sub-header ></app-sub-header>
+    </ng-container>
+    <ng-container *ngIf="authService.currentModule== 'Article'">
+        <app-article-subheader></app-article-subheader>
+    </ng-container>
+</div>
+</header>
+
+<div class="modal fade" id="piChangeModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="piChangeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content cusmodalSec">
+        <button type="button" class=" modal-close" data-bs-dismiss="modal" aria-label="Close">
+            <i class="icon-lab_cross"></i>
+        </button>
+        <div class="text-center locationSec">
+            <h2>Where do you want the delivery?</h2>
+            <div class="mb-1">
+                <div class="mb-2">
+                    <span class="px-2"><i class="icon-location-1-nsm" style="font-size: 18px;color:#1879b7;position: relative;top: 2px;"></i></span>
+                    <span [innerHtml]="pinDetectMsg"></span>
+                    <span *ngIf="geoBlock" class="px-1 hvr" (click)="showGeoRes()"><i class="icon-location-1-nsm" style="font-size: 18px;color:#1879b7;position: relative;top: 2px;"></i></span>
+                </div>
+                <div *ngIf="geoBlockMsg && geoBlock" class="mb-1">User block location service</div>
+            </div>
+   
+                <div class="clr height20"></div>
+                <div class="popularRegionsBgBrd"><span>or enter a pincode</span></div>
+        
+            
+            <!-- <div class="mb-3">
+                <input type="phone" class="form-control bx-shdw" placeholder="Eg : example.123@email.com">
+            </div> -->
+            <form [formGroup]="pinchangeForm" (ngSubmit)="changePin()" class="profile-form">
+                <!-- <div class="mb-3 text-danger fw-5">{{pinError}}</div> -->
+                <div *ngIf="pinSubmit && f['Pincode'].errors" class="error-text">
+                    <div *ngIf="f['Pincode'].errors['required']">*Pincode is required</div>
+                </div>
+                <div *ngIf="pinSubmit && f['Pincode'].errors" class="error-text">
+                    <div *ngIf="f['Pincode'].errors['pattern']">*Pincode is invalid</div>
+                </div>
+                <div class="form-inline">
+                        <input type="text" style="width: 190px;" class="form-control input-lg" inputmode="numeric" maxlength="6" placeholder="Enter Pincode" aria-label="Enter Pincode" aria-describedby="changePin" formControlName="Pincode" pattern="[1-9]{1}[0-9]{5}" (keypress)="numCheck($event)">
+                        <button class="btnSuccess" type="submit" id="changePin">Apply</button>
+                </div>
+            </form>
+
+        </div>
+      </div>
+    </div>
+</div>

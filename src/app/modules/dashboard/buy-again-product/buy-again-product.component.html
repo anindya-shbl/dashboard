@@ -1,0 +1,77 @@
+<ng-container>
+    <div *ngIf="ProductList.length > 0" class="">
+        <div style="min-height: calc(100vh - 358px);">
+            <div class="ac-grid p-3">
+                <ng-container *ngFor="let item of ProductList">
+                    <div class="p-3 border rounded">
+                        <div class="w-100 mb-2 text-center position-relative">
+                            <ng-container *ngIf="item.PrescriptionOTC == 'P'">
+                                <i class="icon-Rx rxblock"></i>
+                            </ng-container>
+                            
+                            
+                            <div class="buyagnImg">
+                                <ng-container *ngIf="item.ProductImage != '' && item.ProductImage != null">
+                                    <img src="https://asset.sastasundar.com/incom/images/product/thumb/{{item.ProductImage}}" width="100%">
+                                </ng-container>
+                                <ng-container *ngIf="item.ProductImage == '' || item.ProductImage == null">
+                                    <!-- <img src="https://asset.sastasundar.com/incom/images/product/thumb/thumb/default_product1460098847.jpg"> -->
+                                    <img *ngIf="item.PrescriptionOTC == 'P' || item.PrescriptionOTC == 'M'"  src="https://asset.sastasundar.com/incom/images/product/thumb/Med.svg" alt="" width="110px">
+                                    <img *ngIf="item.PrescriptionOTC == 'O'" src="https://asset.sastasundar.com/incom/images/product/thumb/Household.svg" alt="" width="110px">
+                                </ng-container>
+                            </div>
+                        </div>
+
+                        <div class="mb-2 fw-5 hvr" (click)="CommonService.getProductDetailsPageURL(item.ProductId, item.ProductName, item.PrescriptionOTC)">{{item.DisplayName}}</div>
+
+                        <div class="d-flex align-items-center justify-content-between">
+                            <div *ngIf="item.IsOutOfStock == 'N'">
+                                <div class="d-flex gap-2 align-items-center">
+                                    <del class="s-price text-black-50">{{item.MRP | currency : 'INR'}}</del>
+                                    <b class="text-orange" *ngIf="item.DiscountPercent > 0">{{item.DiscountPercent}} % off</b>
+                                </div>
+                                <b class="fw-1 pt-1">{{item.OfferPrice | currency : 'INR'}}</b>
+                            </div>
+                            
+                            <div *ngIf="item.IsOutOfStock == 'Y'">
+                                <span class="text-secondary">Out of Stock</span>
+                            </div>
+                            <ng-container *ngIf="item.IsOutOfStock == 'N'">
+                                <div *ngIf="item.addedQty == 0" class="action-btn  hvr" (click)="AddUpdate(item)">
+                                    <span class="fs-3 fw-5 addbutton-color">ADD</span> 
+                                </div>
+    
+                                <div *ngIf="item.addedQty > 0" class="action-btn action-add">
+                                    <span class="item-action" (click)="RemoveUpdate(item)">&#8722;</span>
+                                    <span class="item-text" >{{item.addedQty}}</span>
+                                    <span class="item-action" (click)="AddUpdate(item)">&#43;</span>
+                                </div>
+                            </ng-container>
+
+                            <ng-container *ngIf="item.IsOutOfStock == 'Y'">
+                                <div class="notify-btn hvr" (click)="requestNotify(item)">
+                                    <span class="fs-3 fw-5" >Notify</span>
+                                </div>
+                            </ng-container>
+                        </div>
+                    </div>
+                </ng-container>
+            </div>
+        </div>
+        <div class="d-flex justify-content-between align-items-center p-3 border-top bg-white" [ngClass]="scrollPosition>0 ? 'sticky-bottom':''">
+            <div class="border rounded px-3 py-2">{{checkoutArr.length}} item<span *ngIf="checkoutArr.length > 1">s</span></div>
+            <div class="btnSec">
+                <button *ngIf="checkoutArr.length > 0" class="btnSubmit" (click)="proceed()">Go to cart</button>
+                <button *ngIf="checkoutArr.length == 0" class="btnSubmit" type="button" disabled type="button">Go to cart</button>
+            </div>
+        </div>
+    </div>
+</ng-container>
+
+<ng-container *ngIf="ProductList.length == 0">
+    <div class="notfoundbox mt-3">
+        <ng-container >
+            <div class="fw-5">No Record Found...</div>
+        </ng-container>
+    </div>
+</ng-container>

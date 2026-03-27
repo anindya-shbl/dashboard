@@ -1,0 +1,23 @@
+<div class="d-flex">
+    <div class="tab me-2">
+        <div class="tab-name" routerLink="health-topics"><i class="fa-solid fa-plus me-2"></i> Follow Categories</div>
+    </div>
+    <div class="tab-container">
+        <button class="scroll-btn left" [class.hidden]="currentIndex <= 0" (click)="moveTabs('left')">
+            <i class="fa-solid fa-arrow-left"></i>
+        </button>
+
+        <div class="tabs-wrapper">
+            <div class="tabs" #tabsRef [style.transform]="'translateX(-' + currentIndex * (tabWidth + 10) + 'px)'">
+                <div class="tab" *ngFor="let tab of tabList">
+                    <div class="tab-name text-center" [ngClass]="tab._id == currentTab._id? 'tab-active': ''"
+                        (click)="changeTabDetails(tab)">{{tab.CategoryName}}</div>
+                </div>
+            </div>
+        </div>
+
+        <button class="scroll-btn right" [class.hidden]="isRightHidden" (click)="moveTabs('right')">
+            <i class="fa-solid fa-arrow-right"></i>
+        </button>
+    </div>
+</div>

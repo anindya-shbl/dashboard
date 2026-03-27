@@ -1,0 +1,33 @@
+<div class="d-flex w-100">
+    <ng-container *ngFor="let info of labtrackList ">
+        <ng-container *ngIf="info.BookingStatusId > 1">
+            <div class="linebar" [ngClass]="info.BookingStatus == 'COMPLETED' ? 'bg-success' : 'bg-lt' "></div>
+        </ng-container>
+
+        <div class="text-center">
+            <div class="lm-width" style="font-size: 42px;">
+                <div *ngIf="info.BookingStatusId != 8">
+                    <i class="fa-solid fa-circle-check" [ngClass]="info.BookingStatus == 'COMPLETED' ? 'text-success' : 'txt-off' "></i>
+                </div>
+                <div *ngIf="info.BookingStatusId == 8">
+                    <i class="fa-solid fa-circle-xmark text-danger"></i>
+                </div>
+            </div>
+            <div class="fw-7 lm-width">
+                <ng-container *ngIf="info.BookingStatusId != 8">
+                    <div [ngClass]="info.BookingStatus == 'COMPLETED' ? 'text-success' : 'txt-off' ">{{info.BookingStatusDesc}}</div>
+                    <!-- <div class="info">{{info.BookingStatusHistoryDate}}</div> -->
+                </ng-container>
+                <ng-container *ngIf="info.BookingStatusId == 8">
+                    <div class="text-danger">{{info.BookingStatusDesc}}</div>
+                    <!-- <div class="info"> {{info.BookingStatusHistoryDate}}</div> -->
+                </ng-container>
+                <ng-container>
+                    <div class="mt-1 fs-3" style="font-weight: 400;">{{info.BookingStatusHistoryDate}}</div>
+                </ng-container>
+            </div>
+        </div>
+        
+    </ng-container>
+</div>
+

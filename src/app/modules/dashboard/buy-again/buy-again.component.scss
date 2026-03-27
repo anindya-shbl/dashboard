@@ -1,0 +1,58 @@
+// .buyagnImg{
+//     // border: 1px solid lightgray;
+//     // border-radius: 4px;
+//     //min-width: 80px;
+//     // padding: 8px;
+//     // display: flex;
+//     // justify-content: center;
+//     // align-items: center;
+//     border: 1px solid #D0D5DD;
+// }
+
+.text-decoration-line-through{
+    font-size: 11px;
+    color: gray;
+    padding: 0 8px;
+}
+
+
+.ordTabSec {
+    & ul {
+        & li {
+            margin: 0 0 12px;
+            cursor: pointer;
+            &.tab-active {
+                & a {
+                    color: #007DC9;
+                    background-color: #E0F3FD;
+                }
+            }
+
+            & a {
+                border: 1px solid #D0D5DD;
+                font-size: 14px;
+                color: #344054;
+                font-weight: 600;
+                line-height: 20px;
+                padding: 8px 16px;
+
+            }
+        }
+    }
+}
+
+.notavalible {
+    width: auto;
+    display: table;
+    background-color: #fff;
+    border-radius: 8px;
+    padding: 15px 25px;
+    margin: 5% auto;
+    box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.2);
+}
+.top-sticky {
+    position: sticky;
+    top: 20px;
+    z-index: 10;
+    background-color: #fff;
+}

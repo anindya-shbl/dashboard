@@ -1,0 +1,53 @@
+.bkmrk-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+    grid-gap: 1rem;
+}
+
+// .bkimg-cont{
+//     // width: 164px;
+//     // min-width: 164px;
+//     // height: 100px;
+//     width: 130px;
+//     min-width: 130px;
+// }
+
+.card-img, .card-img-overlay{
+    height: 100px;
+}
+
+.bkMrk-bg{
+    border: 1px solid white;
+    background-color: white;
+    padding: 10px 12px;
+    border-radius: 50%;
+    margin-left: -8px;
+    cursor: pointer;
+}
+
+.h-46{
+    height: 46px;
+}
+
+.rmv{
+    position: absolute;
+    top: 11px;
+    right: 11px;
+    padding: 3px 8px;
+    border: 1px solid #c3c1c1;
+    border-radius: 50%;
+    background-color: #f7f6f6;
+    color: #9f9e9e;
+}
+
+.tag{
+  position: absolute;
+  top: 10px;
+  left: 8px;
+  padding: 6px 11px;
+  border: 1px solid #c3c1c1;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 500;
+  background-color: white;
+}

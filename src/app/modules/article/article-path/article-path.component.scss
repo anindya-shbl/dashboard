@@ -1,0 +1,22 @@
+a,
+a:hover,
+a:focus,
+:focus {
+    text-decoration: none;
+    outline: none;
+    color: #006db5;
+    font-size: 12px;
+    font-weight: 400;
+}
+
+a:hover{
+    color: #007DC9;
+}
+
+.form-select{
+    font-size: 14px;
+    font-weight: 500;
+    padding: .375rem 2.25rem .375rem 1rem !important;
+    cursor: pointer;
+}
+

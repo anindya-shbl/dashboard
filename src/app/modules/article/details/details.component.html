@@ -1,0 +1,83 @@
+<div class="px-3 pt-3">
+    <app-article-path></app-article-path>
+</div>
+<div *ngIf="!isLoading" class="p-3 pt-1">
+    <div class="row">
+
+        <div class="col-xl-8 p-3">
+            <div *ngIf="langContent != ''" class="">
+                <ng-container *ngFor="let cont of langContent.Content.Description">
+                    <div class="bg-white mb-3 rounded-end position-relative">
+                        <div class="tag" [style.background-color]="langContent.Category[0].ColorCode">{{langContent.Category[0].CategoryName}}</div>
+                        <div *ngIf="cont.Image != '' && cont.Image != null && cont.Image != undefined" class="img-cont mb-3">
+                            <img [src]="cont.Image" width="100%" class="rounded-top" alt="...">
+                        </div>
+                        <div class="article-heading text-capitalize px-3">{{langContent.Content.Title}}</div>
+                        <div class="d-flex align-items-center justify-content-between text-secondary fs-5 border-bottom mb-3">
+                            <!-- <div>                                
+                                <span class="p-3"><i class="fa-regular fa-eye pe-1"></i>{{langContent.Viewcount}}</span>
+                            </div> -->
+                            <div class="">
+                                <span class="p-3">Posted On : {{langContent.UpdatedDate | date : "MMM yy"}}</span>
+                            </div>
+                            <div class="position-relative d-flex">
+                                <span class="pe-4 py-3"><i class="fa-regular fa-eye pe-1"></i>{{langContent.Viewcount}}</span>
+                                <span class="pe-4 py-3 hvr">
+                                    <span *ngIf="!langContent.IsLiked" (click)="likeArticle(langContent)"><i class="fa-regular fa-heart"></i></span>
+                                    <span *ngIf="langContent.IsLiked" (click)="likeArticle(langContent)"><i class="fa-solid fa-heart text-danger"></i></span>
+                                    {{langContent.LikeCount}}
+                                </span>
+                                <div class="pe-4 py-3 hvr" (mouseenter)="showDiv = true" (mouseleave)="showDiv = false">
+                                    <span><i class="fa-solid fa-share"></i></span>
+                                    <div *ngIf="showDiv" class="share-cont">
+                                        <app-social-links [inputLink]="parmalink"></app-social-links>
+                                    </div>
+                                </div>
+
+                                <div class="pe-3 py-3 hvr">
+                                    <span *ngIf="!langContent.IsBookmarked" (click)="bookmarkArticle(langContent)"><i class="fa-regular fa-bookmark"></i></span>
+                                    <span *ngIf="langContent.IsBookmarked" (click)="bookmarkArticle(langContent)"><i class="fa-solid fa-bookmark text-success"></i></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="p-3 artica-details-block text-break" [innerHTML]="cont.Content"></div>
+                    </div>
+                </ng-container>
+            </div>
+
+            <div *ngIf="langContent == ''" class="">
+                <app-not-found></app-not-found>
+            </div>
+        </div>
+        <div class="col-xl-4 p-3">
+            <div class="sticky-top z-1 top-10">
+            <div class="fs-7 fw-6 pb-3">Related Health Articles</div>
+            <div *ngIf="relatedArticle.length>0">
+                <app-related-articles [relatedData]="relatedArticle" [currentLang]="defaultLang" (changeDetails)="changeArtcle($event)"></app-related-articles>
+            </div>
+
+            <div *ngIf="relatedArticle.length == 0" class="text-center py-5 bx-shdw bg-white">
+                No Related Article Found
+            </div>
+          </div>
+        </div>
+    </div>
+    <!-- <button (click)="changeLang('Hindi')">changeLang</button> -->
+</div>
+
+
+<button #socialLink type="button" class="d-none" data-bs-toggle="modal" data-bs-target="#socialLinkMod"></button>
+<!-- Modal -->
+<div class="modal fade" id="socialLinkMod" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+    aria-labelledby="socialLinkModLabel" aria-hidden="true">
+    <div class="modal-dialog modal-sm modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="d-flex justify-content-end w-100">
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <app-social-links [inputLink]="parmalink"></app-social-links>
+            </div>
+        </div>
+    </div>
+</div>

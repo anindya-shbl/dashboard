@@ -1,0 +1,48 @@
+a,
+a:hover,
+    a:focus,
+    :focus {
+        text-decoration: none;
+        outline: none;
+    }
+    
+    .db-header{
+    background-color: white;
+    padding: .4rem 1rem;
+    margin-bottom: .1rem;
+}
+
+.breadcrumbSec {
+    padding: 0;
+    margin: 0px;
+    & ul {
+        display: inline-block;
+        list-style: none;
+        display: inline-flex;
+        padding: 0;
+        margin: 0px;
+        & li {
+            color: #667085;
+            font-size: 12px;
+            font-weight: 400;
+            & a {
+                color: #667085;
+                &:hover {
+                    color: #007DC9;
+                }
+            }
+            &::after {
+                content: "\f105";
+                font-family: icomoon !important;
+                padding-left: 8px;
+                margin-right: 8px;
+            }
+            &:last-child {
+                color: #344054;
+                &::after {
+                    content: "";
+                }
+            }
+        }
+    }
+}

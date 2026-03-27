@@ -1,0 +1,42 @@
+<ng-container>
+    <div class="lab-body">
+        <ng-container *ngIf="banners.length>0">
+            <app-home-banner [topBanner]="banners"></app-home-banner>
+        </ng-container>
+
+        <ng-container>
+            <app-order-action></app-order-action>
+        </ng-container>
+
+        <ng-container *ngIf="mostBought.length > 0">
+            <app-most-bought [mstBgt]="mostBought"></app-most-bought>
+        </ng-container>
+
+        <div class="p-3 hvr" (click)="openJito()">            
+            <img src="https://asset.sastasundar.com/incom/jito-health/banner/web2.png" alt="" class="img-fluid">
+        </div>
+
+        <ng-container *ngIf="popularCategory.length>0">
+            <app-popular-category [pCtgry]="popularCategory"></app-popular-category>
+        </ng-container>
+
+        <ng-container *ngIf="keywordProduct.length > 0">
+            <app-keyword-products [kwPrdct]="keywordProduct"></app-keyword-products>
+        </ng-container>
+
+        <ng-container *ngIf="popularBrands.length>0">
+            <app-popular-brands [pplBrnd]="popularBrands"></app-popular-brands>
+        </ng-container>
+
+        <app-med-notes></app-med-notes>
+    </div>
+    <div>
+        <app-download-app></app-download-app>
+    </div>
+    <div>
+        <app-sub-footer></app-sub-footer>
+    </div>
+    <div class="border-top">
+        <app-footer></app-footer>
+    </div>
+</ng-container>

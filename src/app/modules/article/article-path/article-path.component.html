@@ -1,0 +1,14 @@
+<div class="d-flex justify-content-between align-items-center">
+    <div>
+        <span><a href={{Commonservice.baseurl}}>Home</a></span>
+        <span><a routerLink='/healtharticle'> &nbsp; > &nbsp; Health Article</a></span>
+        <span *ngIf="myPath != undefined && myPath !='' && myPath != null" class="active text-capitalize">
+            <a>&nbsp; > &nbsp;{{myPath}}</a>
+        </span>
+    </div>
+    <div>
+        <select class="form-select" [(ngModel)]="selectedValue" (change)="onSelectionChange()">
+            <option *ngFor="let option of options" [ngValue]="option.value">{{option.label}}</option>
+        </select>
+    </div>
+</div>

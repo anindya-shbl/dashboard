@@ -1,0 +1,17 @@
+<div *ngIf="popularPackages.length > 0" class="p-3">
+    <div class="d-flex justify-content-between mb-3">
+        <span class="fs-20 fw-6">Popoular Health Packages</span>
+        <span class="text-primary hvr" (click)="viewAllPckgs()">View all packages</span>
+    </div>
+    <owl-carousel-o [options]="customOptions">
+        <ng-container *ngFor="let item of popularPackages">
+            <ng-template carouselSlide [id]="item.id">
+                <div class="p-2">
+                    <div class="rounded item-shadow hvr mx-320" (click)="viewPckgDtls(item.PermalinkNew)">
+                        <img [src]="item.PkgAppServiceImage" alt="" class="rounded">
+                    </div>
+                </div>
+            </ng-template>
+        </ng-container>
+    </owl-carousel-o>
+</div>

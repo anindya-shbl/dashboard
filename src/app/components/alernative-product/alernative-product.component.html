@@ -1,0 +1,240 @@
+<div *ngIf="productData.length > 0" class="jito-grad border rounded item-shadow fxd-top">
+    <ng-container *ngFor="let JitoData of productData">
+        <div class="d-flex justify-content-between p-3">
+            <div class="text-primary-emphasis">
+                <div class="fw-6 fs-7">
+                    <span><img src="https://asset.sastasundar.com/incom/jito-health/assets/Images/jito-favicon.png"
+                            alt="" width="20px"></span>
+                    <span class="fs-20 fw-8">JITO &nbsp;</span><span>Quality</span>
+                </div>
+                <div class="fw-6 fs-7 ps-2">Alternative Medicine</div>
+            </div>
+            <div>
+                <div class="rpl bg-success bg-gradient text-white">
+                    <div><img src="https://asset.sastasundar.com/incom/sspl_website/images/medi-icon.png"
+                            class="rounded-circle p-1 bg-white" alt=""></div>
+                    <div class="">
+                        <div class="px-2">EXACT SAME</div>
+                        <div class="px-2">COMPOSITION</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row g-0 ct-dv">
+            <ng-container *ngFor="let hds of JitoConfig['results']; let last = last">
+                <div class="col-4 p-1 text-center" [ngClass]="{'border-line': !last}">
+                    <div class=""><img [src]="hds.imageUrl" alt=""></div>
+                    <div class="fs-2 pt-1 mx-auto" style="max-width: 150px;">{{hds.title}}</div>
+                </div>
+            </ng-container>
+        </div>
+        <div class="Alternative-body">
+            <ng-container *ngFor="let altr of JitoData.PreferredSubtitute">
+                <div class="border rounded item-shadow position-relative">
+                    <div *ngIf="altr.savingsPercent >0" class="tagline">Save {{altr.savingsPercent}}%</div>
+                    <div class="d-flex p-3">
+                        <div *ngIf="altr.ProductImage != '' && altr.ProductImage != null" class="pt-3 hvr"
+                            (click)="viewAlter(altr, JitoData.PrescriptionOTC)">
+                            <img src="https://asset.sastasundar.com/incom/images/product/thumb/{{altr.ProductImage}}"
+                                alt="" width="70px">
+                        </div>
+                        <div *ngIf="altr.ProductImage == '' || altr.ProductImage == null" class="pt-3 hvr"
+                            (click)="viewAlter(altr, JitoData.PrescriptionOTC)">
+                            <img *ngIf="JitoData.PrescriptionOTC == 'P' || JitoData.PrescriptionOTC == 'M'"
+                                src="https://asset.sastasundar.com/incom/images/product/thumb/Med.svg" alt=""
+                                width="70px">
+                            <img *ngIf="JitoData.PrescriptionOTC == 'O'"
+                                src="https://asset.sastasundar.com/incom/images/product/thumb/Household.svg" alt=""
+                                width="70px">
+                        </div>
+                        <div class="w-100 ps-3">
+                            <div class="fs-4 fw-5 mb-2 hvr" (click)="viewAlter(altr, JitoData.PrescriptionOTC)">
+                                {{altr.DisplayName}}
+                            </div>
+                            <div class="fs-2 text-secondary mb-2">
+                                {{ altr.MfgGroup }}
+                            </div>
+                            <div class="d-inline-flex fs-2 text-secondary mb-2 p-1 bg-light">
+                                Exp Dt. : {{ altr.ExpiryDate | date : "dd MMM yyyy" }}
+                            </div>
+                            <div class="d-flex justify-content-between ">
+                                <div>
+                                    <div class="d-flex flex-wrap align-items-center mb-1">
+                                        <div class="fw-5 me-2">
+                                            {{altr.CustOfferPrice | currency: 'INR'}}
+                                        </div>
+
+                                        <div *ngIf="altr.CustDiscPercent > 0" class="fw-5" style="color: #E9640D;">
+                                            {{altr.CustDiscPercent}}% Off
+                                        </div>
+                                    </div>
+                                    <div class="d-flex flex-wrap align-items-center">
+                                        <div *ngIf="altr.MRP > altr.CustOfferPrice"
+                                            class="me-2 text-secondary text-decoration-line-through">
+                                            {{altr.MRP | currency: 'INR'}}
+                                        </div>
+                                        <div class="text-secondary">
+                                            {{altr.pricePerUnit | currency: 'INR'}}/Unit
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="ms-3">
+                                    <div *ngIf="altr.addedQty == 0 && JitoData.addedQty ==0" class="action-btn  hvr"
+                                        (click)="addToCart(altr);">
+                                        <span class="action-btn addbutton-color">ADD</span>
+                                    </div>
+                                    <div *ngIf="altr.addedQty == 0 && JitoData.addedQty >0"
+                                        class="action-btn action-add hvr" (click)="replaceAlternative(altr, JitoData)">
+                                        <span class="item-text">Replace</span>
+                                    </div>
+                                    <div *ngIf="altr.addedQty > 0" class="action-btn action-add">
+                                        <span class="item-action" (click)="cartAddMinus(altr)">&#8722;</span>
+                                        <span class="item-text">{{altr.addedQty}}</span>
+                                        <span class="item-action" (click)="cartAddPlus(altr)">&#43;</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="text-center ">
+                        <div class="bg-warning-subtle text-truncate p-3 rounded-bottom">
+                            <span class="pe-2"><img
+                                    src="https://stage.sastasundar.com/flutter/assets/assets/icon/substitute_extra_icon.svg"
+                                    alt=""></span>
+                            <span>Same salt composition as <span
+                                    class="fs-3 fw-5">{{JitoData.ProductName}}</span></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="pt-3 pb-1 fw-5 text-primary hvr" (click)="openCompare(JitoData, altr)">
+                    Compare with original item
+                    <span><i class="fa-solid fa-chevron-right ps-1" style="font-size: 10px;"></i></span>
+                </div>
+            </ng-container>
+        </div>
+    </ng-container>
+</div>
+
+
+<button #compareAltrMdl data-bs-toggle="modal" data-bs-target="#compareAltrMdl" class="d-none"></button>
+<div class="modal fade" id="compareAltrMdl" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+    aria-labelledby="compareAltrMdlLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content jito-grad compMod">
+
+            <div class="d-flex justify-content-between align-items-center p-3 border-bottom" id="closeAlt">
+                <div class="fs-20 fw-6 text-primary-emphasis">Compare Items</div>
+                <div>
+                    <i class="fa-regular fa-circle-xmark fs-8 hvr" #closeAltMod data-bs-dismiss="modal"
+                        aria-label="Close" (click)="closeAlterMod()"></i>
+                </div>
+            </div>
+            <div class="p-3 mb-3">
+                <div class="d-flex justify-content-between">
+                    <div class="mb-3 px-1">
+                        <span class="text-primary fs-8 fw-6">100% Exact</span>
+                        <br>
+                        <span class="fs-5 fw-5">Salt Composition</span>
+                    </div>
+                    <div class="mb-3 px-1 text-end">
+                        <span class="text-success fs-8 fw-6">Save {{compareAlter.savingsPercent}}%</span>
+                        <br>
+                        <span class="fs-5 fw-5">With Jito Alternative</span>
+                    </div>
+                </div>
+                <div class="row g-0 rounded item-shadow">
+                    <div class="col-6 border-end text-center">
+                        <div class="copm-dv bg-body-secondary" style="border-radius: 4px 0 0 0;">Original Item</div>
+                        <div class="copm-dv">
+                            <div class="itemImg mx-auto border-0 "
+                                *ngIf="mainPrd.ProductImage != '' && mainPrd.ProductImage != null">
+                                <img [src]="mainPrd.ProductImage" alt="" width="100%">
+                            </div>
+                            <div class="itemImg mx-auto border-0 "
+                                *ngIf="mainPrd.ProductImage == '' || mainPrd.ProductImage == null">
+                                <img *ngIf="compareAlter.PrescriptionOTC == 'P' || compareAlter.PrescriptionOTC == 'M'"
+                                    src="https://asset.sastasundar.com/incom/images/product/thumb/Med.svg" alt=""
+                                    width="80%">
+                                <img *ngIf="mainPrd.PrescriptionOTC == 'O'"
+                                    src="https://asset.sastasundar.com/incom/images/product/thumb/Household.svg" alt=""
+                                    width="80%">
+                            </div>
+                        </div>
+                        <div class="copm-dv text-truncate">
+                            {{ mainPrd.ProductName }}
+                        </div>
+                        <div class="copm-dv">
+                            {{getPPU(mainPrd) | currency: 'INR'}}/Unit
+                        </div>
+                        <div class="copm-dv text-truncate">
+                            {{ mainPrd.MfgGroup }}
+                        </div>
+                        <div class="copm-dv">
+                            FDA Approved
+                        </div>
+                        <div class="copm-dv text-truncate">
+                            {{mainPrd.SaltName}}
+                        </div>
+                        <!-- <div class="copm-dv border-bottom-0">
+                            <div class="alter-add justify-content-between w-100 ">
+                                <span (click)="cartAddMinus(mainPrd.ProductId)" class="fs-6 fw-6 px-3">-</span>
+                                <span>{{ mainPrd.ItemQuantity }}</span>
+                                <span (click)="cartAddPlus(mainPrd.ProductId)" class="fs-6 fw-6 px-3">+</span>
+                            </div>
+                        </div> -->
+                    </div>
+                    <div class="col-6 text-center bg-gen">
+                        <div class="copm-dv bg-success text-white" style="border-radius: 0 4px 0 0;">JITO
+                            Recommended</div>
+                        <div class="copm-dv position-relative">
+                            <span class="match">
+                                <img src="https://asset.sastasundar.com/incom/jito-health/assets/Images/100-match.png"
+                                    alt="">
+                            </span>
+                            <div class="itemImg mx-auto border-0"
+                                *ngIf="compareAlter.ProductImage != '' && compareAlter.ProductImage != null">
+                                <img src="https://asset.sastasundar.com/incom/images/product/thumb/{{compareAlter.ProductImage}}"
+                                    alt="" width="100%">
+                            </div>
+                            <div class="itemImg mx-auto border-0"
+                                *ngIf="compareAlter.ProductImage == '' || compareAlter.ProductImage == null">
+                                <img *ngIf="compareAlter.PrescriptionOTC == 'P' || compareAlter.PrescriptionOTC == 'M'"
+                                    src="https://asset.sastasundar.com/incom/images/product/thumb/Med.svg" alt=""
+                                    width="80%">
+                                <img *ngIf="compareAlter.PrescriptionOTC == 'O'"
+                                    src="https://asset.sastasundar.com/incom/images/product/thumb/Household.svg" alt=""
+                                    width="80%">
+                            </div>
+                        </div>
+                        <div class="copm-dv text-truncate">
+                            {{ compareAlter.DisplayName }}
+                        </div>
+                        <div class="copm-dv">
+                            <span>{{compareAlter.pricePerUnit | currency: 'INR'}}/Unit</span>
+                            <span class="ms-2" style="color: #E9640D;">{{compareAlter.savingsPercent}}% lower</span>
+                        </div>
+                        <div class="copm-dv text-truncate">
+                            {{ compareAlter.MfgGroup }}
+                        </div>
+                        <div class="copm-dv">
+                            FDA Approved
+                        </div>
+                        <div class="copm-dv text-truncate">
+                            {{mainPrd.SaltName}}
+                        </div>
+                        <!-- <div class="copm-dv border-bottom-0">
+                            <div *ngIf="compareAlter.addedQty == 0"
+                                class="alter-btn bg-success border-success justify-content-center w-100"
+                                style="padding: 8px;" (click)="replaceAlternative(compareAlter, compareAlter)">Replace
+                            </div>
+                            <div *ngIf="compareAlter.addedQty > 0"
+                                class="alter-btn bg-success border-success justify-content-center w-100">Added</div>
+                        </div> -->
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>

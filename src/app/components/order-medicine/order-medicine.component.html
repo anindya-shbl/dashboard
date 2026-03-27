@@ -1,0 +1,287 @@
+<div class="lab-body">
+    <ng-container *ngIf="productDetails.length>0">
+        <div class="fs-2 p-3 pb-0">
+            <span><a class="text-decoration-none text-secondary" href={{CommonService.baseurl}}>Home</a>
+                &nbsp;>&nbsp;</span>
+            <span><a class="text-decoration-none text-secondary" routerLink='/newcategory/listing'>Shop by
+                    Category</a>&nbsp;>&nbsp;</span>
+            <span class="">{{productDetails[0].DisplayName}}</span>
+        </div>
+        <div class="d-flex  p-3 mb-2">
+            <div class="detail-block">
+                <div class="prd-img" *ngIf="imageArr.length>0">
+                    <app-image-medotc [prodImages]="imageArr" [veganType]="productDetails[0].FoodPreference"></app-image-medotc>
+                </div>
+                <div class="prd-img-sm" *ngIf="imageArr.length>0">
+                    <app-small-img-med-otc [prodImages]="imageArr" [veganType]="productDetails[0].FoodPreference"></app-small-img-med-otc>
+                </div>
+                <div class="w-100">
+                    <div class="mb-2">
+                        <div class="fs-22 fw-6">{{productDetails[0].DisplayName}}</div>
+                    </div>
+                    <div>
+                        <div class="mb-3 d-flex">
+                            <span>By &nbsp;</span>
+                            <span class="me-3 text-primary hvr" (click)="viewbyBrand(productDetails[0].MfgGroup)">{{productDetails[0].MfgGroup}}
+                                <!-- <span class="text-secondary">&nbsp;|| View more products from</span>
+                            {{productDetails[0].MfgGroup}} -->
+                            </span>
+                        </div>
+                        <!-- <div class="detail-block"> -->
+                        <div>
+                            <div *ngIf="productDetails[0].ProductStatus == 'C'" class="mb-3 d-flex align-items-center">
+                                <ng-container *ngIf="productDetails[0].IsOutOfStock == 'N'">
+                                    <span class="fw-7 fs-24"
+                                        *ngIf="(productDetails[0].OfferPrice > 0 && productDetails[0].MRP > productDetails[0].OfferPrice) else showmrp">{{productDetails[0].OfferPrice
+                                        | currency: 'INR'}}</span>
+                                    <ng-template #showmrp>
+                                        <span class="fw-7 fs-24"
+                                            *ngIf="productDetails[0].MRP > 0">{{productDetails[0].MRP |
+                                            currency: 'INR'}}</span>
+                                    </ng-template>
+                                    <span class="text-secondary text-decoration-line-through mx-3 fs-8"
+                                        *ngIf="productDetails[0].MRP > productDetails[0].OfferPrice">{{productDetails[0].MRP
+                                        |
+                                        currency: 'INR'}}</span>
+                                    <span *ngIf="productDetails[0].CustDiscPercent > 0" class="fw-7 fs-20"
+                                        style="color: #f46a12;">{{productDetails[0].CustDiscPercent}}% Off</span>
+                                </ng-container>
+                                <ng-container *ngIf="productDetails[0].IsOutOfStock == 'Y'">
+                                    <span class="text-secondary fw-7 fs-20">Out Of Stock</span>
+                                </ng-container>
+                            </div>
+                            <div *ngIf="productDetails[0].ProductStatus == 'D'" class="mb-3 d-flex align-items-center">
+                                <span class="text-danger fw-7 fs-20">Discontinued</span>
+                            </div>
+
+                            <div *ngIf="productDetails[0].ProductStatus=='C' && productDetails[0].showVarient == 0" class="mb-3 d-flex">
+                                <ng-container *ngIf="productDetails[0].IsOutOfStock == 'N'">
+                                    <div *ngIf="productDetails[0].addedQty == 0" class="action-btn btn-prd  hvr"
+                                        (click)="addToCart(productDetails[0], 1);">
+                                        <span class="action-btn btn-prd addbutton-color">ADD</span>
+                                    </div>
+                                    <div *ngIf="productDetails[0].addedQty > 0"
+                                        class="action-btn btn-prd action-add justify-content-around">
+                                        <span class="item-action"
+                                            (click)="cartAddMinus(productDetails[0])">&#8722;</span>
+                                        <span class="item-text">{{productDetails[0].addedQty}}</span>
+                                        <span class="item-action" (click)="cartAddPlus(productDetails[0])">&#43;</span>
+                                    </div>
+                                    <div class="ms-3 action-btn btn-prd border-success text-white bg-success hvr"
+                                        (click)="buyNow()">Buy Now</div>
+                                </ng-container>
+
+                                <ng-container *ngIf="productDetails[0].IsOutOfStock == 'Y'">
+                                    <div class="notify-btn btn-prd  hvr" (click)="requestNotify(productDetails[0])">
+                                        <span class="fw-5">Notify</span>
+                                    </div>
+                                </ng-container>
+                            </div>
+                            <div *ngIf="productDetails[0].showVarient == 1" class="mb-3">
+                                <div class="fs-5 mb-2 text-primary">New Varient Available</div>
+                                <div class="d-flex border rounded border-primary-subtle item-shadow p-3">
+                                    <div class="var-img position-relative border rounded me-3">
+                                        <span *ngIf="productDetails[0].RefProductDetails.PrescriptionOTC == 'P'" class="rx-icn">&#8478;</span>
+                                        <ng-container *ngIf="productDetails[0].RefProductDetails.ProductImage != '' && productDetails[0].RefProductDetails.ProductImage != null">
+                                            <img src="https://asset.sastasundar.com/incom/images/product/thumb/{{productDetails[0].RefProductDetails.ProductImage}}" alt width="100%">
+                                        </ng-container>
+                                        <ng-container *ngIf="productDetails[0].RefProductDetails.ProductImage == '' || productDetails[0].RefProductDetails.ProductImage == null">
+                                            <img *ngIf="productDetails[0].RefProductDetails.PrescriptionOTC == 'P' || productDetails[0].RefProductDetails.PrescriptionOTC == 'M'" src="https://asset.sastasundar.com/incom/images/product/thumb/Med.svg" alt="" width="100%">
+                                            <img *ngIf="productDetails[0].PrescriptionOTC == 'O'" src="https://asset.sastasundar.com/incom/images/product/thumb/Household.svg" alt="" width="100%">
+                                        </ng-container>
+                                    </div>
+                                    <div class="w-100">
+                                        <div class="fs-5 fw-5 mb-2 line-clamp-2">
+                                            {{productDetails[0].RefProductDetails.DisplayName}}
+                                        </div>
+                                        <!-- <div class="fs-3 text-secondary mb-2 line-clamp-1">{{productDetails[0].RefProductDetails.MfgGroup}}</div> -->
+                                        <div class="mb-1 d-flex justify-content-between align-items-center flex-wrap">
+                                            <div class="pe-2">
+                                                <div *ngIf="productDetails[0].RefProductDetails.ExpiryDate !=null && productDetails[0].RefProductDetails.ExpiryDate != undefined && productDetails[0].RefProductDetails.ExpiryDate!= ''" class="mb-2">
+                                                    <span class="text-secondary me-1">Exp Date :</span> {{productDetails[0].RefProductDetails.ExpiryDate | date: 'MMM dd, YYYY'}}
+                                                </div>
+                                                <div>
+                                                    <span class="fs-5 fw-5 me-2">{{productDetails[0].RefProductDetails.CustOfferPrice | currency: 'INR'}}</span>
+                                                    <span *ngIf="productDetails[0].RefProductDetails.MRP > productDetails[0].RefProductDetails.CustOfferPrice" class="text-decoration-line-through fs-5 text-secondary me-2">{{productDetails[0].RefProductDetails.MRP | currency: 'INR'}}</span>
+                                                    <span *ngIf="productDetails[0].RefProductDetails.CustDiscPercent>0" class="fs-5 fw-5 me-2" style="color: #f46a12;">{{productDetails[0].RefProductDetails.CustDiscPercent}}% Off</span>
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <span class="action-btn addbutton-color hvr" (click)="viewProductDetails(productDetails[0].RefProductDetails.EncodeProdId, productDetails[0].RefProductDetails.DisplayName, productDetails[0].RefProductDetails.PrescriptionOTC)">View</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div *ngIf="productDetails[0].ExpDate != '' && productDetails[0].ExpDate!= null && productDetails[0].ExpDate!= undefined && productDetails[0].IsOutOfStock == 'N'"
+                                class="mb-3 d-flex">
+                                <span class="type-box">Best Before :</span>
+                                <span class="fw-5">{{productDetails[0].ExpDate | date: 'MMM dd, YYYY'}}</span>
+
+                            </div>
+                            <div class="mb-3 d-flex">
+                                <span class="type-box">Country of Origin :</span>
+                                <span class="fw-5">{{productDetails[0].CountryofOrigin}}</span>
+                            </div>
+                            <div class="mb-3 d-flex">
+                                <span class="type-box">Generic Name :</span>
+                                <span class="fw-5">{{productDetails[0].GenericName}}</span>
+                            </div>
+                            <div class="mb-3 d-flex">
+                                <span class="type-box">Pack/Size :</span>
+                                <span class="fw-5">{{productDetails[0].Size}} {{productDetails[0].Unit}}</span>
+                            </div>
+                            <div class="mb-3 d-flex">
+                                <span class="type-box">Price/Unit :</span>
+                                <span
+                                    *ngIf="productDetails[0].PricePerUnit != null && productDetails[0].PricePerUnit != '' && productDetails[0].PricePerUnit != undefined"
+                                    class="fw-5">{{productDetails[0].PricePerUnit}}</span>
+                                <span
+                                    *ngIf="productDetails[0].PricePerUnit == null || productDetails[0].PricePerUnit == '' || productDetails[0].PricePerUnit == undefined"
+                                    class="fw-5">NA</span>
+                            </div>
+                            <div class="mb-3 d-flex">
+                                <div class="type-box">Manufacturer :</div>
+                                <div class="text-primary fw-5 hvr" data-bs-toggle="modal"
+                                    data-bs-target="#medmanufacturerDtls">
+                                    View Details</div>
+                            </div>
+                            <div *ngIf="sellerInfo.length>0" class="mb-3 d-flex">
+                                <span class="type-box">Seller Info :</span>
+                                <span class="fw-5">{{sellerInfo[0].HBName}}</span>
+                            </div>
+                            <div *ngIf="productDetails[0].IsOutOfStock == 'N'" class="mb-3">
+                                <div class="fs-6 fw-5 mb-3">Available Variant:</div>
+                                <div class="d-flex flex-wrap">
+                                    <div class="border border-primary rounded item-shadow var-box text-primary">
+                                        <div class="fs-3 line-clamp-2">{{productDetails[0].Strength}}</div>
+                                        <div class="fs-3">{{productDetails[0].OfferPrice | currency: 'INR'}}</div>
+                                    </div>
+                                    <ng-container *ngIf="varietyArr.length>0">
+                                        <ng-container *ngFor="let vrty of varietyArr">
+                                            <div *ngIf="vrty.IsOutOfStock == 'N'"
+                                                class="border rounded item-shadow var-box hvr"
+                                                (click)="viewProductDetails(vrty.EncodeProdId, vrty.DisplayName, productDetails[0].PrescriptionOTC)">
+                                                <div class="fs-3 line-clamp-2">{{vrty.Strength}}</div>
+                                                <div class="fs-3">{{vrty.OfferPrice | currency: 'INR'}}</div>
+                                            </div>
+                                            <div *ngIf="vrty.IsOutOfStock == 'Y'"
+                                                class="border rounded item-shadow var-box text-secondary">
+                                                <div class="fs-3 line-clamp-2">{{vrty.Strength}}</div>
+                                                <div class="fs-3">Sold Out</div>
+                                            </div>
+                                        </ng-container>
+                                    </ng-container>
+                                </div>
+                            </div>
+
+                            <div *ngIf="productDetails[0].showVarient == 0 && productDetails[0].IsOutOfStock == 'N'" class="row g-0 mb-3">
+                                <div class="col-4 bg-light text-center px-2 py-3">
+                                    <div class="text-secondary d-flex align-items-center justify-content-center mb-2"><i
+                                            class="fa-solid fa-prescription me-1"></i>Doctor's
+                                        note</div>
+                                    <div *ngIf="productDetails[0].PrescriptionOTC=='P'" class="hvr text-danger fw-5">
+                                        Required</div>
+                                    <div *ngIf="productDetails[0].PrescriptionOTC !='P'"
+                                        class="hvr text-secondary fw-5">
+                                        Not Required</div>
+                                </div>
+
+                                <div *ngIf="deliveryMsg !=''" class="col-4 bg-light text-center px-2 py-3">
+                                    <div class="text-secondary d-flex align-items-center justify-content-center mb-2"><i
+                                            class="fa-solid fa-truck-fast me-1"></i>Delivery</div>
+                                    <div class="text-success fw-5">{{deliveryMsg}}</div>
+                                </div>
+                                <div class="col-4 bg-light text-center px-2 py-3">
+                                    <div class="text-secondary d-flex align-items-center justify-content-center mb-2"><i
+                                            class="fa-solid fa-arrow-rotate-left me-1"></i> Return</div>
+                                    <div *ngIf="!productDetails[0].IsNonReturnable" class="fw-5 text-secondary">
+                                        14 days</div>
+                                    <div *ngIf="productDetails[0].IsNonReturnable" class="fw-5 text-danger">
+                                        Non-Returnable</div>
+                                </div>
+                            </div>
+
+                            <div *ngIf="compositionInfo.length >0" class="mb-3 pt-3">
+                                <div class="fs-6 fw-5 mb-3 hvr">
+                                    Composition/Salt :
+                                </div>
+                                <div class="">
+                                    <ng-container *ngFor="let cmps of compositionInfo">
+                                        <div class="d-flex mb-3">
+                                            <div class="me-3">
+                                                <img [src]="cmps.appicon" width="30px" alt="">
+                                            </div>
+                                            <div>
+                                                <div class="mb-2 text-secondary fw-5">{{cmps.title}}</div>
+                                                <div class="" [innerHTML]="cmps.description"></div>
+                                            </div>
+                                        </div>
+                                    </ng-container>
+                                </div>
+                            </div>
+
+                            <div *ngIf="productDetails[0].ProductShortDescription != null && productDetails[0].ProductShortDescription != '' && productDetails[0].ProductShortDescription != undefined"
+                                class="mb-3 pt-3">
+                                <div class="fs-6 fw-5 mb-3 hvr">
+                                    More About This Product
+                                </div>
+                                <div class="artica-details-block text-break"
+                                    [innerHTML]="productDetails[0].ProductShortDescription"></div>
+                            </div>
+
+                        </div>
+                        <!-- </div> -->
+                    </div>
+                </div>
+            </div>
+            <div *ngIf="productDetails[0].PreferredSubtitute.length>0 || similarItems.length>0" class="ms-3 wrpl">
+                <ng-container *ngIf="productDetails[0].PreferredSubtitute.length>0">
+                    <app-alernative-product [productData]="productDetails"
+                        (pdpAlter)="alterAction($event)"></app-alernative-product>
+                </ng-container>
+
+                <ng-container *ngIf="similarItems.length>0">
+                    <app-similar-products [searchList]="similarItems"
+                        (viewSimilar)="productRedirect($event)"></app-similar-products>
+                </ng-container>
+            </div>
+        </div>
+
+
+    </ng-container>
+</div>
+<div>
+    <app-download-app></app-download-app>
+</div>
+<div>
+    <app-sub-footer></app-sub-footer>
+</div>
+<div class="border-top">
+    <app-footer></app-footer>
+</div>
+
+
+<div class="modal fade" id="medmanufacturerDtls" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+    aria-labelledby="medmanufacturerDtlsLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="d-flex justify-content-between p-3 border-bottom fs-5 fw-5">
+                <div>Manufacturing and Packaging Information</div>
+                <div class="hvr" data-bs-dismiss="modal" aria-label="Close"><i class="fa-solid fa-xmark"></i></div>
+            </div>
+            <div *ngIf="productDetails.length>0" class="modal-body">
+                <ng-container *ngFor="let dtls of productDetails[0].MoreInformation">
+                    <div class="row">
+                        <ng-container *ngFor="let dts of dtls.Items">
+                            <div class="col-6 mb-3">
+                                <div class="text-secondary mb-1">{{dts.Title}}</div>
+                                <div>{{dts.Desc}}</div>
+                            </div>
+                        </ng-container>
+                    </div>
+                </ng-container>
+            </div>
+        </div>
+    </div>
+</div>

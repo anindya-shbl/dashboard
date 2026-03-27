@@ -1,0 +1,18 @@
+<ng-container *ngIf="isLoggedIn == 'true'">
+    <!-- <div>
+        <app-main-header></app-main-header>
+    </div>
+    <div>
+        <app-sub-header></app-sub-header>
+    </div> -->
+    <div class="ssbody">
+        <div *ngIf="isLoggedIn == 'true'" class="main">
+            <div class="sidebar">
+                <app-sidebar></app-sidebar>
+            </div>
+            <div class="body-container">
+                <router-outlet></router-outlet>
+            </div>
+        </div>
+    </div>
+</ng-container>

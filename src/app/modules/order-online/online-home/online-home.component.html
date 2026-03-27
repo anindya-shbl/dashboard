@@ -1,0 +1,215 @@
+<ng-container *ngIf="!showSearch">
+    <div class="ssbody bg1">
+    <div class="body-container">
+        <div class="mb-3 fw-7 text-6xl mob-center">
+            Get <span class="text-primary">100% Genuine </span>Medicines
+        </div>
+        <div class="mb-4 tcolor-light textline text-center">
+            <!-- <h1>Flat <span class="text-dark">18% Off</span> on Medicines + <span class="text-dark">₹50 OFF on Your First Order</span> - Order Now & Save Big!</h1> -->
+            <h1>Flat <span class="text-danger">18% Off</span> on Medicines + <span class="text-danger">Extra 2% OFF</span> on Orders above ₹999! use Code : <span class="text-danger fs-9">EXTRA2</span> </h1>
+        </div>
+
+        <!-- ============ Search for Mob ================= -->        
+        <div class="w-100 mobileSearch">
+            <div (click)="toggleSearch()" class="position-relative">
+                <span class="search-icon"><i class="fa fa-search fs-8"></i></span>
+                <div class="input-group mb-1 hvr">
+                    <input type="text" class="form-control" placeholder="Search for Medicines, Household Supplies, Tests & Health Packages">
+                </div>
+            </div>
+        </div>
+
+        <!-- ============ Search for Web ================= -->
+        <div class="position-relative w-100 mx-auto desktopSearch" style="height: 80px;">
+             <div class="position-absolute w-100 top-50 start-50 translate-middle" style="z-index: 10; max-width: 700px;">
+                <app-header-search (newItemEvent)="count()"></app-header-search>
+             </div>
+        </div>
+
+        <!-- <div class="text-center mt-1 mb-5 tcolor-light">Search from over 50,000+ genuine medicines and health products</div> -->
+        <div class="text-center mt-2 mb-5 tcolor-light fs-5 fw-5">Trusted by Over 8 Lakh Happy Customers.</div>
+
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="min-hgt1">
+                    <div class="me-3">
+                        <i class="fa-solid fa-truck-fast round-block"></i>
+                    </div>
+                    <div>
+                        <div class="mb-2 fs-6 fw-6 tcolor-dark">Fast Delivery</div>
+                        <div class="tcolor-light">Fastest delivery available</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="min-hgt1">
+                    <div class="me-3">
+                        <i class="fa-solid fa-shield round-block"></i>
+                    </div>
+                    <div>
+                        <div class="mb-2 fs-6 fw-6 tcolor-dark">100% Genuine</div>
+                        <div class="tcolor-light">Verified & authentic medicines</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="min-hgt1">
+                    <div class="me-3">
+                        <i class="fa-solid fa-clock round-block"></i>
+                    </div>
+                    <div>
+                        <div class="mb-2 fs-6 fw-6 tcolor-dark">Quick Support</div>
+                        <div class="tcolor-light">We respond to your queries quickly</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="ssbody bg-white">
+    <div class="body-container">
+        <div class="mb-3 text-5xl fw-7 tcolor-dark">
+            Shop by Category
+        </div>
+        <div class="mb-5 fs-8 tcolor-light">
+            Find everything you need for your health and wellness.
+        </div>
+        <div class="w-100">
+            <app-online-slider></app-online-slider>
+        </div>
+    </div>
+</div>
+
+<div class="ssbody bg2">
+    <div class="body-container">
+        <div class="mb-3 text-5xl fw-7 tcolor-dark mob-center">
+            Why Choose SastaSundar?
+        </div>
+
+        <div class="mb-5 fs-8 text-center tcolor-light">
+            Your health deserves nothing less than the best. At SastaSundar, we bring you <b>quality, convenience, and care</b> with every order. Now you can buy online medicine without any hassle and with attractive discounts.
+        </div>
+
+        <div>
+            <div class="row g-4 mb-4">
+                <div class="col-md-4">
+                    <div class="min-hgt2">
+                        <div class="mb-3">
+                            <i class="fa-solid fa-shield rounded-block green"></i>
+                        </div>
+                        <div>
+                            <div class="mb-3 fs-8 fw-6 tcolor-dark">100% Genuine Medicines</div>
+                            <div class="tcolor-light">We source all products directly from <b>licensed and trusted manufacturers</b>—ensuring safety and authenticity in every dose.</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="min-hgt2">
+                        <div class="mb-3">
+                            <i class="fa-solid fa-truck-fast rounded-block blue"></i>
+                        </div>
+                        <div>
+                            <div class="mb-3 fs-8 fw-6 tcolor-dark">Fast & Free Delivery</div>
+                            <!-- <div class="tcolor-light">Enjoy <b>the fastest delivery</b> in metro cities and <b>free shipping</b> on all orders above ₹499. Because your time and health matter.</div> -->
+                            <div class="tcolor-light">Enjoy <b>fast & free delivery</b> across serviceable locations and <b>free shipping</b> on all orders above ₹499. Because your time and health matter.</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="min-hgt2">
+                        <div class="mb-3">
+                            <i class="fa-solid fa-credit-card rounded-block purple"></i>
+                        </div>
+                        <div>
+                            <div class="mb-3 fs-8 fw-6 tcolor-dark">Secure Payments</div>
+                            <div class="tcolor-light">Pay your way with <b>multiple payment options</b>, all protected by <b>bank-grade security protocols</b>.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row g-4 mb-4">
+                <div class="col-md-4">
+                    <div class="min-hgt2">
+                        <div class="mb-3">
+                            <i class="fa-solid fa-headphones rounded-block orange"></i>
+                        </div>
+                        <div>
+                            <div class="mb-3 fs-8 fw-6 tcolor-dark">Expert Support </div>
+                            <div class="tcolor-light">Need help? Our <b>qualified pharmacists and customer care team</b> are ready to assist swiftly.</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="min-hgt2">
+                        <div class="mb-3">
+                            <i class="fa-solid fa-award rounded-block purplyblue"></i>
+                        </div>
+                        <div>
+                            <div class="mb-3 fs-8 fw-6 tcolor-dark">Licensed & Trusted Pharmacy</div>
+                            <div class="tcolor-light">We are <b>government-certified</b> online pharmacy, backed by a robust supply chain, and trusted by <b>millions of satisfied customers</b>.</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="min-hgt2">
+                        <div class="mb-3">
+                            <i class="fa-solid fa-clock rounded-block red"></i>
+                        </div>
+                        <div>
+                            <div class="mb-3 fs-8 fw-6 tcolor-dark">Easy Returns</div>
+                            <div class="tcolor-light">Change of mind or issue with the order? Enjoy <b>hassle-free returns within 7 days.</b></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+<div class="ssbody bg3">
+    <div class="body-container p-0">
+        <div class="row g-0 w-100">
+            <div class="col-lg-8">
+                <div class="pad50">
+                <div class="mb-3 text-5lg fw-7 text-white">Get the SastaSundar App</div>
+                <div class="mb-3 fs-8 text-white">Order medicines on the go! Download our app for exclusive offers, faster checkout, and medicine reminders.</div>
+                <!-- <div class="">
+                    <a class="btn btn-light pad-10 me-3 mb-3" href="https://play.google.com/store/apps/details?id=com.shtpl.sastasundar&hl=en_IN">
+                        <i class="fa-solid fa-download me-2"></i>
+                        Download for Android
+                    </a>
+                    <a class="btn btn-light pad-10 mb-3" href="https://apps.apple.com/in/app/sastasundar-online-pharmacy/id6738185605">
+                        <i class="fa-solid fa-download me-2"></i>
+                        Download for Android iOS
+                    </a>
+                </div> -->
+
+                <div class="btnsec">
+                    <a href="https://play.google.com/store/apps/details?id=com.shtpl.sastasundar&hl=en_IN" target="_blank"><img src="https://sastasundar.com/assets/images/g-play.png" alt=""></a>
+				   <a href="https://apps.apple.com/in/app/sastasundar-online-pharmacy/id6738185605" target="_blank"><img src="https://sastasundar.com/assets/images/app-store.png" alt=""></a>
+                </div>
+
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <!-- <div class="tab-icon">
+                    <i class="fa-solid fa-mobile-screen-button"></i>
+                </div> -->
+                <img src="https://sastasundar.com/assets/images/order-online-app.png" alt="" class="img-custom">
+            </div>
+        </div>
+    </div>
+</div>
+</ng-container>
+
+
+<div *ngIf="showSearch" class="ssbody bg-white extraSearch" style="min-height: calc(100vh - 0px);">
+    <div class="relativeblock">
+    <div class="backpage" (click)="toggleSearch()"><i class="fa fa-arrow-left"></i></div>
+    <app-product-search></app-product-search>
+    </div>
+</div>

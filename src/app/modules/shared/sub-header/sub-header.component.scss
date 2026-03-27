@@ -1,0 +1,226 @@
+.nav-tabs .nav-link .link.active {
+  border-color: white !important;
+}
+.nav-tabs,
+.nav-link {
+  border: none !important;
+  border-radius: 0 !important;
+}
+.nav-tabs .nav-link:hover {
+  border-color: white !important;
+}
+.nav-tabs {
+  position: relative;
+}
+.rarrow {
+  color: #696969;
+  font-size: 13px;
+}
+.border-bottom-dashed {
+  border-bottom: 1px dashed #d1d1d1;
+}
+.showcatagory {
+  position: absolute;
+  inset: 0px auto auto 0px;
+  margin: 0px;
+  background-color: #fff;
+  transform: translate(8px, 39px);
+  z-index: 10;
+  top: 1px;
+  left: 6px;
+  border-radius: 4px 4px 10px 10px;
+  border: 1px solid #ccc;
+  border-top: 1px solid #f1f0f5;
+  overflow: hidden;
+  display: none;
+}
+.nav-item:hover {
+  & .showcatagory {
+  display: block;
+  }
+  & .rarrow {
+    transform: rotateX(180deg);
+  }
+}
+.shopviewall {
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 18px;
+  display: flex;
+  align-items: center;
+  color: #000;
+  & i {
+    padding-left: 6px;
+    color: #006db1;
+  }
+}
+.ctImgDiv {
+  position: absolute;
+  z-index: -1;
+  bottom: 0;
+  text-align: center;
+  padding: 0 10px;
+}
+.text-blue {
+  color: #1268B3;
+}
+.text-blue-heading {
+  color: #1268B3;
+}
+.ctImg {
+  opacity: 0.5;
+  height: auto;
+  max-width: 100%;
+}
+
+//scrollbar----
+::-webkit-scrollbar {
+  width: 2px;
+}
+/* Track */
+::-webkit-scrollbar-track {
+  background: #fff;
+}
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #cccbcb;
+}
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #e9e7e7;
+}
+//End_scrollbar----
+
+.dropmenu-height {
+  height: 600px;
+  //min-height: 400px;
+}
+.subitem-height {
+  min-height: 350px;
+  max-height: 450px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  position: relative;
+  & .mw-60 {
+    max-width: 60%;
+    position: relative;
+    z-index: 2;
+  }
+}
+.menu-animation {
+  -webkit-transition-property: opacity;
+  -moz-transition-property: opacity;
+  -o-transition-property: opacity;
+  transition-property: opacity;
+  -webkit-transition-duration: 0.4s;
+  -moz-transition-duration: 0.4s;
+  -o-transition-duration: 0.4s;
+  transition-duration: 0.4s;
+  animation-name: fade, slide;
+  animation-duration:200ms, 300ms;
+	animation-fill-mode: forwards;
+	animation-timing-function: linear, cubic-bezier(0.23, 1, 0.32, 1);
+	animation-delay: 200ms, 0;	
+}
+.hvr {
+  font-weight: normal;
+}
+.gap-item {
+  padding: 5px 15px 5px 5px;
+}
+.burder-c-end {
+ position: relative;
+ &::after {
+  content: '';
+  position: absolute;
+  height: 100%;
+  width: 1px;
+  height: 100%;
+  background-color: #ccc;
+  right: 0px;
+  top: 0;
+ }
+}
+.m-overflow {
+  border-right: 1px solid #ddd;
+}
+
+.listitem {
+  position: relative;
+  padding: 8px 10px;
+  word-break: break-all;
+  &.r-arrow {
+    background-color: #EFF8FF;
+    border-radius: 5px;
+    &::after {
+      background-color: #EFF8FF;
+      content: "";
+      height: 18px;
+      position: absolute;
+      right: -5px;
+      transform: rotate(45deg);
+      width: 18px;
+      top: 0;
+      bottom: 0;
+      margin: auto;
+  }
+  }
+}
+.c-support {
+    font-size: 16px;
+    font-weight: normal;
+    line-height: normal;
+    color: #667085;
+    font-family: "Inter", sans-serif;
+    & strong {
+    color: #007DC9;
+    font-weight: 700;
+    font-size: 16px;
+    }
+}
+.relative {
+  position: relative;
+}
+.image-section {
+    position: absolute;
+    width: 100%;
+    height: 600px;
+    right: 1px;
+    bottom: 1px;
+    z-index: 1;
+    & .shop-now {
+    position: relative;
+    z-index: 3;
+    width:250px; 
+    height:125px;
+    display: block;
+    float: right;
+    margin: 20px;
+    }
+    & .img-bg {
+    position: absolute; 
+    bottom: 0;
+    right: 0; 
+    width:98%; 
+    display: block;
+    & img {
+      border-radius: 0 0 8px 0;
+    }
+    }
+    & img {
+    width: 100%;
+    }
+}
+
+.text-normal {
+    font-weight: normal;
+    font-size: 13px;
+}
+
+.subct {
+    border-top: 1px solid #e6e6e9;
+    box-shadow: 0 2px 0 0 #e1dfdf;
+    font-family: "Inter", sans-serif;
+    color: black;
+}

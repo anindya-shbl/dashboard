@@ -1,0 +1,68 @@
+.item-shadow {
+    box-shadow: 0 1px 3px 2px #8c959f26;
+}
+
+.ctgry-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    grid-gap: 1rem;
+}
+
+
+.imgSec {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0px;
+    padding: 16px 16px 32px 16px;
+    border-radius: 5px;
+    background: #eef6fd;
+    --mask: radial-gradient(11.66px at 50% calc(100% - 16px), #000 99%, #0000 101%) calc(50% - 20px) 0 / 40px 100%, radial-gradient(11.66px at 50% calc(100% + 6px), #0000 99%, #000 101%) 50% calc(100% - 10px) / 40px 100% repeat-x;
+    -webkit-mask: var(--mask);
+    mask: var(--mask);
+
+    img {
+        width: 140px;
+        min-width: 140px;
+    }
+}
+
+.ct-name {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    min-height: 60px;
+    padding: 10px;
+    font-weight: 500;
+}
+
+
+// .owl-cont{
+//     position: relative !important;
+// }
+
+// .owl-cont ::ng-deep{
+//     .owl-theme .owl-nav {
+//         position: absolute !important;
+//         margin: 0px !important;
+//         top: 35% !important;
+//         display: flex !important;
+//         align-items: center !important;
+//         justify-content: space-between !important;
+//         padding: 0 .3rem;
+//         width: 100%;
+//     };
+//     .owl-prev, .owl-next{
+//         margin: 0px !important;
+//         padding: 12px !important;
+//         font-size: 22px;
+//         // border-radius: 4px;
+//         font-weight: 600;
+//         background-color: #f1f5fb !important;
+//         color: gray !important
+//     };
+//     .owl-theme .owl-nav .disabled{
+//         opacity: 0 !important;
+//     }
+// }

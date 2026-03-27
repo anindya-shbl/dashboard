@@ -1,0 +1,96 @@
+.ac-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    grid-gap: .5rem;
+}
+.bx-nm{
+    width: 100px;
+}
+
+.table>:not(caption)>*>* {
+    padding: .5rem 1rem !important;
+    th{
+        background-color: lightgray;
+        font-size: 14px;
+    }
+}
+
+
+
+
+
+
+.listGridSec {
+    display: flex; align-items: center;  column-gap: 10px;
+    & .secgrid {background: #fff; border: 1px solid #E4E7EC; box-shadow: 0px 4px 8px -2px #1018281A; width: 100%; border-radius: 6px; padding: 16px;
+         column-gap: 16px; display: flex; justify-content: space-between; min-height: 110px; max-width: 360px;
+        //  align-items: end;
+
+         & .left {display: flex; align-items: center; justify-content: flex-start; column-gap: 16px;
+        & .iconSec {border-radius: 50%; height: 48px; width: 48px; display: flex; align-items: center; justify-content: center; font-size: 20px;
+        &.yellow {background-color: #FFFAEB; color: #F79009;}
+        &.green {background-color: #ECFDF3; color: #039855;}
+        &.red {background-color: #FEF3F2; color: #D92D20;}
+        &.blue {background-color: #EFF8FF; color: #1570EF;}
+        }
+        & .conSec {display: flex; flex-direction: column; row-gap: 2px;
+        & small {color: #475467; font-weight: 500; font-size: 14px; line-height: 20px;}
+        & strong {color: #1D2939; font-weight: 700; font-size: 24px; line-height: 32px;}
+
+        }
+        }
+        & .infoIcon {font-size: 17px; display: flex; align-items: flex-end;}
+    }
+}
+
+.recentOrdSec {display: flex; align-items: flex-start; justify-content: space-between; margin: 16px 0 0; 
+& .leftSec {background-color: #fff; border-radius: 6px; border: 1px solid #D0D5DD; width: 100%; box-shadow: 0px 4px 8px -2px #1018281A;
+& .currentOrdersSec { display: flex; flex-direction: column;
+& .thead {background-color: #eff8ff; display: flex; align-items: center; justify-content: space-between; padding: 16px; gap:10px;
+& div {width: 20%; display: flex; align-items: center; //justify-content: center;
+    &:first-child {text-align: left;justify-content: left;}
+    // &:last-child {width: 30%; text-align: left;justify-content: left;}
+
+    
+}
+}
+& .tbody { display: flex; align-items: center; justify-content: space-between; padding: 6px 16px; border-bottom: 1px solid #ddd; gap:10px;
+    & div {width: 20%; min-height: 50px; display: flex; align-items: center; //justify-content: center;
+   // & span.active {background-color: #ECFDF3; color: #027A48; padding: 2px 6px;}
+    & span.deactive {background-color: #F2F4F7; color: #475467; padding: 2px 6px;}
+
+    &:first-child {text-align: left;justify-content: left;}
+    //&:last-child {width: 30%; text-align: left;justify-content: left;}
+
+    &.btnSec { display: flex; align-items: center; justify-content: flex-start; column-gap: 8px;
+    & .activeBtn {background-color: #0090DD; border: 1px solid #0090DD; color: #fff; border-radius: 6px; padding: 8px 24px; font-size: 12px; font-weight: 600; line-height: 18px; text-decoration: none;
+        @media only screen and (min-width: 1000px) and (max-width: 1500px) {
+            padding: 8px 15px;
+        }
+        &:hover {background-color: #009DEC;}
+    }
+    & .defultBtn {background-color: #fff; border: 1px solid #D0D5DD; color: #344054; border-radius: 6px; padding: 8px 24px; font-size: 12px; font-weight: 600; line-height: 18px; text-decoration: none;
+        &:hover {background-color: #FCFAFF;}
+}
+    }
+}
+    &:last-child {border-bottom: none;}
+}
+}
+
+ & .headerSec {display: flex; align-items: center; justify-content: space-between; padding: 14px 16px; border-bottom: 1px solid #D0D5DD;
+ & h3 {padding: 0; margin: 0; font-size: 16px; font-weight: 700; line-height: 32px; color: #344054;}
+ & span {padding: 0; margin: 0; font-size: 14px; font-weight: 500; line-height: 20px; color: #344054; cursor: pointer;
+&:hover {color: #000;}
+}
+}
+
+
+}
+// & .rightSec {background-color: #fff; border-radius: 6px; border: 1px solid #D0D5DD; width: 35%; box-shadow: 0px 4px 8px -2px #1018281A;
+    
+//     }
+& .rightSec {background-color: #fff; border-radius: 6px; border: 1px solid #D0D5DD; box-shadow: 0px 4px 8px -2px #1018281A;  position:sticky; top: 80px; z-index: 10;
+    
+}
+}

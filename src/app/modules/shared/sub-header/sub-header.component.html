@@ -1,0 +1,152 @@
+<!-- <div *ngIf="ctgryList.length>0" class="d-flex justify-content-between align-items-center bg-white subct">
+    <div>
+        <ul class="nav nav-tabs">            
+            <li class="nav-item" >
+              <a class="nav-link fw-5" style="padding: 10px 16px; color: black;" routerLink="/newcategory">Shop by Category <span style="padding-left: 7px;"><i class="fa-solid fa-caret-down rarrow"></i></span></a>
+              <ng-container *ngIf="ctgryList.length > 0">
+                <div  class="showcatagory menu-animation bx-shdw" >
+                    <div class="border-bottom-dashed px-3 py-2 fs-4 d-flex justify-content-between">
+                        <div>
+                            <span class="text-normal">Shop By : </span>
+                            <span class="fw-6 text-blue-heading">{{pctgry.CategoryName}}</span>
+                        </div>
+                        <div>
+                            <a class="shopviewall" routerLink="/newcategory/listing"><span class="text-normal">View All Categories</span> <i class="icon-angle-right"></i></a>
+                        </div>
+                    </div>
+                    <div class="d-flex dropmenu-height">
+                        <div class=" fs-4 m-overflow" style="width: 280px; overflow-y: auto; overflow-x: hidden;">
+                            <div class=" gap-item">
+                                <ng-container *ngFor="let prct of ctgryList">
+                                    <div class="hvr listitem" [ngClass]="prct.CategoryId == pctgry.CategoryId ? 'text-blue r-arrow': ''" (mouseover)="setSubCtgry(prct)" (click)="category_redirect(pctgry.ActionUrl)">
+                                        {{prct.CategoryName}}
+                                    </div>
+                                </ng-container>
+                            </div>
+                        </div>
+                       
+                        <div style="width: 600px; overflow: hidden;" class="relative">
+
+                            <div class="p-3 fs-4 subitem-height">
+                                <div class="mw-60">
+                                <div class="mb-3">
+                                    <a class="text-decoration-none fw-5 mb-3 text-blue-heading">{{pctgry.CategoryName}}</a>
+                                </div>
+                                <ng-container *ngFor="let sbct of subCtgry">
+                                    <div class="mb-2 hvr" (mouseover)="getSubCtgrydetails(sbct)" (click)="category_redirect(sbct.ActionUrl)">
+                                        <a class="text-decoration-none hvr" [ngClass]="sbct.CategoryId == sbctgry.CategoryId ? 'text-blue': 'text-dark-emphasis'">{{sbct.CategoryName}}</a>
+                                    </div>
+                                </ng-container>  
+                            </div>
+                            </div> 
+
+                            <div class="image-section">
+                                <a class="shop-now hvr" (click)="category_redirect(pctgry.ActionUrl)">
+                                    <img src="https://asset.sastasundar.com/incom/sspl_website/images/category_menu/{{pctgry.CategoryName | replace : '[ ]' : '-'}}_link.png" alt="">
+                                </a> 
+                                <div class="img-bg">
+                                    <img src="https://asset.sastasundar.com/incom/sspl_website/images/category_menu/{{pctgry.CategoryName | replace : '[ ]' : '-'}}_menu_bg.png" alt="">
+                                </div>
+                             </div>
+                        </div>
+                    </div>
+                </div>
+              </ng-container>
+            </li>
+            <li class="nav-item" (mouseover)="resetCtgry()">
+                <a class="nav-link fw-5 " style="padding: 10px 17px; color: black;" href="{{ CommonService.baseurl }}index.php/customercart">Order Medicines</a>
+            </li>
+
+            <li class="nav-item" (mouseover)="resetCtgry()">
+                <a class="nav-link fw-5" style="padding: 10px 17px; color: black;" routerLink="/newlab-test">Lab Test</a>
+            </li>
+            <li class="nav-item" (mouseover)="resetCtgry()">
+                <a class="nav-link fw-5" style="padding: 10px 17px; color: black;" href="{{ CommonService.baseurl }}index.php/customerlabcart">Book Lab Test</a>
+            </li>
+            <li class="nav-item" (mouseover)="resetCtgry()">
+                <a class="nav-link fw-5" style="padding: 10px 17px; color: black;" routerLink="/healtharticle">Health Articles</a>
+            </li>
+          </ul>
+    </div>
+    <div class="pe-3 fw-5" (mouseover)="resetCtgry()">
+        <span class="c-support"><strong><i class="icon-phone3"></i>&nbsp;628-90-90-000</strong></span>
+    </div>
+</div> -->
+
+
+
+<div *ngIf="!isloading" class="d-flex justify-content-between align-items-center">
+    <div>
+        <ul class="nav nav-tabs">
+            
+            <li class="nav-item" >
+              <a class="nav-link fw-5" style="padding: 10px 16px; color: black;" href="https://sastasundar.com/category/listing/">Shop by Category <span style="padding-left: 7px;"><i class="fa-solid fa-caret-down rarrow"></i></span></a>
+              <ng-container *ngIf="ctgryList.length > 0">
+                <div  class="showcatagory menu-animation bx-shdw" >
+                    <div class="border-bottom-dashed px-3 py-2 fs-4 d-flex justify-content-between">
+                        <div>
+                            <span class="text-normal">Shop By : </span>
+                            <span class="fw-6 text-blue-heading">{{pctgry.CategoryName}}</span>
+                        </div>
+                        <div>
+                            <a class="shopviewall" href="{{CommonService.baseurl }}category/listing/"><span class="text-normal">View All Categories</span> <i class="icon-angle-right"></i></a>
+                        </div>
+                    </div>
+                    <div class="d-flex dropmenu-height">
+                        <div class=" fs-4 m-overflow" style="width: 280px; overflow-y: auto; overflow-x: hidden;">
+                            <div class=" gap-item">
+                            <ng-container *ngFor="let prct of ctgryList">
+                                <div class="hvr listitem" [ngClass]="prct.CategoryId == pctgry.CategoryId ? 'text-blue r-arrow': ''" (mouseover)="setSubCtgry(prct)" (click)="category_redirect(pctgry.ActionUrl)">
+                                    {{prct.CategoryName}}
+                                </div>
+                            </ng-container>
+                        </div>
+                        </div>
+                       
+                        <div  style="width: 600px; overflow: hidden;" class="relative">
+
+                            <div class="p-3 fs-4 subitem-height">
+                                <div class="mw-60">
+                                <div class="mb-3">
+                                    <a class="text-decoration-none fw-5 mb-3 text-blue-heading">{{pctgry.CategoryName}}</a>
+                                </div>
+                                <ng-container *ngFor="let sbct of subCtgry">
+                                    <div class="mb-2 hvr" (mouseover)="getSubCtgrydetails(sbct)">
+                                        <a class="text-decoration-none" [ngClass]="sbct.CategoryId == sbctgry.CategoryId ? 'text-blue': 'text-dark-emphasis'" href={{sbct.ActionUrl}}>{{sbct.CategoryName}}</a>
+                                    </div>
+                                </ng-container>  
+                            </div>
+                            </div> 
+
+                            <div class="image-section">
+                                <a class="shop-now" href={{pctgry.ActionUrl}}>
+                                    <img src="https://asset.sastasundar.com/incom/sspl_website/images/category_menu/{{pctgry.CategoryName | replace : '[ ]' : '-'}}_link.png" alt="">
+                                </a> 
+                                <div class="img-bg">
+                                    <img src="https://asset.sastasundar.com/incom/sspl_website/images/category_menu/{{pctgry.CategoryName | replace : '[ ]' : '-'}}_menu_bg.png" alt="">
+                                </div>
+                             </div>
+                        </div>
+                    </div>
+                </div>
+              </ng-container>
+            </li>
+            <li class="nav-item" (mouseover)="resetCtgry()">
+                <a class="nav-link fw-5 " style="padding: 10px 17px; color: black;" href="{{ CommonService.baseurl }}index.php/customercart">Order Medicines</a>
+            </li>
+            <li class="nav-item" (mouseover)="resetCtgry()">
+                <a class="nav-link fw-5" style="padding: 10px 17px; color: black;" href="{{ CommonService.baseurl }}index.php/lab-test">Lab Test</a>
+            </li>
+            <li class="nav-item" (mouseover)="resetCtgry()">
+                <a class="nav-link fw-5" style="padding: 10px 17px; color: black;" href="{{ CommonService.baseurl }}index.php/customerlabcart">Book Lab Test</a>
+            </li>
+            <li class="nav-item" (mouseover)="resetCtgry()">
+                <a class="nav-link fw-5" style="padding: 10px 17px; color: black;" routerLink="/healtharticle">Health Articles</a>
+            </li>
+          </ul>
+    </div>
+    <div class="pe-3 fw-5" (mouseover)="resetCtgry()">
+        <span class="c-support"><strong><i class="icon-phone3"></i>&nbsp;628-90-90-000</strong></span>
+    </div>
+</div>
+

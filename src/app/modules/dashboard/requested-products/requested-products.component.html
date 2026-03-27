@@ -1,0 +1,228 @@
+<div class="px-3 pt-3 top-sticky">
+  <div class="mb-3"><app-route-path></app-route-path></div>
+  
+  <div class="commonHeadertitleSec">
+      <div class="custNameSec"><strong>In Stock Alert</strong></div>
+  </div>
+  <div class="d-flex justify-content-between">
+    <div>
+      <nav class="ordTabSec" aria-label="Page navigation">
+        <ul class="pagination mb-0">
+          <li class="page-item text-nowrap" (click)="showTab('requested')" [ngClass]="selectedTab == 'requested' ? 'tab-active':''"><a class="page-link">Enquired Products</a></li>
+          <li class="page-item text-nowrap" (click)="showTab('instock')" [ngClass]="selectedTab == 'instock' ? 'tab-active':''">
+            <a class="page-link">Back in Stock 
+              <span *ngIf="totalInStock>0" class="instock-Count">{{totalInStock}}</span>
+            </a>
+          </li>
+        </ul>
+      </nav>
+    </div>
+    <div>
+      <input class="form-control" type="text" (keyup)="onSearchChange($event)"  (keydown)="onKeydown()" [(ngModel)]="searchTxt" name="searchTxt" autocomplete="off" placeholder="Search your product">
+    </div>
+  </div>
+</div>
+
+<div class="table-responsive px-3 pb-3">
+  <ng-container *ngIf="selectedTab == 'requested'">
+    <div *ngIf="!isloading && displayList.length > 0" class="table-responsive border rounded bx-shdw ">
+      <table class="table mb-0">
+        <thead>
+          <tr>
+            <th scope="col th-bgc">Product Details</th>
+            <th scope="col th-bgc">Product Type</th>            
+            <th scope="col th-bgc">Requested On</th>
+            <th scope="col th-bgc">Expected By</th>
+            <th scope="col th-bgc">Procurement Comments</th>
+            <th scope="col">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <ng-container *ngFor="let prod of displayList">
+            <tr>
+              <td scop="col">
+                <div class="d-flex">
+                  <span>
+                    <ng-container *ngIf="prod.ProductImage != '' && prod.ProductImage != null">
+                      <img src="https://asset.sastasundar.com/incom/images/product/thumb/{{prod.ProductImage}}">
+                  </ng-container>
+                  <ng-container *ngIf="prod.ProductImage == '' || prod.ProductImage == null">
+                      <img src="https://asset.sastasundar.com/incom/images/product/thumb/default_product1460098847.jpg">
+                   </ng-container>
+                  </span>
+                  <span class="ms-3">
+                    <span>{{prod.ProductName}}</span> 
+                    <!-- <br>
+                    <span *ngIf="prod.ProductId != null && prod.ProductId != '' && prod.ProductId != undefined && prod.ProductId >0" class="fs-3">ID : {{prod.ProductId}}</span> -->
+                  </span>
+                </div>
+              </td>
+              <td scop="col">
+                <span *ngIf="prod.ProductType == 'P' || prod.ProductType == 'M'">Medicine</span>
+                <span *ngIf="prod.ProductType == 'O'">OTC</span>
+                <span *ngIf="prod.ProductType != 'P' && prod.ProductType != 'M' && prod.ProductType != 'O'">Others</span>
+              </td>
+              <td scop="col">{{prod.RequestedDate | date : "dd MMM yyyy"}} </td>
+              <td scop="col">{{prod.ExpectedDate | date : "dd MMM yyyy"}} </td>
+              <td scop="col">
+                <span>{{prod.ProductRequestStatus}}</span> <br>
+                <span>{{prod.LastStatusUpdatedDate | date : "dd MMM yyyy"}}</span> 
+              </td>
+              <td scop="col">
+                <div *ngIf="prod.ProductId != null && prod.ProductId != '' && prod.ProductId != undefined && prod.ProductId >0" class="alter hvr">
+                  <span class="fs-3 fw-5 addbutton-color" (click)="getAletnatives(prod)">View Alternative</span>
+                </div>
+              </td>
+            </tr>
+          </ng-container>
+        </tbody>
+        <!-- <tfoot>
+          <div *ngIf="totalRequested > displayList.length" class="loadMore hvr" (click)="loadMoreRequest()">Load More ...</div>
+          <div *ngIf="totalRequested <= displayList.length" class="loadMore">No More Result.</div> 
+        </tfoot> -->
+      </table>
+      <div *ngIf="searchTxt == '' ">
+        <div *ngIf="totalRequested > displayList.length" class="loadMore hvr" (click)="loadMoreRequest()">Load More ...</div>
+        <div *ngIf="totalRequested <= displayList.length" class="loadMore">No More Result.</div> 
+      </div>
+    </div>
+    <div *ngIf="!isloading && displayList.length == 0" class="notfoundbox mt-3">
+        <div class="fw-5">No Record Found...</div>
+    </div>
+  </ng-container>
+
+  <ng-container *ngIf="selectedTab == 'instock'">
+    <div *ngIf="!isloading && displayList.length > 0" class="table-responsive border rounded bx-shdw ">
+      <table class="table mb-0">
+        <thead>
+          <tr>
+            <th scope="col th-bgc">Product Details</th>
+            <th scope="col th-bgc">Product Type</th>            
+            <th scope="col th-bgc">Requested On</th>
+            <th scope="col th-bgc">Available On</th>
+            <th scope="col th-bgc">Procurement Comments</th>
+            <th scope="col">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <ng-container *ngFor="let prod of displayList">
+            <tr>
+              <td scop="col">
+                <div class="d-flex">
+                  <span>
+                    <ng-container *ngIf="prod.ProductImage != '' && prod.ProductImage != null">
+                      <img src="https://asset.sastasundar.com/incom/images/product/thumb/{{prod.ProductImage}}">
+                  </ng-container>
+                  <ng-container *ngIf="prod.ProductImage == '' || prod.ProductImage == null">
+                      <img src="https://asset.sastasundar.com/incom/images/product/thumb/default_product1460098847.jpg">
+                   </ng-container>
+                  </span>
+                  <span class="ms-3">
+                    <span>{{prod.ProductName}}</span> 
+                    <!-- <br>
+                    <span class="fs-3">ID : {{prod.ProductId}}</span> -->
+                  </span>
+                </div>
+              </td>
+              <td scop="col">
+                <span *ngIf="prod.ProductType == 'P' || prod.ProductType == 'M'">Medicine</span>
+                <span *ngIf="prod.ProductType == 'O'">OTC</span>
+                <span *ngIf="prod.ProductType != 'P' && prod.ProductType != 'M' && prod.ProductType != 'O'">Others</span>
+              </td>
+              <td scop="col">{{prod.RequestedDate | date : "dd MMM yyyy"}} </td>
+              <td scop="col" class="text-success">{{prod.AvailableDate | date : "dd MMM yyyy"}} </td>
+              <td scop="col">
+                <span>{{prod.ProductRequestStatus}}</span> <br>
+                <span>{{prod.LastStatusUpdatedDate | date : "dd MMM yyyy"}}</span> 
+              </td>
+              <td scop="col">
+                <div *ngIf="prod.addedQty == 0" class="action-btn  hvr" (click)="addToCart(prod, 1)">
+                  <span class="fs-3 fw-5 addbutton-color">ADD</span>
+                </div>
+              
+                <div *ngIf="prod.addedQty > 0" class="action-btn action-add">
+                  <span class="item-action" (click)="cartAddMinus(prod)">&#8722;</span>
+                  <span class="item-text">{{prod.addedQty}}</span>
+                  <span class="item-action" (click)="cartAddPlus(prod)">&#43;</span>
+                </div>
+              </td>
+            </tr>
+          </ng-container>
+        </tbody>
+      </table>
+      <div *ngIf="searchTxt == '' ">
+        <div *ngIf="totalInStock > displayList.length" class="loadMore hvr" (click)="loadMoreInstock()">Load More ...</div>
+        <div *ngIf="totalInStock <= displayList.length" class="loadMore">No More Result.</div>          
+      </div>
+    </div>
+    <div *ngIf="!isloading && displayList.length == 0" class="notfoundbox mt-3">
+      <ng-container >
+          <div class="fw-5">No Record Found...</div>
+      </ng-container>
+    </div>
+  </ng-container>
+</div>
+
+
+
+<button #alterItemsMod data-bs-toggle="modal" data-bs-target="#alterItemsModal" class="d-none"></button>
+<div class="modal fade" id="alterItemsModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="alterItemsModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h6 class="modal-title">Alternative for {{RequestItem.ProductName}}</h6>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" (click)="resetAlter()"></button>
+        </div>
+        <div class="modal-body" style="max-height: 400px; overflow-y: scroll;">
+          <ng-container *ngIf="alternativeItems.length > 0">
+            <div *ngFor="let item of alternativeItems">
+              <div class="d-flex border rounded p-3 mb-3">
+                <div class="w-100">
+                    <div class="d-flex w-100">
+                        <div class="buyagnImg me-3">
+                            <ng-container *ngIf="item.ProductImage != '' && item.ProductImage != null">
+                                <img src="https://asset.sastasundar.com/incom/images/product/thumb/{{item.ProductImage}}">
+                            </ng-container>
+                            <ng-container *ngIf="item.ProductImage == '' || item.ProductImage == null">
+                                <img src="https://asset.sastasundar.com/incom/images/product/thumb/default_product1460098847.jpg">
+                             </ng-container>
+                        </div>
+
+                        <div class="d-flex justify-content-between w-100 ">
+                            <div>
+                                <div class="mb-2 fw-5 hvr" (click)="CommonService.getProductDetailsPageURL(item. ProductId, item.ProductName, item.PrescriptionOTC)">{{item.ProductName}}</div>
+                                <div class="mb-2 mrps">{{item.MfgGroup}}</div>
+                                <div *ngIf="item.IsOutOfStock=='N'" class="">
+                                    <span class="fw-5">{{item.OfferPrice | currency : 'INR'}}</span>
+                                    <!-- <span class="ps-2 mrps">{{item.PricePerUnit | currency : 'INR'}}/Unit</span> -->
+                                    <del *ngIf="item.Mrp > item.OfferPrice" class="px-2 mrps line-through">{{item.Mrp | currency : 'INR'}}</del>
+                                    <b *ngIf="item.DiscountPercent > 0" class="text-orange">{{item.DiscountPercent}} % off</b>
+                                </div>
+                                <div *ngIf="item.IsOutOfStock=='Y'" class="">Out Of Stock</div>
+                            </div>
+
+                            <div *ngIf="item.addedQty == 0 && item.IsOutOfStock=='N'" class="action-btn  hvr" style="min-width: 90px;" (click)="addToCart(item, 1)">
+                              <span class="fs-3 fw-5 addbutton-color">ADD</span>
+                            </div>
+                          
+                            <div *ngIf="item.addedQty > 0 && item.IsOutOfStock=='N'" class="action-btn action-add">
+                              <span class="item-action" (click)="cartAddMinus(item)">&#8722;</span>
+                              <span class="item-text">{{item.addedQty}}</span>
+                              <span class="item-action" (click)="cartAddPlus(item)">&#43;</span>
+                            </div>
+                        </div>
+                        
+                    </div>
+                </div>
+              </div>
+            </div>
+          </ng-container>  
+          <ng-container *ngIf="alternativeItems.length == 0">
+            <div class="notfoundbox mt-3">
+              <div class="fw-5">No Alternative Found...</div>
+          </div>
+          </ng-container>
+        </div>
+      </div>
+    </div>
+</div>

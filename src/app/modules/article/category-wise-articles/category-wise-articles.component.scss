@@ -1,0 +1,33 @@
+.cts-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+    grid-gap: 1rem;
+}
+
+// .imgCont{
+//     // min-height: 260px;
+//     // display: flex;
+//     // justify-content: center;
+//     width: 160px;
+//     min-width: 160px;
+// }
+
+// .h-46{
+//     height: 46px;
+// }
+
+.mh-1{
+    min-height: 120px;
+}
+
+.tag{
+  position: absolute;
+  top: 10px;
+  left: 8px;
+  padding: 6px 11px;
+  // border: 1px solid #c3c1c1;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 500;
+  background-color: white;
+}

@@ -1,0 +1,35 @@
+<div class="p-3">
+    <div class="d-flex justify-content-between mb-3">
+        <span class="fs-20 fw-7">Popular Categories</span>
+        <span class="text-primary hvr" routerLink="/newcategory">View All</span>
+    </div>
+
+    <div class="ctgry-grid">
+        <ng-container *ngFor="let item of pCtgry">
+            <div class="border rounded item-shadow hvr" style="min-height: 220px;" (click)="categoryDtls(item.actionUrl)">
+                <div class="imgSec">
+                    <img [src]="item.imageUrl" [alt]="item.ProductImage" [title]="item.DisplayName">
+                </div>
+                <div class="ct-name line-clamp-2 mb-2">{{item.title}}</div>
+            </div>
+        </ng-container>
+    </div>
+
+    <!-- <div class="owl-cont">
+        <owl-carousel-o [options]="customOptions">
+
+            <ng-container *ngFor="let item of pCtgry">
+                <ng-template carouselSlide [id]="item.id">
+                    <div class="p-1">
+                        <div class="border rounded" style="min-height: 210px;">
+                            <div class="imgSec mb-3">
+                                <img [src]="item.imageUrl" [alt]="item.ProductImage" [title]="item.DisplayName">
+                            </div>
+                            <div class="text-center fw-semibold line-clamp px-3 mb-3">{{item.title}}</div>
+                        </div>
+                    </div>
+                </ng-template>
+            </ng-container>    
+        </owl-carousel-o>
+    </div> -->
+</div>

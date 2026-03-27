@@ -1,0 +1,226 @@
+
+<div class="p-3 w-100 mxct me-1 bg-white">
+  <div class="mb-3"><app-route-path></app-route-path></div>
+  <div class="commonHeadertitleSec">
+    <div class="custNameSec">
+        <strong>Return Request from Order ID - {{ orderId }}</strong>
+    </div>
+  </div>
+
+  <ng-container *ngIf="!isloading && ItemDetails.length > 0">
+    <div *ngIf="IsAllReturn" class="d-flex align-items-center px-3 mb-3 border rounded bx-shdw bg-opacity-10" style="background-color: #eff8ff;">
+      <div  class="my-3">
+        <span class="me-2">
+          <input class="form-check-input" type="checkbox" value="" (click)="returnAllItems($event)" />
+        </span>
+        <span class="ms-2" style="line-height: 28px;">Return All Items</span>
+      </div>
+      <div *ngIf="fullOrder == 1" class="px-3">
+        <select #allRsn class="form-select" (change)="setAllReason($event)">
+          <option value="">Select Reason</option>
+          <ng-container *ngFor="let rsn of allReasonList">
+            <ng-container *ngFor="let dls of rsn | keyvalue">
+              <option [value]="dls.key">{{ dls.value }}</option>
+            </ng-container>
+          </ng-container>
+        </select>
+      </div>
+    </div>
+
+    <div class="table-responsive border rounded bx-shdw ">
+      <table class="table table align-middle mb-0">
+        <thead >
+          <tr>
+            <th scope="col th-bgc">&nbsp;&nbsp;Select</th>
+            <th scope="col th-bgc">Product Name</th>
+            <th scope="col th-bgc">Ordered Qty</th>
+            <th scope="col th-bgc">Return Qty</th>
+            <th *ngIf="fullOrder != 1" scope="col">Select Return Reason</th>
+          </tr>
+        </thead>
+        <tbody [ngClass]="fullOrder == 1 ? 'noClick bgl-gray bg-opacity-10' : ''">
+          <ng-container *ngFor="let item of ItemDetails">
+            <tr>
+              <td scope="col">
+                &nbsp;&nbsp;
+                <ng-container *ngIf="item.IsNonReturnable !=1 && item.SalesReturnQty>0">
+                  <input class="form-check-input hvr" type="checkbox" value="" (click)="setReturnProductList($event, item)" [checked]="item.selected" />
+                </ng-container>
+                <ng-container *ngIf="item.IsNonReturnable ==1 || item.SalesReturnQty == 0">
+                  <!-- <i class="fa fa-minus-circle" aria-hidden="true"></i> -->
+                   N/A
+                </ng-container>
+                
+              </td>
+              <td>{{ item.DisplayName }}</td>
+              <td>&nbsp;&nbsp;{{ item.OrderedQuantity }}</td>
+              <td>
+                <ng-container *ngIf="fullOrder == 1">
+                  <span *ngIf="item.IsNonReturnable == 1">Non Returnable</span>
+                  <span *ngIf="item.IsNonReturnable != 1">{{ item.SalesReturnQty }}</span>
+                </ng-container> 
+                <ng-container *ngIf="fullOrder != 1 && item.SalesReturnQty>0 && item.IsNonReturnable != 1">
+                  <select class="form-select t-select " (change)="setQty($event, item)" [ngClass]="item.selected == false ? 'noClick bgl-gray bg-opacity-10' : ''" style="width: 85px;">
+                    <ng-container *ngFor="let qty of item.qtylist">
+                      <option [value]="qty" [selected]="item.SalesReturnQty">{{ qty }}</option>
+                    </ng-container>
+                  </select>
+                </ng-container>
+                <ng-container *ngIf="fullOrder != 1 && item.SalesReturnQty==0 && item.IsNonReturnable != 1"> 0 </ng-container>
+                <ng-container *ngIf="fullOrder != 1 && item.IsNonReturnable == 1"> Non Returnable </ng-container>
+              </td>
+              <td *ngIf="fullOrder != 1">
+                <ng-container *ngIf="item.IsNonReturnable == 1 || item.SalesReturnQty==0">&nbsp;N/A</ng-container>
+                <ng-container *ngIf="item.IsNonReturnable != 1 && item.SalesReturnQty!=0">
+                  <select class="form-select t-select" (change)="setReason($event, item)" [ngClass]="item.selected == false ? 'noClick bgl-gray bg-opacity-10' : ''">
+                    <option value="">-- Select Reason --</option>
+                    <ng-container *ngFor="let rsn of individualReasonList">
+                      <ng-container *ngFor="let dls of rsn | keyvalue">
+                        <option [value]="dls.key">{{ dls.value }}</option>
+                      </ng-container>
+                    </ng-container>
+                  </select>
+                </ng-container>
+              </td>
+              <!-- <td></td> -->
+            </tr>
+          </ng-container>
+        </tbody>
+      </table>
+    </div>
+
+    
+
+    <div *ngIf="returnItems.length > 0">
+      <div class="my-3">
+        <label for="Remarks" class="form-label">Remarks</label>
+        <textarea type="text" rows="3" class="form-control bx-shdw" placeholder="enter your remarks here.." maxlength="300" id="Remarks" [(ngModel)]="remarks"></textarea>
+      </div>
+      <div class="mb-3">
+        <!-- <div class="form-label">Product Image</div> -->
+        <div class="">
+          <div class="mb-3">
+            <input #imageFile type="file" (change)="onSelectFile($event)" accept=".jpg, .jpeg" />
+          </div>
+          <div *ngIf="preview != ''" class="d-flex p-3" style="background-color: #e3e3e3">
+            <div class="mb-3"><img class="attached" [src]="preview" /></div>
+            <div class="px-3">
+              <button class="btn btn-primary fs-4" (click)="uploadFile()" style="min-width: 100px;">
+                Upload
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="btnSec">
+        <button class="btnSubmit" (click)="returnPrevew()">Proceed</button>
+      </div>
+    </div>
+  </ng-container>
+  <ng-container *ngIf="!isloading && ItemDetails.length == 0">
+    <div class="notfoundbox mt-3">
+      <ng-container>
+        <!-- <i class="fa fa-frown-o mb-3" style="font-size:48px; color:#4775d1"></i> -->
+        <div class="fw-5">No Record Found...</div>
+      </ng-container>
+    </div>
+  </ng-container>
+</div>
+
+<button #ReturninfoModal data-bs-toggle="modal" data-bs-target="#ReturninfoModal" class="d-none"></button>
+<div class="modal fade" id="ReturninfoModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+  aria-labelledby="ReturninfoModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-body">
+        <div class="d-flex w-100 my-3 fw-5">{{ respMsg }}</div>
+        <div class="btnSec">
+          <button type="button" class="btnSubmit" data-bs-dismiss="modal" aria-label="Close" (click)="resetMsg()">
+            Ok
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<button #PreviewModal data-bs-toggle="modal" data-bs-target="#PreviewModal" class="d-none"></button>
+<div class="modal fade" id="PreviewModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+  aria-labelledby="PreviewModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-body">
+        <div class="my-2" style="min-height: 32px;">
+          <div *ngIf="RefundToPG > 0" class="d-flex w-100 my-1 fw-5">
+            <span class="text-success">{{RefundToPG | currency: 'INR'}}</span>&nbsp; will be returned to your source account.
+          </div>
+          <div *ngIf="RefundToWA > 0" class="d-flex w-100 my-1 fw-5">
+            <span class="text-success">{{RefundToWA | currency: 'INR'}}</span>&nbsp; will be credited to your wallet.
+          </div>
+        </div>
+        <div *ngIf="authService.ConfigData.WalletEnable == 'Y'" class="d-flex align-items-center fw-5 mb-3"><i class="fa-solid fa-wallet pe-2" style="color: #F79009; font-size: 22px;"></i> Wallet Balance ({{this.authService.walletBalance | currency : 'INR'}})</div>
+        <div class="btnSec">
+          <button type="button" class="btnCancel" data-bs-dismiss="modal" aria-label="Close" (click)="resetMsg()">Cancel</button>
+          <button type="button" class="btnSubmit" data-bs-dismiss="modal" aria-label="Close" (click)="submitRequest()">Submit</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<button #ReturnsucessModal data-bs-toggle="modal" data-bs-target="#ReturnsucessModal" class="d-none"></button>
+<div class="modal fade" id="ReturnsucessModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+  aria-labelledby="ReturnsucessModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-body">
+        <div class="d-flex w-100 my-3 fw-5">{{ respMsg }}</div>
+        <div class="btnSec">
+          <button type="button" class="btnSubmit" data-bs-dismiss="modal" aria-label="Close" (click)=" redirect()">
+            Ok
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- <ng-container *ngFor="let item of ItemDetails">
+  <div class="d-flex align-items-center w-100 p-3 mb-3 border rounded bx-shdw"  [ngClass]="fullOrder == 1 ? 'noClick bgl-gray bg-opacity-10' : ''">
+    <div class="me-2">
+      <input class="form-check-input" type="checkbox" value="" (click)="setReturnProductList($event, item)" [checked]="item.selected" />
+    </div>
+    <div class="buyagnImg">
+      <img [src]="item.ProductImageURL" alt="{{ item.ProductImage }}" />
+    </div>
+    <div class="px-3 w-100">
+      <div class="fw-5 mb-1">{{ item.DisplayName }}</div>
+
+      <div class="fw-5 mb-1" style="font-size: 12px">Ordered Qty : {{ item.OrderedQuantity }}</div>
+
+      <div *ngIf="fullOrder == 1" class="fw-5 mb-1 mt-2">Return Qty : {{ item.SalesReturnQty }}</div>
+
+      <div *ngIf="fullOrder != 1" class="d-flex align-items-center">
+        <div class="d-flex">
+          <label class="form-label text-nowrap fw-5">Return Qty : &nbsp;</label>
+          <select class="form-select" (change)="setQty($event, item)" [ngClass]="item.selected == false ? 'noClick bgl-gray bg-opacity-10' : ''">
+            <ng-container *ngFor="let qty of item.qtylist">
+              <option [value]="qty" [selected]="item.SalesReturnQty">{{ qty }}</option>
+            </ng-container>
+          </select>
+        </div>
+        <div class="px-2">
+          <select class="form-select" (change)="setReason($event, item)" [ngClass]="item.selected == false ? 'noClick bgl-gray bg-opacity-10' : ''">
+            <option value="">Select Reason</option>
+            <ng-container *ngFor="let rsn of individualReasonList">
+              <ng-container *ngFor="let dls of rsn | keyvalue">
+                <option [value]="dls.key">{{ dls.value }}</option>
+              </ng-container>
+            </ng-container>
+          </select>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-container> -->

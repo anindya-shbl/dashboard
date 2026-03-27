@@ -1,0 +1,31 @@
+<div *ngIf="prodImages.length>0" class="border rounded item-shadow p-4 fxd-top">
+    <div *ngIf="veganType != null && veganType != '' && veganType != undefined"
+        class="vegan">
+        <div *ngIf="veganType == 'Veg'">
+            <img src="https://asset.sastasundar.com/incom/incom_images/veg.png" alt="">
+        </div>
+        <div *ngIf="veganType == 'Non-Veg'">
+            <img src="https://asset.sastasundar.com/incom/incom_images/non-veg.png" alt="">
+        </div>
+    </div>
+    <div class="display-img" (mousemove)="onMouseMove($event)" (mouseleave)="onMouseLeave()">
+        <img #zoomImg [src]="showImg.ProductBigImageUrl" alt="">
+    </div>
+    <div class="position-relative">
+        <div #widgetsContent class="img-smallCont">
+            <ng-container *ngFor="let img of prodImages">
+                <img (click)="setImg(img.DisplaySeq)" [src]="img.ProductBigImageUrl" [ngClass]="showImg.DisplaySeq == img.DisplaySeq? 'border-primary': ''" alt="">
+            </ng-container>
+        </div>
+        <div *ngIf="currentIndex > 5" class="arow-cont-left hvr" (click)="scrollLeft()">
+            <i class="fa-solid fa-chevron-left"></i>
+        </div>
+        <div *ngIf="currentIndex < prodImages.length" class="arow-cont-right hvr" (click)="scrollRight()">
+            <i class="fa-solid fa-chevron-right"></i>
+        </div>
+        <!-- <div cl-ass="arow-cont">
+            <span><i cl-ass="fa-solid fa-chevron-left"></i></span>
+            <span><i cl-ass="fa-solid fa-chevron-right"></i></span>
+        </div> -->
+    </div>
+</div>

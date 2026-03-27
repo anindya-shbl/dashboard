@@ -1,0 +1,421 @@
+<div class="p-3">
+    <div class="mb-3">
+        <app-route-path></app-route-path>
+    </div>
+    <ng-container *ngIf="!isloading">
+        <div class="commonHeadertitleSec">
+            <div class="custNameSec">
+                <strong>My Appointment Bookings</strong>
+            </div>
+        </div>
+
+        <ng-container *ngIf="apmntDetails !=''">
+            <div class="d-flex justify-content-between">
+                <div class="mb-3 fs-6 fw-5">
+                    <span *ngIf="apmntDetails.BookingStatusId ==9 || apmntDetails.BookingStatusId ==6"
+                        class="status text-danger">{{apmntDetails.BookingStatus}}</span>
+                    <span
+                        *ngIf="apmntDetails.BookingStatusId ==1 || apmntDetails.BookingStatusId ==3 || apmntDetails.BookingStatusId ==7"
+                        class="status text-primary">{{apmntDetails.BookingStatus}}</span>
+                    <span *ngIf="apmntDetails.BookingStatusId ==4 || apmntDetails.BookingStatusId ==5"
+                        class="status text-success">{{apmntDetails.BookingStatus}}</span>
+                </div>
+                <ng-container
+                    *ngIf="apmntDetails.ModeOfConsultation == 'V' && apmntDetails.BookingStatusId !=4 && apmntDetails.BookingStatusId !=5">
+                    <div *ngIf="apmntDetails.BookingStatusId ==3 || apmntDetails.BookingStatusId ==7"
+                        class="lab-btns hvr bg-primary text-white" (click)="joinVideocall(apmntDetails)">Join Video Call
+                    </div>
+                    <div *ngIf="apmntDetails.BookingStatusId ==1 &&  apmntDetails.BookingStatusId ==6 && apmntDetails.BookingStatusId ==9"
+                        class="lab-btns bg-secondary-subtle">Join Video Call</div>
+                </ng-container>
+                <!-- <ng-container *ngIf="apmntDetails.BookingStatusId ==4 || apmntDetails.BookingStatusId ==5">
+                    <div class="btn btn-primary" (click)="getPrescription(apmntDetails)">Download Prescription</div>
+                </ng-container> -->
+            </div>
+
+            <div class="d-flex">
+                <div class="w-100 me-3">
+                    <div *ngIf="referMeds.length>0" class="border rounded bx-shdw mb-3">
+                        <div class="sum-head border-bottom">
+                            <div class="fs-5 fw-5">Prescribed Medicines</div>
+                            <div class="btn-act" (click)="bookMeds()">Order Medicines</div>
+                        </div>
+                        <div class="p-3">
+                            <ng-container *ngFor="let item of referMeds">
+                                <div class="d-flex align-items-center hvr mb-2"
+                                    (click)="CommonService.getProductDetailsPageURL(item.ProductId, item.ProductName, item.PrescriptionOTC)">
+                                    <div class="buyagnImg position-relative me-3">
+                                        <!-- <ng-container *ngIf="item.PrescriptionOTC == 'P'"><i class="icon-Rx rxblock"></i></ng-container> -->
+                                        <ng-container *ngIf="item.ProductImage != '' && item.ProductImage != null">
+                                            <img
+                                                src="https://asset.sastasundar.com/incom/images/product/thumb/{{item.ProductImage}}">
+                                        </ng-container>
+                                        <ng-container *ngIf="item.ProductImage == '' || item.ProductImage == null">
+                                            <img *ngIf="item.PrescriptionOTC == 'P' || item.PrescriptionOTC == 'M'"
+                                                src="https://asset.sastasundar.com/incom/images/product/thumb/Med.svg">
+                                            <img *ngIf="item.PrescriptionOTC == 'O'"
+                                                src="https://asset.sastasundar.com/incom/images/product/thumb/Household.svg">
+                                        </ng-container>
+                                    </div>
+
+                                    <div class="">{{item.DisplayName}}</div>
+                                </div>
+                            </ng-container>
+                        </div>
+                    </div>
+
+                    <div *ngIf="referedLabs.length>0" class="border rounded bx-shdw mb-3">
+                        <div class="sum-head border-bottom">
+                            <div class="fs-5 fw-5">Prescribed Lab Tests</div>
+                            <div class="btn-act" (click)="bookLabTests()">Book Lab Tests</div>
+                        </div>
+                        <div class="p-3">
+                            <ng-container *ngFor="let item of referedLabs">
+                                <div class="d-flex align-items-center hvr mb-3"
+                                    (click)="CommonService.getLabTestDetailsPageURL(item.PermalinkNew)">
+                                    <div class="me-3">
+                                        <img src="https://asset.sastasundar.com/incom/sspl_website/images/labicon.png"
+                                            alt="" width="20px">
+                                    </div>
+                                    <div class="fs-3">{{item.ServiceName}}</div>
+                                </div>
+                            </ng-container>
+                        </div>
+                    </div>
+
+                    <div class="border rounded bx-shdw mb-3">
+                        <div class="sum-head border-bottom">
+                            <div class="fs-5 fw-5">Doctor Details</div>
+                        </div>
+                        <div class="d-flex px-4 py-3">
+                            <div class="doc-img me-3">
+                                <img *ngIf="apmntDetails.DoctorDetails.DoctorImage != '' && apmntDetails.DoctorDetails.DoctorImage != undefined && apmntDetails.DoctorDetails.DoctorImage != null"
+                                    [src]="apmntDetails.DoctorDetails.DoctorImage" class="rounded" width="100%" alt="">
+                                <img *ngIf="apmntDetails.DoctorDetails.DoctorImage == '' || apmntDetails.DoctorDetails.DoctorImage == undefined || apmntDetails.DoctorDetails.DoctorImage == null"
+                                    src="https://asset.sastasundar.com/incom/images/product/thumb/default_product1460098847.jpg"
+                                    class="rounded" width="100%" alt="">
+                            </div>
+                            <div>
+                                <div class=" fs-6 fw-5 mb-1">{{apmntDetails.DoctorDetails.Salutation}}
+                                    {{apmntDetails.DoctorDetails.DoctorName}}</div>
+                                <div *ngIf="apmntDetails.DoctorDetails.Qualification != undefined"
+                                    class="mb-1 text-secondary">
+                                    {{apmntDetails.DoctorDetails.Qualification}}</div>
+                                <div *ngIf="apmntDetails.DoctorDetails.SpecialityName != undefined"
+                                    class="mb-1 text-secondary">
+                                    {{apmntDetails.DoctorDetails.SpecialityName}}</div>
+                                <div *ngIf="apmntDetails.DoctorDetails.Language != undefined"
+                                    class="mb-1 text-secondary">
+                                    <span class="fw-6 me-3"><i class="fa-solid fa-language"></i></span>
+                                    <span>{{apmntDetails.DoctorDetails.Language}}</span>
+                                </div>
+                                <div class="text-secondary">
+                                    <span *ngIf="apmntDetails.DoctorDetails.DoctorExperience != undefined"
+                                        class="me-2">Exp:
+                                        {{apmntDetails.DoctorDetails.DoctorExperience}} Yrs,</span>
+                                    <span
+                                        *ngIf="apmntDetails.DoctorDetails.ConsultationMsg != undefined">{{apmntDetails.DoctorDetails.ConsultationMsg}}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+
+                    <div class="border rounded mb-3">
+                        <div class="sum-head border-bottom">
+                            <div class="fs-5 fw-5">Patient Vitals</div>
+                            <div class="btn-act" data-bs-toggle="modal" data-bs-target="#ptntVitalMdl">Modify Vitals</div>
+                        </div>
+                        <div class="p-3">
+                            <div class="d-flex justify-content-between mb-2 text-secondary">
+                                <span>Height</span>
+                                <span>{{apmntDetails.PatientVitalsInfo.Height}} ft</span>
+                            </div>
+                            <div class="d-flex justify-content-between mb-2 text-secondary">
+                                <span>Weight</span>
+                                <span>{{apmntDetails.PatientVitalsInfo.BodyWeight}} Kgs</span>
+                            </div>
+                            <div class="d-flex justify-content-between mb-2 text-secondary">
+                                <span>Common Allergies</span>
+                                <span *ngIf="apmntDetails.PatientVitalsInfo.CommonAllergiesData.length > 0">
+                                    <ng-container *ngFor="let ds of apmntDetails.PatientVitalsInfo.CommonAllergiesData">
+                                        <span class="me-2">{{ds.ConditionName}},</span>
+                                    </ng-container>
+                                </span>
+                            </div>
+                            <div class="d-flex justify-content-between mb-2 text-secondary">
+                                <span>Chronic Condition</span>
+                                <span *ngIf="apmntDetails.PatientVitalsInfo.ChronicConditionData.length > 0">
+                                    <ng-container
+                                        *ngFor="let ds of apmntDetails.PatientVitalsInfo.ChronicConditionData">
+                                        <span class="me-2">{{ds.ConditionName}},</span>
+                                    </ng-container>
+                                </span>
+                            </div>
+                            <div class="border-top mt-4 pt-3">
+                                <div class="d-flex justify-content-between align-items-center mb-3">
+                                    <div class="fw-5">Uploaded Past Report (optional)</div>
+                                    <div class="">
+                                        <label for="file-input" class="btn-act">Add New</label>
+                                        <input id="file-input" type="file" class="d-none" (change)="selectPrescription($event)" multiple accept=".jpg, .jpeg, .pdf" />
+                                    </div>
+                                </div>
+                                <div *ngIf="prscImages.length > 0" class="mb-3">
+                                    <div class="d-flex flex-wrap gap-10">
+                                            <ng-container *ngFor="let image of prscImages">
+                                                <div class="border rounded px-2 py-3 me-2 position-relative">
+                                                    <div class="cross" (click)="delFile(image)">
+                                                        <i class="fa fa-times-circle"></i>
+                                                    </div>
+                                                    <div class="prsc-slot-new">
+                                                        <ng-container *ngIf="image.type == 'application/pdf'">
+                                                            <i class="fa-solid fa-file-lines text-danger" style="font-size: 70px;"></i>
+                                                        </ng-container>
+                                                        <ng-container *ngIf="image.type != 'application/pdf'">
+                                                            <img [src]="image.url" class="px-2" width="80px" height="70px" />
+                                                        </ng-container>
+                                                    </div>
+                                                </div>
+                                            </ng-container>
+                                    </div>
+                                    <div class="fs-3 text-secondary my-3">Upload jpg, jpeg, png and pdf below 5MB</div>
+                                    <div class="btn-act upload-btn">Upload Files</div>
+                                </div>
+                                <div *ngIf="apmntDetails.PatientVitalsInfo.ReportDocuments.length > 0" class="d-flex mb-3">
+                                    <ng-container *ngFor="let docs of apmntDetails.PatientVitalsInfo.ReportDocuments">
+                                        <div class="border rounded px-2 py-3 me-2 position-relative">
+                                            <span class=""><i class="fa-solid fa-file-lines text-danger" style="font-size: 70px;"></i></span>
+                                            <span class="cross" (click)="removeReport(docs)"><i class="fa fa-times-circle"></i></span>
+                                        </div>
+                                    </ng-container>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="summery-grid">
+                    <ng-container *ngIf="apmntDetails.BookingStatusId ==4 || apmntDetails.BookingStatusId ==5">
+                        <div class="btn-act btn-download mb-3" (click)="getPrescription(apmntDetails)">Download Prescription</div>
+                    </ng-container>
+                    <div *ngIf="ratingRes != ''" class="border rounded bx-shdw mb-3">
+                        <div class="sum-head border-bottom">
+                            <div class="fs-5 fw-5">Rate Your Consultation</div>
+                        </div>
+                        <div class="stars">
+                            <i *ngFor="let star of [1,2,3,4,5]" class="fa"
+                                [ngClass]="star <= ratingRes.data.FeedbackRating ? 'fa-star checked' : 'fa-star'"
+                                (click)="openRating(star)">
+                            </i>
+                        </div>
+                    </div>
+                    <div class="border rounded bx-shdw mb-3">
+                        <div class="sum-head border-bottom">
+                            <div class="fs-5 fw-5">Bill Summary</div>
+                        </div>
+                        <div class="p-3">
+                            <div class="d-flex justify-content-between mb-2 text-secondary">
+                                <span>Booking No</span>
+                                <span>{{apmntDetails.BookingNo}}</span>
+                            </div>
+                            <div class="d-flex justify-content-between mb-2 text-secondary">
+                                <span>Appointment Date</span>
+                                <span>{{apmntDetails.BookingDate}}</span>
+                            </div>
+                            <div class="d-flex justify-content-between mb-2 text-secondary">
+                                <span>Patient Name</span>
+                                <span>{{apmntDetails.PatientName}}</span>
+                            </div>
+                            <div class="d-flex justify-content-between mb-2 text-secondary">
+                                <span>Contact No</span>
+                                <span>{{apmntDetails.PatientMobileNo}}</span>
+                            </div>
+                            <div class="d-flex justify-content-between mb-2 text-secondary">
+                                <span>Consultation Fee</span>
+                                <span>{{apmntDetails.BookingAmount | currency: 'INR'}}</span>
+                            </div>
+                            <div class="d-flex justify-content-between mb-2 text-secondary">
+                                <span>Item Discount</span>
+                                <span>{{apmntDetails.ItemDiscount | currency: 'INR'}}</span>
+                            </div>
+                            <div class="d-flex justify-content-between mb-2 text-secondary">
+                                <span>Coupon Discount</span>
+                                <span>{{apmntDetails.CouponDiscount | currency: 'INR'}}</span>
+                            </div>
+                            <div class="d-flex justify-content-between mb-2">
+                                <span class="fw-5 fs-5">Amount to be paid</span>
+                                <span class="fw-5 fs-5">{{apmntDetails.BillAmount | currency: 'INR'}}</span>
+                            </div>
+                            <div class="d-flex justify-content-between mb-2 text-secondary">
+                                <span>Payment Mode</span>
+                                <span>{{apmntDetails.CouponDiscount | currency: 'INR'}}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </ng-container>
+    </ng-container>
+</div>
+
+
+<div class="modal fade" id="ptntVitalMdl" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+    aria-labelledby="ptntVitalMdlLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h6 class="modal-title mb-0" id="ptntVitalMdlLabel">Add Patient Vitals</h6>
+                <button #clsVitalMdl type="button" class="btn-close" data-bs-dismiss="modal"
+                    aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <app-patient-vitals [bookingDtls]="apmntDetails"
+                    (ptntVitals)="vitalAction($event)"></app-patient-vitals>
+            </div>
+        </div>
+    </div>
+</div>
+
+<button #addLabsMdl data-bs-toggle="modal" data-bs-target="#addLabsMdl" class="d-none"></button>
+<div class="modal fade" id="addLabsMdl" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+    aria-labelledby="addLabsMdlLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h6 class="modal-title mb-0" id="addLabsMdlLabel">Book Prescribed Lab Tests</h6>
+                <button #clsaddLab type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+                    (click)="resetLabSelect()"></button>
+            </div>
+            <div class="modal-body">
+                <ng-container *ngFor="let item of referedLabs; let i= index">
+                    <div class="d-flex justify-content-between border-bottom pb-3 mb-3">
+                        <div class="d-flex align-items-center hvr mb-3">
+                            <div class="d-flex justify-content-center align-items-center p-2 me-3 border rounded">
+                                <img src="https://asset.sastasundar.com/incom/sspl_website/images/labicon.png" alt=""
+                                    width="30px">
+                            </div>
+                            <div>
+                                <div class="fs-3 fw-5 mb-1">{{item.ServiceName}}</div>
+                                <div class="fw-5">{{item.OfferFees | currency: 'INR'}}</div>
+                            </div>
+                        </div>
+                        <!-- <div>
+                            <button *ngIf="!item.selected" class="button-add" (click)="addTest(item)">Add</button>
+                            <button *ngIf="item.selected" class="btn-remove" (click)="removeTest(item)">Remove</button>
+                        </div> -->
+                        <div *ngIf="!item.selected" class="action-btn addbutton-color hvr" (click)="addTest(item)">
+                            <span class="item-text">Add</span>
+                        </div>
+                        <div *ngIf="item.selected" class="action-btn addbutton-color hvr" (click)="removeTest(item)">
+                            <span class="item-text">Remove</span>
+                        </div>
+                    </div>
+                </ng-container>
+                <div *ngIf="selectedTests.length>0">
+                    <button class="btn btn-primary" (click)="proceedLabCart()">Go to cart</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<button #addMedsMdl data-bs-toggle="modal" data-bs-target="#addMedsMdl" class="d-none"></button>
+<div class="modal fade" id="addMedsMdl" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+    aria-labelledby="addMedsMdlLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h6 class="modal-title mb-0" id="addMedsMdlLabel">Order Prescribed Medicine</h6>
+                <button #clsaddMeds type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+                    (click)="resetMedSelect()"></button>
+            </div>
+            <div class="modal-body">
+
+                <ng-container *ngFor="let item of referMeds">
+                    <div class="d-flex border-bottom pb-3 mb-3">
+                        <div class="w-100">
+                            <div class="d-flex w-100 mb-2">
+                                <div class="buyagnImg position-relative me-3">
+                                    <ng-container *ngIf="item.PrescriptionOTC == 'P'">
+                                        <i class="icon-Rx rxblock"></i>
+                                    </ng-container>
+                                    <ng-container *ngIf="item.ProductImage != '' && item.ProductImage != null">
+                                        <img
+                                            src="https://asset.sastasundar.com/incom/images/product/thumb/{{item.ProductImage}}">
+                                    </ng-container>
+                                    <ng-container *ngIf="item.ProductImage == '' || item.ProductImage == null">
+                                        <img *ngIf="item.PrescriptionOTC == 'P' || item.PrescriptionOTC == 'M'"
+                                            src="https://asset.sastasundar.com/incom/images/product/thumb/Med.svg">
+                                        <img *ngIf="item.PrescriptionOTC == 'O'"
+                                            src="https://asset.sastasundar.com/incom/images/product/thumb/Household.svg">
+                                    </ng-container>
+                                </div>
+
+                                <div class="d-flex justify-content-between w-100 ">
+                                    <div>
+                                        <div class="mb-2 fw-5 hvr"
+                                            (click)="CommonService.getProductDetailsPageURL(item.ProductId, item.ProductName, item.PrescriptionOTC)">
+                                            {{item.DisplayName}}</div>
+                                        <div *ngIf="item.IsOutOfStock == 'N'">
+                                            <span class="fw-5">{{item.OfferPrice | currency : 'INR'}}</span>
+                                            <del class="s-price px-2 text-black-50">{{item.MRP | currency :
+                                                'INR'}}</del>
+                                            <b *ngIf="item.DiscountPercent > 0"
+                                                class="text-orange">{{item.DiscountPercent}} % off</b>
+                                        </div>
+                                        <div *ngIf="item.IsOutOfStock == 'Y'">
+                                            <span class="text-secondary">Out of Stock</span>
+                                        </div>
+                                    </div>
+
+                                    <div *ngIf="item.IsOutOfStock == 'N'" class="d-flex align-items-center">
+                                        <div *ngIf="item.addedQty>0" item.addedQty class="action-btn addbutton-color">
+                                            <span class="item-action" (click)="removeUpdateItem(item)">&#8722;</span>
+                                            <span class="item-text">{{item.addedQty}}</span>
+                                            <span class="item-action" (click)="addUpdateItem(item)">&#43;</span>
+                                        </div>
+                                        <div *ngIf="item.addedQty ==0" item.addedQty
+                                            class="action-btn addbutton-color hvr">
+                                            <span class="item-text" (click)="addItem(item)">Add</span>
+                                        </div>
+                                    </div>
+
+                                    <div *ngIf="item.IsOutOfStock == 'Y'" class="notify-btn hvr"
+                                        (click)="requestNotify(item)">
+                                        <span class="fs-3 fw-5">Notify</span>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </ng-container>
+
+                <div *ngIf="proceedMed">
+                    <button class="btn btn-primary" (click)="proceedMedCart()">Go to cart</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<button #ratingMdl data-bs-toggle="modal" data-bs-target="#ratingMdl" class="d-none"></button>
+<div class="modal fade" id="ratingMdl" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+    aria-labelledby="ratingMdlLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h6 class="modal-title mb-0" id="ratingMdlLabel">Rate Your Consultation Experience</h6>
+                <button #clsrating type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+                    (click)="resetRating()"></button>
+            </div>
+            <div class="modal-body">
+                <app-rate-consultation [RatingData]="ratingRes.data" [custRating]="inputRating"
+                    [consultant]="apmntDetails.DoctorDetails.DoctorName" (submitFeedback)="handleFeedback($event)">
+                </app-rate-consultation>
+            </div>
+        </div>
+    </div>
+</div>

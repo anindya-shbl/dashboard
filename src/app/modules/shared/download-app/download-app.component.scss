@@ -1,0 +1,30 @@
+.appbanner {
+    background-color: #f4f9ff;
+    padding: 0;
+    margin: 0 auto;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    img {
+    width: 100%;
+    -o-object-fit: cover;
+    object-fit: cover;
+}
+}
+
+.btnsec {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    position: absolute;
+    -moz-column-gap: 0px;
+    column-gap: 0px;
+    left: 58%;
+    top: 55%;
+
+    img {
+        border-radius: 6px;
+        width: 92%;
+    }
+}

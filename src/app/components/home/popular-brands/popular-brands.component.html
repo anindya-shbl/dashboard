@@ -1,0 +1,42 @@
+<div class="p-3">
+
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <span class="fs-20 fw-7">Popular Brands</span>
+        <span class="hvr text-primary" routerLink="/newbrand/shopbybrand">View All</span>
+    </div>
+
+    <div class="owl-cont p-2 rounded bg-secondary">
+
+        <owl-carousel-o [options]="customOptions">
+            <ng-container *ngFor="let item of pplBrnd">
+                <ng-template carouselSlide [id]="item.ProductId">
+                    <div class="p-2 ">
+                        <div class="rounded item-shadow p-3 bg-white hvr" (click)="viewListings(item)">
+                            <div class="tst-img py-3">
+                                <img [src]="item.BrandImageUrl" [alt]="item.ProductImage" [title]="item.DisplayName">
+                            </div>
+                        </div>
+                    </div>
+                </ng-template>
+            </ng-container>
+        </owl-carousel-o>
+<!-- 
+        <div class="p-3">
+            <owl-carousel-o [options]="customOptions">
+
+                <ng-container *ngFor="let item of pplBrnd">
+                    <ng-template carouselSlide [id]="item.id">
+
+                        <div class="p-1">
+                            <div class="d-flex align-items-center justify-content-center border rounded bg-white"
+                                style="min-height: 140px;">
+                                <img [src]="item.BrandImageUrl" [alt]="item.ProductImage" [title]="item.DisplayName">
+                            </div>
+                        </div>
+                    </ng-template>
+                </ng-container>
+
+            </owl-carousel-o>
+        </div> -->
+    </div>
+</div>

@@ -1,0 +1,50 @@
+<div class="leftAccountSec">
+    <h2 routerLink="myaccount" class="hvr" routerLinkActive="active">My Account</h2>
+
+    <div class="tabSec">
+        <h4>Medicine Orders</h4>
+          <ul>
+            <li routerLink="orderlist" routerLinkActive="active"><i class="fa-solid fa-box"></i> My Orders</li>
+            <li routerLink="buyagain" routerLinkActive="active"><i class="fa-solid fa-retweet"></i> Buy Again</li>
+            <li routerLink="requestproduct" routerLinkActive="active"><i class="icon-checked-round"></i> In Stock Alert</li>
+          </ul>
+    </div>
+
+    <div class="tabSec">
+      <h4>Lab Bookings</h4>
+        <ul>
+            <li routerLink="lab-bookings" routerLinkActive="active"><i class="icon-lab_instrument_1"></i> My Lab Bookings</li>
+        </ul>
+    </div>
+
+    <!-- <div class="tabSec">
+      <h4>Doctor Consultation</h4>
+        <ul>
+            <li routerLink="online_consultation" routerLinkActive="active"><i class="fa-solid fa-stethoscope"></i>Book Consultation</li>
+            <li routerLink="consultation-list" routerLinkActive="active"><i class="fa-solid fa-notes-medical"></i>My Consultations</li>
+        </ul>
+    </div> -->
+
+    <div class="tabSec">
+      <h4>Profile</h4>
+        <ul>
+          <li routerLink="profile" routerLinkActive="active"><i class="fa-regular fa-user"></i> My Profile</li>
+          <li routerLink="health_records" routerLinkActive="active"><i class="icon-health-service-1"></i>My Health Records</li>
+          <li routerLink="address" routerLinkActive="active"><i class="icon-location-3-nsm"></i>Manage Address</li>
+          <li routerLink="family" routerLinkActive="active"><i class="icon-users"></i> Manage Family Members</li>
+          <li routerLink="CFH_Redemptions" routerLinkActive="active"><i class="fa-solid fa-id-card-clip"></i>CFH Health Card</li>
+          <!-- <li *ngIf="authService.ConfigData.WalletEnable == 'Y'" (click)="getWalletRecords()" routerLinkActive="active"><i class="fa-solid fa-wallet"></i> My Wallet</li> -->
+          <li *ngIf="authService.ConfigData.WalletEnable == 'Y'" routerLink="wallet" routerLinkActive="active"><i class="fa-solid fa-wallet"></i> My Wallet</li>
+        </ul>
+    </div>
+
+    <div class="tabSec">
+      <h4>Settings</h4>
+        <ul>
+            <!-- <li routerLink="change_password" routerLinkActive="active"><i class="icon-change-password-rs"></i> Change Password</li> -->
+            <li routerLink="manage_account" routerLinkActive="active"><i class="icon-equalizer"></i> Manage Account</li>
+            <!-- <li routerLink="healthbuddy" routerLinkActive="active"><i class="fa-solid fa-house-medical"></i> Manage Healthbuddy</li>   -->
+        </ul>
+    </div>
+
+  </div>

@@ -1,0 +1,29 @@
+.jito-grad {
+    background: linear-gradient(177deg, rgba(187, 230, 250, 0.29) 26%, rgb(253, 229, 229) 87%);
+}
+
+@media only screen and (max-width: 1359px) {
+    .key-grd {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(480px, 1fr));
+        grid-gap: 1rem;
+    }
+}
+
+@media only screen and (min-width: 1360px) and (max-width: 1900px) {
+    .key-grd {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(600px, 1fr));
+        grid-gap: 1rem;
+    }
+}
+
+// .key-grd{
+//     display: flex;
+//     flex-wrap: wrap;
+// }
+
+// .key-cont{
+//     width: 50%;
+//     min-width: 600px;
+// }

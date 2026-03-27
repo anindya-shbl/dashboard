@@ -1,0 +1,155 @@
+
+<div class="commonngwhite">
+    <div class="p-3 pb-0 mb-0"><app-route-path></app-route-path></div>
+
+    <div class="commonHeadertitleSec border-bottom p-3 pt-0">
+        <div class="custNameSec">
+            <strong>My Health Records</strong>
+        </div>
+    </div>
+
+    
+    <div class="commonHeadertitleSec border-bottom p-3 pt-0 d-none">
+        <div class="custNameSec">
+           <div (click)="getData('Prescriptions')" [ngClass]="tabName == 'Prescriptions' ? 'tab-active':''" class="btnSubmitOutline" style="min-width: 328px;">Prescriptions ({{savedPrscList.length}})</div>
+        </div>
+        <div class="custSaved">
+            <div class="input-group">
+                <label class="input-group-text px-3" style="font-size: 14px; font-weight: 500;"  for="inputGroupSelect01">Records for </label>
+                <select class="form-select" style="font-size: 14px; font-weight: 500;" id="inputGroupSelect01">
+                  <option selected>Choose...</option>
+                  <option value="1">One</option>
+                  <option value="2">Two</option>
+                  <option value="3">Three</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+
+
+    <!-- <nav class="row" aria-label="Page navigation">
+        <div class="col-lg-6 col-xl-8 mb-3">
+            <ul class="pagination mb-0">
+                <li class="page-item text-nowrap" (click)="getData('Prescriptions')" [ngClass]="tabName == 'Prescriptions' ? 'tab-active':''"><a class="page-link">Prescriptions ({{savedPrscList.length}})</a></li>
+                <li class="page-item text-nowrap" (click)="getData('LabTestReports')" [ngClass]="tabName == 'LabTestReports' ? 'tab-active':''"><a class="page-link">Lab Test Reports (0)</a></li>
+              </ul>
+        </div>
+        <div class="col-lg-6 col-xl-4 mb-3">
+            <div class="input-group">
+                <label class="input-group-text px-3" style="font-size: 14px; font-weight: 500;"  for="inputGroupSelect01">Records for </label>
+                <select class="form-select" style="font-size: 14px; font-weight: 500;" id="inputGroupSelect01">
+                  <option selected>Choose...</option>
+                  <option value="1">One</option>
+                  <option value="2">Two</option>
+                  <option value="3">Three</option>
+                </select>
+            </div>
+        </div>
+    </nav> -->
+
+
+    <div class="p-3 pt-0">
+        <div class="currentOrdersSec">
+        <div class="thead">
+            <!-- <div style="width: 5%;">Sl.</div> -->
+            <div style="width: 60%;">FileName</div>
+            <div style="width: 30%;">Generate/Update</div>
+            <div style="width: 10%;"></div>
+        </div>
+      
+      
+        
+        <ng-container *ngFor="let record of savedPrscList; let i= index">
+        <div class="tbody hvr" (click)="getPdf(record.FilePath)">
+            <!-- <div>{{record.PrescriptionName}}</div> -->
+            <!-- <div style="width: 5%;">{{i+1}}</div> -->
+            <div style="width: 60%;">{{record.FilePath}}</div>
+            <div style="width: 30%;">{{record.PrescriptionDate}}</div>
+            <div style="width: 10%;"> <i class="icon-download"></i> </div>
+        </div>
+      </ng-container>
+        
+      
+      </div>
+      </div>
+
+
+
+   <!--  <div class="p-3 pt-0">
+    <div *ngIf="!isloading && savedPrscList.length > 0" class="border rounded bx-shdw">
+        <div class="row py-3 border-bottom bg-primary bg-opacity-10 m-0 fw-5">
+            <div class="col-7">FileName</div>
+            <div class="col-3">Generate/Update</div>
+            <div class="col-2"></div>
+        </div>
+        <ng-container *ngFor="let record of savedPrscList">
+            <div class="row py-2 border-bottom m-0">
+                <div class="col-7">{{record.FilePath}}</div> 
+                <div class="col-7">{{record.PrescriptionName}}</div>
+                <div class="col-3">{{record.PrescriptionDate}}</div>
+                <div class="col-2 hvr" (click)="getPdf(record.FilePath)"> <i class="fa-solid fa-download mx-2 text-primary"></i>
+                    <button type="button" class="btn btn-link btn-sm btn-sm fw-5 me-3"
+                        (click)="getPdf(record.FilePath)">
+                        <i class="fa-solid fa-download fs-5 mx-2"></i></button>
+                </div>
+            </div>
+        </ng-container>
+
+         <div class="row py-2 border-bottom m-0">
+            <div class="col-1">
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+                </div>
+            </div>
+            <div class="col-5"><i class="fa-solid fa-file pe-2"></i> FileName</div>
+            <div class="col-3">29 Jun, 2024</div>
+            <div class="col-3">
+                <div class="d-flex justify-content-between align-items-center" style="margin-top: 4px;">
+                    <span class="px-3"><i class="fa-solid fa-share-nodes fs-7"></i></span>
+                    <span class="px-3"><i class="fa-solid fa-download fs-7"></i></span>
+                    <span class="px-3"><i class="fa-regular fa-trash-can fs-7"></i></span>
+                </div>
+            </div>
+        </div>
+
+        <div class="row py-3 m-0">
+            <div class="col-2">
+                <button type="button" class="btn btn-outline-primary btn-sm fw-5" style="--bs-btn-padding-y: .15rem;"><i class="fa-solid fa-arrow-left pe-2"></i>Previous</button>
+            </div>
+            <div class="col-8"></div>
+            <div class="col-2 text-end">
+                <button type="button" class="btn btn-outline-primary btn-sm fw-5" style="--bs-btn-padding-y: .15rem;">Next<i class="fa-solid fa-arrow-right ps-2"></i></button>
+            </div>
+        </div>
+    </div>
+</div> -->
+
+    <ng-container *ngIf="!isloading && savedPrscList.length == 0">
+        <div class="p-3">
+            <ng-container >
+                <!-- <i class="fa fa-frown-o mb-3" style="font-size:48px; color:#4775d1"></i> -->
+                <div class="notfoundbox fw-5">No record found..</div>
+            </ng-container>
+        </div>
+    </ng-container>
+</div>
+
+
+
+<!-- <div class="modal fade" id="deleteModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h6 class="modal-title mb-0" id="deleteModalLabel">Delete Address</h6>
+        </div>
+        <div class="modal-body">
+            <div class="mb-3">Do you want to delete the address?</div>
+            <div class="d-flex text-center">
+                <button type="reset" class="btn btn-outline-danger btn-sm btn-sm fw-5 me-3" >Yes</button>
+                <button type="submit" class="btn btn-outline-primary btn-sm btn-sm fw-5" data-bs-dismiss="modal">No</button>                
+            </div>
+        </div>
+      </div>
+    </div>
+</div> -->

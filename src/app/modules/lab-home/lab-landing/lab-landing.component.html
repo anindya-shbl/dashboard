@@ -1,0 +1,46 @@
+<ng-container *ngIf="topBanner.length > 0">
+    <div class="p-3 mb-3">
+        <div id="carouselExampleAutoplaying" class="carousel slide" data-bs-ride="carousel">
+            <div class="carousel-inner">
+                <ng-container *ngFor="let item of topBanner; let i = index;">
+                    <div class="carousel-item hvr" [ngClass]="i == 0? 'active':''" (click)="bnrDtls(item.ActionUrl)">
+                        <img [src]="item.imageUrl" class="d-block w-100" alt="...">
+                    </div>
+                </ng-container>
+            </div>
+            <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleAutoplaying"
+                data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Previous</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleAutoplaying"
+                data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Next</span>
+            </button>
+        </div>
+    </div>
+    <div class="mb-3">
+        <app-home-packages></app-home-packages>
+    </div>
+    <div class="mb-3">
+        <app-home-tests></app-home-tests>
+    </div>
+    <div class="px-3 py-4 hvr" (click)="viewRadiology()">
+        <div class="d-flex justify-content-between mb-3 pb-2">
+            <span class="fs-20 fw-6">Radiology Tests</span>
+        </div>
+        <div class="mb-3">
+            <img src="https://sastasundar.com/assets/lab/assets/images/radiology_banner1.png" alt="" width="100%">
+        </div>
+    </div>
+    <div class="mb-3">
+        <app-home-healthconditions></app-home-healthconditions>
+    </div>
+    <div class="">
+        <app-home-organs></app-home-organs>
+    </div>
+    <div class="p-3 pb-5">
+        <app-how-it-works></app-how-it-works>
+    </div>
+</ng-container>

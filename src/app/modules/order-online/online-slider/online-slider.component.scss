@@ -1,0 +1,17 @@
+.item-box {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 10px;
+    img {
+        height: 140px;
+        width: 140px;
+    }
+}
+.box-animation {
+    transition: transform 0.3s ease-in-out;
+    &:hover {
+        transform: scale(1.025);
+        border-color: #6e9af8 !important;
+        box-shadow: 1px 5px 6px 0px rgba(179,179,179,0.5);
+    }
+}
