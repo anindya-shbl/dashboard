@@ -76,13 +76,16 @@
                     <div class="item-grid ">
                         <ng-container *ngFor="let item of orderItems">
                             <div class="d-flex align-items-start w-100 cursor-pointer border-block" (click)="CommonService.getProductDetailsPageURL(item.ProductId, item.ProductName, item.PrescriptionOTC)">
-                                <div class="buyagnImg">
+                                  <div class="buyagnImg" style="display: block;">
                                     <ng-container *ngIf="item.ProductImage != '' && item.ProductImage != null">
                                         <img src="https://asset.sastasundar.com/incom/images/product/thumb/{{item.ProductImage}}">
                                     </ng-container>
                                     <ng-container *ngIf="item.ProductImage == '' || item.ProductImage == null">
                                         <img src="https://asset.sastasundar.com/incom/images/product/thumb/default_product1460098847.jpg">
                                      </ng-container>
+                                     <ng-container *ngIf="item.InteractiveModule != null && item.InteractiveModule != '' && item.InteractiveModule == 'PetCare'">
+                                        <small class="petTag centertag"> <img src="https://asset.sastasundar.com/incom/images/product/icons/pets-icon.png" alt="For Pets" width="auto"> For Pets</small>
+                                    </ng-container>
                                     <!-- <img [src]="item.ProductImageURL" alt={{item.ProductImage}}> -->
                                 </div>
                                 <div class="px-3 w-100">

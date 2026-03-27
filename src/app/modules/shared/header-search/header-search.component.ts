@@ -40,6 +40,7 @@ export class HeaderSearchComponent implements OnInit {
   showSubs: any = '';
   showRefPrd: any = 0;
   showVar: any = '';
+  InteractiveModule: any = '';
 
   searchResult: boolean = false;
   searchLoading: boolean = false;
@@ -257,7 +258,7 @@ export class HeaderSearchComponent implements OnInit {
         this.ProductStatus = this.getKeyIndex('ProductStatus');
         this.RefProductDetails = this.getKeyIndex('RefProductDetails');
         this.showRefPrd = this.getKeyIndex('showRefPrd');
-
+        this.InteractiveModule = this.getKeyIndex('InteractiveModule');
 
         data['products'].forEach((elm: any) => {
           let pID = this.getKeyIndex('ProductId');

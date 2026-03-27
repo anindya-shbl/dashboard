@@ -122,3 +122,21 @@
     line-height: 30px;
     font-weight: 700;
 }
+.petTag {
+    background-color: #ffe795;
+    padding: 1px 6px;
+    border-radius: 4px;
+    color: #b1590b;
+    font-size: 10px;
+    font-weight: 600;
+}
+.petTag img{
+    width: auto;
+    height: auto;
+    margin: 0;
+    padding: 0;
+}
+.centertag {
+    margin: 5px auto 0;
+    display: table;
+}

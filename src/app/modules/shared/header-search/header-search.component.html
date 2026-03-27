@@ -70,7 +70,7 @@
                             <div class="hvr"
                                 (click)="CommonService.getProductDetailsPageURL(product[ProductId], product[productIndex], product[PrescriptionOTC])">
                                 <div class="d-flex">
-                                    <div class="imglistblock">
+                                    <div class="imglistblock" style="display: block;height: auto;width: 80px;">
                                         <ng-container
                                             *ngIf="product[ProductImage] != '' && product[ProductImage] != null">
                                             <img src="https://asset.sastasundar.com/incom/images/product/thumb/{{product[ProductImage]}}"
@@ -85,6 +85,9 @@
                                             <img *ngIf="product[PrescriptionOTC] == 'O'"
                                                 src="https://asset.sastasundar.com/incom/images/product/thumb/Household.svg"
                                                 alt="" width="100%">
+                                        </ng-container>
+                                        <ng-container *ngIf="product[InteractiveModule] != null && product[InteractiveModule] != '' && product[InteractiveModule] == 'PetCare'">
+                                            <small class="petTag centertag"> <img src="https://asset.sastasundar.com/incom/images/product/icons/pets-icon.png" alt="For Pets" width="auto"> For Pets</small>
                                         </ng-container>
                                     </div>
                                     <div>
@@ -161,7 +164,7 @@
                                     <div class="hvr"
                                         (click)="CommonService.getProductDetailsPageURL(product[RefProductDetails].ProductId, product[RefProductDetails].DisplayName, product[RefProductDetails].PrescriptionOTC)">
                                         <div class="d-flex">
-                                            <div class="imglistblock">
+                                            <div class="imglistblock" style="display: block;height: auto;width: 80px;">
                                                 <ng-container
                                                     *ngIf="product[RefProductDetails].ProductImage != '' && product[RefProductDetails].ProductImage != null">
                                                     <img src="https://asset.sastasundar.com/incom/images/product/thumb/{{product[RefProductDetails].ProductImage}}"
@@ -175,6 +178,11 @@
                                                     <img *ngIf="product[PrescriptionOTC] == 'O'"
                                                         src="https://asset.sastasundar.com/incom/images/product/thumb/Household.svg"
                                                         alt="" width="100%">
+                                                </ng-container>
+                                                <ng-container
+                                                    *ngIf="product[InteractiveModule] != null && product[InteractiveModule] != '' && product[InteractiveModule] == 'PetCare'">
+                                                    <small class="petTag centertag"> <img src="https://asset.sastasundar.com/incom/images/product/icons/pets-icon.png"
+                                                            alt="For Pets" width="auto"> For Pets</small>
                                                 </ng-container>
                                             </div>
                                             <div>
