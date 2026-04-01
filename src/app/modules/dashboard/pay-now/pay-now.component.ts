@@ -48,8 +48,8 @@ export class PayNowComponent implements OnInit {
     // console.log(orderId, typeof('orderId'))
     if (orderId != undefined || orderId != '') {
       let fd = new FormData();
-      // fd.append('orderId', atob(orderId));
-      fd.append('OrderId', '101002485118');
+      fd.append('OrderId', atob(orderId));
+      // fd.append('OrderId', '101002485118');
       this.getPaymentGatewayList(fd);
     }
 
@@ -62,129 +62,7 @@ export class PayNowComponent implements OnInit {
     this.paynowService.getPgListById('webapi/cartapp/paynow_pg_list', param).subscribe((res: any) => {
       // console.log(res);
       this.spinner.hide();
-      res = {
-        "status": 200,
-        "data": {
-          "orderDetails": [
-            {
-              "order_id": 101002485118,
-              "order_items": [
-                "Triple A Cal (New) Cap (10 Cap)"
-              ],
-              "total_count": 1,
-              "total_amount": 57
-            },
-            {
-              "order_id": 101002485119,
-              "order_items": [
-                "AB Flo SR Tab (10 Tab)"
-              ],
-              "total_count": 1,
-              "total_amount": 116
-            }
-          ],
-          "totalPayableAmount": 173,
-          "pgList": [
-            {
-              "Title": "UPI",
-              "Key": "EASEBUZZ",
-              "Image": "UPI.png",
-              "PgType": "UPI",
-              "Desc": "NULL",
-              "IsDefault": 1,
-              "DisplaySeq": 6,
-              "LongDesc": null,
-              "LongImage": null,
-              "GateWayPayMode": null
-            },
-            {
-              "Title": "Net Banking",
-              "Key": "EASEBUZZ",
-              "Image": "netbanking.png",
-              "PgType": "NB",
-              "Desc": "NULL",
-              "IsDefault": 1,
-              "DisplaySeq": 7,
-              "LongDesc": null,
-              "LongImage": null,
-              "GateWayPayMode": null
-            },
-            {
-              "Title": "Credit Card",
-              "Key": "EASEBUZZ",
-              "Image": "creditcard.png",
-              "PgType": "CC",
-              "Desc": "NULL",
-              "IsDefault": 1,
-              "DisplaySeq": 8,
-              "LongDesc": null,
-              "LongImage": null,
-              "GateWayPayMode": null
-            },
-            {
-              "Title": "Debit Card",
-              "Key": "EASEBUZZ",
-              "Image": "debitcard.png",
-              "PgType": "DC",
-              "Desc": "NULL",
-              "IsDefault": 1,
-              "DisplaySeq": 9,
-              "LongDesc": null,
-              "LongImage": null,
-              "GateWayPayMode": null
-            },
-            {
-              "Title": "EMI",
-              "Key": "EASEBUZZ",
-              "Image": "emi.png",
-              "PgType": "EMI",
-              "Desc": "NULL",
-              "IsDefault": 1,
-              "DisplaySeq": 9,
-              "LongDesc": null,
-              "LongImage": null,
-              "GateWayPayMode": null
-            },
-            {
-              "Title": "Wallet",
-              "Key": "EASEBUZZ",
-              "Image": "wallet.png",
-              "PgType": "MW",
-              "Desc": "NULL",
-              "IsDefault": 1,
-              "DisplaySeq": 9,
-              "LongDesc": null,
-              "LongImage": null,
-              "GateWayPayMode": null
-            },
-            {
-              "Title": "UPI / Net Banking / Credit Card / Debit Card",
-              "Key": "PHONEPE",
-              "Image": "razorpay_web.png",
-              "PgType": "PG",
-              "Desc": "NULL",
-              "IsDefault": 1,
-              "DisplaySeq": 10,
-              "LongDesc": "NULL",
-              "LongImage": "NULL",
-              "GateWayPayMode": "NULL"
-            },
-            {
-              "Title": "UPI / Net Banking / Credit Card / Debit Card",
-              "Key": "RAZORPAY",
-              "Image": "razorpay_web.png",
-              "PgType": "PG",
-              "Desc": "NULL",
-              "IsDefault": 1,
-              "DisplaySeq": 10,
-              "LongDesc": "NULL",
-              "LongImage": "NULL",
-              "GateWayPayMode": "NULL"
-            }
-          ]
-        },
-        "message": "Success"
-      };
+      
       console.log(res);
       this.orderDetails = res['data']['orderDetails'];
       this.paymentGateways = res['data']['pgList'];
@@ -320,24 +198,6 @@ export class PayNowComponent implements OnInit {
     console.log(this.orderDetails[0].order_id);
     this.paynowService.getGatewayInfo('webapi/cartapp/paynow_gatewayinfo', fd).subscribe((response: any) => {
       console.log(response);
-      response = {
-        "status": 200,
-        "data": {
-          "status": 1,
-          "message": "api successfully call",
-          "data": {
-            "EasebuzzDetails": {
-              "status": 1,
-              "data": "c06eea86b5e3a0734b18cc09a8bd5f5602bb4efc7d907c0c17060f78a30c3938",
-              "PayUrl": "https://testpay.easebuzz.in/pay/c06eea86b5e3a0734b18cc09a8bd5f5602bb4efc7d907c0c17060f78a30c3938",
-              "CallbackUrl": "https://stage.sastasundar.com/payment_return/paynow_easebuzz_callback"
-            },
-            "PayGatewayTransacNo": "686A5813-AD1E-49E8-9177-C17550F2EED0",
-            "PaymentMethod": "EASEBUZZ"
-          }
-        },
-        "message": "Success"
-      };
       console.log(response['data']['data']['EasebuzzDetails']['PayUrl']);
       if (response && response['status'] == 200) {
         let EZdata = response['data']['data']['EasebuzzDetails'];
