@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
 @Injectable({
   providedIn: 'root',
 })
-export class OrderService {
+export class PayNowService {
 
   // ========== Live ==========
 
@@ -62,7 +62,12 @@ export class OrderService {
     return this.http.get(gettUrl);
   }
 
-  getOrderDetailById(url: any, params: any) {
+  getPgListById(url: any, params: any) {
+    let postUrl = this.apiUrl + url;
+    return this.http.post(postUrl, params);
+  }
+
+  getGatewayInfo(url: any, params: any) {
     let postUrl = this.apiUrl + url;
     return this.http.post(postUrl, params);
   }

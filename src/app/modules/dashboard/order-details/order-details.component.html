@@ -28,10 +28,10 @@
                 <div class="mt-2" [innerHTML]="orderInfo.desc"></div>
             </div>
         </div>
-        <div *ngIf="orderDetails.OrderStatusId != 8 && orderDetails.OrderStatusId != 9" class="p-3 bg-white mrg-1 d-none" style="min-width: 360px;">
+        <div *ngIf="orderDetails.OrderStatusId != 8 && orderDetails.OrderStatusId != 9" class="p-3 bg-white mrg-1" style="min-width: 360px;">
             <div class="fw-6 mb-3">More Actions</div>
             <div class="d-flex">
-                <button *ngIf="orderDetails.TypeofPayment == 'COD'" class="btn btn-outline-success btn-sm fw-5 mx-1 my-2 d-none" type="button" style="min-width: 146px;">Pay Online</button>
+                <button *ngIf="orderDetails.TypeofPayment == 'COD'" class="btn btn-outline-success btn-sm fw-5 mx-1 my-2" type="button" style="min-width: 146px;" (click)="getPGlistForCOD(orderDetails.OrderId)">Pay Now</button>
                 <button class="btn btn-sm fw-5 mx-1 my-2" [ngClass]="orderDetails.InvoiceId == null ? 'btn-outline-secondary' : 'btn-outline-primary' " type="button" style="min-width: 146px;" [disabled]="orderDetails.InvoiceId == null" (click)="getInvoice(orderDetails.InvoiceId)">Download Invoice</button>
             </div>
         </div>

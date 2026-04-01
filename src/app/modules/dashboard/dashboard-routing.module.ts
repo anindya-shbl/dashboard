@@ -12,6 +12,7 @@ import { ChangePasswordComponent } from './change-password/change-password.compo
 import { ManageAccountComponent } from './manage-account/manage-account.component';
 import { RequestedProductsComponent } from './requested-products/requested-products.component';
 import { OrderDetailsComponent } from './order-details/order-details.component';
+import { PayNowComponent } from './pay-now/pay-now.component';
 import { ServiceRequestStatusComponent } from './service-request-status/service-request-status.component';
 import { RequestReturnComponent } from './request-return/request-return.component';
 import { ManageHealthbuddyComponent } from './manage-healthbuddy/manage-healthbuddy.component';
@@ -36,6 +37,7 @@ const routes: Routes = [
       { path: 'myaccount', component: MyAccountComponent },
       { path: 'orderlist', component: AllOrdersComponent },
       { path: 'orderview/:orderID', component: OrderDetailsComponent },
+      { path: 'paynow/:orderID', component: PayNowComponent },
       { path: 'servicerequest/:orderID', component: ServiceRequestStatusComponent },
       { path: 'returnrequest/:orderID/:invoiceID', component: RequestReturnComponent },
       { path: 'buyagain', component: BuyAgainComponent },

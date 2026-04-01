@@ -16,6 +16,7 @@ import { ManageAccountComponent } from './manage-account/manage-account.componen
 import { RequestedProductsComponent } from './requested-products/requested-products.component';
 import { SidebarComponent } from './sidebar/sidebar.component';
 import { OrderDetailsComponent } from './order-details/order-details.component';
+import { PayNowComponent } from './pay-now/pay-now.component';
 import { BuyAgainComponent } from './buy-again/buy-again.component';
 import { TrackOrderComponent } from './track-order/track-order.component';
 import { ServiceRequestStatusComponent } from './service-request-status/service-request-status.component';
@@ -56,6 +57,7 @@ import { HealthCardsListComponent } from './health-cards-list/health-cards-list.
     RequestedProductsComponent,
     SidebarComponent,
     OrderDetailsComponent,
+    PayNowComponent,
     BuyAgainComponent,
     TrackOrderComponent,
     ServiceRequestStatusComponent,
