@@ -14,12 +14,12 @@ export class OrderService {
   // public genuPathApiUrl = 'https://serv.genupathlabs.com/';
 
   // =========== Stage ==========
-  // public apiUrl = 'https://stage.sastasundar.com/index.php/';
-  // public genuPathApiUrl = 'https://stage-serv.genupathlabs.com/';
+  public apiUrl = 'https://stage.sastasundar.com/index.php/';
+  public genuPathApiUrl = 'https://stage-serv.genupathlabs.com/';
 
   // =============  Local  ==================
-  private apiUrl = 'http://192.168.5.236:8081/sspl_com/index.php/';
-  public genuPathApiUrl = 'https://stage-serv.genupathlabs.com/';
+  // private apiUrl = 'http://192.168.5.236:8081/sspl_com/index.php/';
+  // public genuPathApiUrl = 'https://stage-serv.genupathlabs.com/';
 
   private authSecretKey = 'Bearer Token';
 

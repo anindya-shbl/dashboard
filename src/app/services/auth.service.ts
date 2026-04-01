@@ -16,14 +16,14 @@ export class AuthService {
 
   // ================  stage ==========
 
-  // public baseurl = 'https://stage.sastasundar.com/';
-  // public apiUrl = 'https://stage.sastasundar.com/index.php/';
-  // public catalogUrl = 'https://stage-serv-catalog.sastasundar.com/';
+  public baseurl = 'https://stage.sastasundar.com/';
+  public apiUrl = 'https://stage.sastasundar.com/index.php/';
+  public catalogUrl = 'https://stage-serv-catalog.sastasundar.com/';
 
   // ===========  Local  ===========
-  public baseurl = 'http://192.168.5.236:8081/sspl_com/';
-  public apiUrl = 'http://192.168.5.236:8081/sspl_com/index.php/';
-  public catalogUrl = 'http://192.168.5.236:8003/';
+  // public baseurl = 'http://192.168.5.236:8081/sspl_com/';
+  // public apiUrl = 'http://192.168.5.236:8081/sspl_com/index.php/';
+  // public catalogUrl = 'http://192.168.5.236:8003/';
 
   public PinCode: any = '';
   public WHId: any = '';
