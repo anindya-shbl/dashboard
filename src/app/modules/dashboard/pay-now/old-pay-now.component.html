@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>Pay Now Component</h1>
+    <h2>Order Details</h2>
+    <ol>
+        <div *ngFor="let od of orderDetails">
+            <li>Order ID: {{od.order_id}}</li>
+            <li>Order Amount: {{od.total_amount}}</li>
+            <li>Product Count: {{od.total_count}}</li>
+        </div>
+    </ol>
+    <h3>Payment Gateway Lists</h3>
+    <ol>
+        <ng-container *ngFor="let pg of paymentGateways">
+            <a href="javascript:;" (click)="placeOrder(pg)"><li>{{pg.Title}}</li></a>
+        </ng-container>
+    </ol>
+</body>
+</html>
