@@ -1,25 +1,372 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-    <h1>Pay Now Component</h1>
-    <h2>Order Details</h2>
-    <ol>
-        <div *ngFor="let od of orderDetails">
-            <li>Order ID: {{od.order_id}}</li>
-            <li>Order Amount: {{od.total_amount}}</li>
-            <li>Product Count: {{od.total_count}}</li>
+<div class="bg-white p-3"><app-route-path></app-route-path></div>
+<ng-container>
+    <!-- Ordered-Items -->
+    <div class="d-flex  bg-white w-100 mrg-1">
+        <div class="w-100 p-3 relative">
+            <div class="ItemsHeading">Ordered Items ({{orderDetails.length}})</div>
+
+            <div class="item-grid" *ngFor="let od of orderDetails">
+                <div>Order Id :
+                    {{od.order_id}}
+                </div>
+                <div *ngFor="let item of od.order_items">
+                    <div class="d-flex align-items-start w-100 cursor-pointer border-block">
+                        <div class="buyagnImg">
+                            <img src="https://asset.sastasundar.com/incom/images/product/thumb/Telma-Beta-1653292290-10046531-1.jpg"
+                                class="ng-star-inserted">
+                        </div>
+                        <div class="px-3 w-100">
+                            <div class="fw-5 fs-5 mb-1">
+                                {{item}}
+                            </div>
+                            <div class="mb-1 f12">Glenmark Pharmaceuticals Ltd.(M1)</div>
+                            <div class="fw-5 mb-2">
+                                <span class="fw-5">₹228.71</span>
+                                <span class="s-price px-2">MRP ₹278.91</span>
+                            </div>
+                            <div class="mb-1">Ordered Qty : 3</div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <!-- <div class="d-flex align-items-start w-100 cursor-pointer border-block">
+                    <div class="buyagnImg">
+                        <img src="https://asset.sastasundar.com/incom/images/product/thumb/Glycinorm-OD-1663403871-10094626-1.jpg"
+                            class="ng-star-inserted">
+                    </div>
+                    <div class="px-3 w-100">
+                        <div class="fw-5 fs-5 mb-1">Glycinorm OD 30 mg Tablet (15 Tab)
+                        </div>
+                        <div class="mb-1 f12">Ipca Laboratories Ltd.(D)</div>
+                        <div class="fw-5 mb-2">
+                            <span class="fw-5">₹137.18</span>
+                            <span class="s-price px-2">MRP ₹167.30</span>
+                        </div>
+                        <div class="mb-1">Ordered Qty : 2</div>
+                    </div>
+                </div>
+
+                <div class="d-flex align-items-start w-100 cursor-pointer border-block">
+                    <div class="buyagnImg">
+                        <img src="https://asset.sastasundar.com/incom/images/product/thumb/Cilacar-1749624210-10150487-a.jpg"
+                            class="ng-star-inserted">
+                    </div>
+                    <div class="px-3 w-100">
+                        <div class="fw-5 fs-5 mb-1">Cilacar 20 mg Tablet (15 Tab)</div>
+                        <div class="mb-1 f12">J.B. Chemicals &amp; Pharmaceuticals Ltd.(D)</div>
+                        <div class="fw-5 mb-2">
+                            <span class="fw-5">₹272.77</span><span class="s-price px-2">MRP ₹332.65</span>
+                        </div>
+                        <div class="mb-1">Ordered Qty : 2</div>
+                    </div>
+                </div> -->
+
+            </div>
+
+            <div class="w-100">
+                
+                <div class="seller-block">
+                    <div class="auto">
+                        <div class="mb-1"><b>Seller Information :</b></div>
+                        <div class="d-flex gap-2"><i class="icon-my-account-rs"></i><span>New Chakdaha
+                                Medical</span></div>
+                        <div class="d-flex gap-2"><i class="icon-location-3-nsm"></i>
+                            <span>Holding No.-756, Netaji Park,Ground Floor, Near UCO Bank, Ward No.-8, P.O. &amp;
+                                P.S.-Chakdaha, Dist.- Nadia</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Payment-Process -->
+    <div class="pt-3">
+        <div class="border rounded item-shadow p-3 mb-3">
+            <div class="d-flex justify-content-between mb-2">
+                <div class="AddCFH">Add CFH Health Card</div>
+            </div>
+            <div class="mb-3">
+                <form class="ng-pristine">
+                    <div class="position-relative w-100">
+                        <input type="text" id="code" formcontrolname="code" placeholder="Enter Health Card Code"
+                            class="form-control radius6 hgt-50">
+                        <button type="submit" class="applybtn position-absolute border-0">Add Card</button>
+                    </div>
+                </form>
+            </div>
+            <div class="d-flex justify-content-between rounded p-3 align-items-center radius6"
+                style="background-color: #e3fbf0;">
+                <div>
+                    <div class="mb-2 fs-3 text-secondary">Available Balance</div>
+                    <b class="fs-6 fw-6">₹0.00</b>
+                </div>
+                <label class="switchButton">
+                    <input type="checkbox" disabled>
+                    <span class="sliderButton"></span>
+                </label>
+            </div>
         </div>
-    </ol>
-    <h3>Payment Gateway Lists</h3>
-    <ol>
-        <ng-container *ngFor="let pg of paymentGateways">
-            <a href="javascript:;" (click)="placeOrder(pg)"><li>{{pg.Title}}</li></a>
-        </ng-container>
-    </ol>
-</body>
-</html>
+
+
+        <div class="address-List-Block">
+
+            <label class="address-List-item">
+                <input type="radio" name="payment" id="upi">
+                <span class="chrckBlock"></span>
+
+                <div class="ListFlex">
+                    <div class="pay-img">
+                        <img src="https://asset.sastasundar.com/incom/PaymentgatewayImages/web/UPI.png" alt="">
+                    </div>
+
+                    <div class="fw-5">UPI <span class="priceValue"> ₹172.00</span></div>
+                    <button type="button" class="proceed">Place &nbsp;Order</button>
+                </div>
+                <div class="checkBG"></div>
+            </label>
+
+            <label class="address-List-item">
+                <input type="radio" name="payment" id="NetBanking">
+                <span class="chrckBlock"></span>
+
+                <div class="ListFlex">
+                    <div class="pay-img">
+                        <img src="https://asset.sastasundar.com/incom/PaymentgatewayImages/web/netbanking.png" alt="">
+                    </div>
+
+                    <div class="fw-5">Net Banking <span class="priceValue"> ₹172.00</span></div>
+                    <button type="button" class="proceed">Place &nbsp;Order</button>
+                </div>
+                <div class="checkBG"></div>
+            </label>
+
+            <label class="address-List-item">
+                <input type="radio" name="payment" id="CreditCard">
+                <span class="chrckBlock"></span>
+
+                <div class="ListFlex">
+                    <div class="pay-img">
+                        <img src="https://asset.sastasundar.com/incom/PaymentgatewayImages/web/creditcard.png" alt="">
+                    </div>
+
+                    <div class="fw-5">Credit Card <span class="priceValue"> ₹172.00</span></div>
+                    <button type="button" class="proceed">Place &nbsp;Order</button>
+                </div>
+                <div class="checkBG"></div>
+            </label>
+
+        </div>
+
+    </div>
+
+        </div>
+        <div class=" bg-white mrg-1 border-bottom border-start" style="width: 460px; word-break: break-all;">
+            <!-- Delivery Address -->
+            <div class="p-3">
+                <div class="fs-7 fw-6 mb-2 pb-2">Delivery Address</div>
+                <div class="mb-2 pb-2">
+                    <div class="mb-2">{{orderDetails.Addline}}</div>
+                    <div class="mb-2" *ngIf="orderDetails.Landmark != null"><span>Landmark : </span>
+                        {{orderDetails.Landmark}}</div>
+                    <div>{{orderDetails.City}}, {{orderDetails.PinCode}} {{orderDetails.StateName}}</div>
+                </div>
+                <div class="mb-2">
+                    <div class="mb-2"><span>Customer : </span><span class="fw-5">{{orderDetails.PatientName}}</span>
+                    </div>
+                    <div><span>Contact No : </span>
+                        <span *ngIf="orderDetails.CustContactNo != null && orderDetails.CustContactNo!= ''"
+                            class="fw-5">{{orderDetails.CustContactNo}}</span>
+                        <span *ngIf="orderDetails.CustContactNo == null || orderDetails.CustContactNo == ''"
+                            class="fw-5">N/A</span>
+                    </div>
+                </div>
+            </div>
+            <!-- Order Summary -->
+            <div>
+                <div class="p-3 bg-white mxct mrg-1 " style="width: 455px; word-break: break-all;">
+                    <div class="fs-7 fw-6 mb-2 pb-2">Order Summary</div>
+                    <div class="d-flex justify-content-between mb-2">
+                        <span>Order ID</span>
+                        <span class="fw-5">{{orderDetails.OrderId}}</span>
+                    </div>
+                    <div class="d-flex justify-content-between mb-3">
+                        <span>Order Date</span>
+                        <span class="fw-5">{{orderDetails.OrderDate | date: 'd MMM, y'}}</span>
+                    </div>
+                    <div class="d-flex justify-content-between mb-2">
+                        <span>Subtotal</span>
+                        <span class="fw-5">{{orderDetails.OrderAmount | currency : 'INR'}}</span>
+                    </div>
+                    <div class="d-flex justify-content-between mb-2"
+                        [ngClass]="orderDetails.ItemDiscount>0? 'text-success': ''">
+                        <span>Discount(-)</span>
+                        <span class="fw-5">{{orderDetails.ItemDiscount | currency : 'INR'}}</span>
+                    </div>
+                    <div class="d-flex justify-content-between mb-2">
+                        <span>Round Off Value({{orderDetails.RoundOfSign}})</span>
+                        <span class="fw-5">{{orderDetails.RoundOfVal | currency : 'INR'}}</span>
+                    </div>
+                    <div *ngIf="CouponDiscount>0" class="d-flex justify-content-between mb-2"
+                        [ngClass]="orderDetails.CouponDiscount>0? 'text-success': ''">
+                        <span>Coupon Discount(-) <span *ngIf="orderDetails.CouponPromoCode != null">(
+                                {{orderDetails.CouponPromoCode}} )</span></span>
+                        <span class="fw-5">{{orderDetails.CouponDiscount | currency : 'INR'}}</span>
+                    </div>
+                    <div *ngIf="PromoDiscount>0" class="d-flex justify-content-between mb-2"
+                        [ngClass]="orderDetails.PromoDiscount>0? 'text-success': ''">
+                        <span>Promo Discount(-) <span *ngIf="orderDetails.PromoCode != null">(
+                                {{orderDetails.PromoCode}} )</span></span>
+                        <span class="fw-5">{{orderDetails.PromoDiscount | currency : 'INR'}}</span>
+                    </div>
+                    <div class="d-flex justify-content-between mb-2">
+                        <span>Platform Fee(+)</span>
+                        <span class="fw-5">{{orderDetails.ConvienceFee | currency : 'INR'}}</span>
+                    </div>
+                    <div *ngIf="orderDetails.SmallOrderFee != null && orderDetails.SmallOrderFee>0"
+                        class="d-flex justify-content-between mb-2">
+                        <span>Small Order Fee(+)</span>
+                        <span class="fw-5">{{orderDetails.SmallOrderFee | currency : 'INR'}}</span>
+                    </div>
+                    <div class="d-flex justify-content-between mb-2">
+                        <span>Shipping Charges(+)</span>
+                        <span class="fw-5">{{orderDetails.ShippingCharge | currency : 'INR'}}</span>
+                    </div>
+
+                    <hr>
+                    <div class="d-flex justify-content-between mb-2">
+                        <span class="">Total Amount</span>
+                        <span class="fw-5">{{orderDetails.OrderBillAmount | currency : 'INR'}}</span>
+                    </div>
+                    <div *ngIf="orderDetails.GiftCardValue != undefined && orderDetails.GiftCardValue != null && orderDetails.GiftCardValue != '' && orderDetails.GiftCardValue>0"
+                        class="d-flex justify-content-between mb-2 text-success">
+                        <span>CFH Deduction(-)</span>
+                        <span class="fw-5">{{orderDetails.GiftCardValue | currency : 'INR'}}</span>
+                    </div>
+                    <!-- <div *ngIf="orderDetails.EwalletVal != undefined && orderDetails.EwalletVal != null && orderDetails.EwalletVal != '' && orderDetails.EwalletVal>0" class="d-flex justify-content-between mb-2 text-primary">
+                <span>Wallet Used(-)</span>
+                <span class="fw-5">{{orderDetails.EwalletVal | currency : 'INR'}}</span>
+            </div>
+
+            <div *ngIf="orderDetails.OnlinePaid != undefined && orderDetails.OnlinePaid != null && orderDetails.OnlinePaid != '' && orderDetails.OnlinePaid>0" class="d-flex justify-content-between mb-2">
+                <span class="">Online Paid</span>
+                <span class="fw-5">{{orderDetails.OnlinePaid | currency : 'INR'}}</span>
+            </div>
+
+            <div *ngIf="orderDetails.DueAmount != undefined && orderDetails.DueAmount != null && orderDetails.DueAmount != ''" class="d-flex justify-content-between mt-3 mb-2">
+                <span class="fs-6 fw-5">Due Amount</span>
+                <span class="fs-6 fw-5">{{orderDetails.DueAmount | currency : 'INR'}}</span>
+            </div> -->
+
+                    <div class="d-flex justify-content-between mb-2">
+                        <span>Payment Method</span>
+                        <span class="fw-5">{{orderDetails.TypeofPayment}}</span>
+                    </div>
+
+                    <div *ngIf="totalSavings > 0" class="d-flex justify-content-between mb-2"
+                        [ngClass]="totalSavings>0? 'text-success': ''">
+                        <span class="">Total Savings(-)</span>
+                        <span class="fw-5">{{totalSavings | currency : 'INR'}}</span>
+                    </div>
+                    <hr>
+                    <div class="">
+                        <!-- <ng-container *ngIf="orderDetails.OrderStatusId != 8">
+                    <button *ngIf="orderDetails.OrderStatusId != 5" class="btn btn-outline-danger btn-sm fw-5 mb-3" type="button" style="min-width: 146px;" data-bs-toggle="modal" data-bs-target="#cancelModal">Cancel Order</button>
+                    <button *ngIf="orderDetails.OrderStatusId == 5" class="btn btn-outline-danger btn-sm fw-5 mb-3" type="button" style="min-width: 146px;" (click)="returnRequest(orderDetails.OrderId, orderDetails.InvoiceId)">Return</button>
+                </ng-container> -->
+                        <ng-container *ngIf="orderDetails.IsCancel == 'Y'">
+                            <button class="btn btn-outline-danger fw-5 mb-3" type="button"
+                                style="min-width: 240px; line-height: 32px;" data-bs-toggle="modal"
+                                data-bs-target="#cancelModal">Cancel Order</button>
+                            <div *ngIf="cancelDesc != ''" class="mb-3" style="font-size: 12px; color: grey;">
+                                {{cancelDesc}}</div>
+                        </ng-container>
+                        <ng-container *ngIf="orderDetails.IsSalesReturnActive == 1">
+                            <button class="btn btn-outline-danger fw-5 mb-3" type="button"
+                                style="min-width: 240px; line-height: 32px;"
+                                (click)="returnRequest(orderDetails.OrderId, orderDetails.InvoiceId)">Return</button>
+                            <div *ngIf="returnDesc != ''" class="mb-3" style="font-size: 12px; color: grey;">
+                                {{returnDesc}}</div>
+                        </ng-container>
+
+                        <div class="border rounded-2 bx-shdw w-100 mxct p-3">
+                            <div class="sm-txt mb-1">Need help with order?</div>
+                            <div class="fw-6 fs-6  mb-1">Contact Us : <span class="text-success">6289090000</span></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    
+
+</ng-container>
+
+
+<div class="modal fade" id="cancelModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+    aria-labelledby="cancelModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h6 class="modal-title mb-0" id="cancelModalLabel">Do you want to cancel Order?</h6>
+                <!-- <button class="btn btn-close" #closebutton type="button" data-bs-dismiss="modal" aria-label="Close" (click)="cancelReset()"></button> -->
+            </div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <div class="d-flex w100 mb-3 fs-6">
+                        <div style="min-width: 180px;">OrderId</div>
+                        <div>:&nbsp; {{orderDetails.OrderId}}</div>
+                    </div>
+                    <!-- <div class="d-flex w100 mb-3 fw-5">
+                    <div style="min-width: 140px;">Payment Mode</div>
+                    <div>:&nbsp; {{orderDetails.TypeofPayment}}</div>
+                </div> -->
+                    <div class="d-flex w100 mb-3 pb-3 fs-6">
+                        <div class="pt-1" style="min-width: 180px;">Cancellation Reason <span class="text-danger">
+                                *</span></div>: &nbsp;
+                        <div>
+                            <select #cnlsOrd class="form-select" (change)="setCancelReason($event)">
+                                <option value=''>Select Category</option>
+                                <ng-container *ngFor="let rsn of cancelReasonList">
+                                    <option [value]="rsn">{{rsn}}</option>
+                                </ng-container>
+                            </select>
+                            <div *ngIf="cnlsMsg" class="text-danger mt-1"> Please select reason for cancel order </div>
+                        </div>
+                    </div>
+                    <!-- <label for="CancalOrder" class="form-label">Cancelation Reason <span class="text-danger"> *</span></label> -->
+
+                </div>
+                <!-- <div class="row">
+                <div class="col-12 d-flex justify-content-end py-2">
+                    <button type="submit" class="btn btn-outline-primary btn-sm fw-5" style="min-width: 140px;" (click)="canceOrder()">Submit</button>
+                </div>
+            </div> -->
+
+                <div class="btnSec">
+                    <button class="btnCancel" #closebutton type="button" data-bs-dismiss="modal" aria-label="Close"
+                        (click)="cancelReset()">Cancel</button>
+                    <button type="submit" class="btnSubmit" (click)="canceOrder()">Submit</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<button #cnlsRspModal data-bs-toggle="modal" data-bs-target="#cnlsRspModal" class="d-none"></button>
+<div class="modal fade" id="cnlsRspModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+    aria-labelledby="cnlsRspModal" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="d-flex w-100 my-3 fw-5">{{respMsg}}</div>
+                <div class="btnSec">
+                    <button class="btnSubmit" type="button" data-bs-dismiss="modal" aria-label="Close"
+                        (click)="cancelReset()">OK</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
