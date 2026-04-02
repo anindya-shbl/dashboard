@@ -35,6 +35,7 @@ export class PayNowComponent implements OnInit {
   totalPayableAmount: any = 0;
   gatewayDetails: any = '';
   msgText: string = '';
+  totalItemsOrdered: number = 0;
 
   respMsg: any = '';
   @ViewChild('cnlsRspModal') cnlsRspModal: any;
@@ -51,8 +52,54 @@ export class PayNowComponent implements OnInit {
       fd.append('OrderId', atob(orderId));
       // fd.append('OrderId', '101002485118');
       this.getPaymentGatewayList(fd);
+      this.orderDetailById(fd);
     }
 
+  }
+
+  orderDetailById(param: any){
+    this.spinner.show();
+    this.isloading = true;
+    this.orderService.getOrderDetailById('webapi/order/viewOrder', param).subscribe((res: any) => {
+      // this.orderDetails = res;
+      // console.log(res);
+      if(res && res['response_code'] == 0){
+        this.orderDetails = res['data']['OrderHeaders'];
+        this.orderItems = res['data']['OrderItems'];
+        this.orderTracker = res['data']['order_track_details'];
+        this.orderInfo = res['data']['ShortInfo'];
+        // console.log(this.orderDetails, this.orderItems, this.orderTracker);
+        // this.totalSavings = res['data']['OrderHeaders']['ItemDiscount'] +  res['data']['OrderHeaders']['PromoDiscount'];
+        this.ItemDiscount= res['data']['OrderHeaders']['ItemDiscount'] == null ? 0 : res['data']['OrderHeaders']['ItemDiscount'];
+        this.CouponDiscount = res['data']['OrderHeaders']['CouponDiscount']== null ? 0 : res['data']['OrderHeaders']['CouponDiscount'];
+        // this.CouponPromoDesc = res['data']['OrderHeaders']['CouponPromoDesc']== null ? 0 : res['data']['OrderHeaders']['CouponPromoDesc'];
+        this.PromoDiscount = res['data']['OrderHeaders']['PromoDiscount']== null ? 0 : res['data']['OrderHeaders']['PromoDiscount'];
+        if(this.orderInfo['returnButton']['desc'] != undefined && this.orderInfo['returnButton']['desc'] != null && this.orderInfo['returnButton']['desc'] != ''){
+          this.returnDesc = this.orderInfo['returnButton']['desc'];
+        }
+        if(this.orderInfo['cancelButton']['desc'] != undefined && this.orderInfo['cancelButton']['desc'] != null && this.orderInfo['cancelButton']['desc'] != ''){
+          this.cancelDesc = this.orderInfo['cancelButton']['desc'];
+        }
+
+        this.totalSavings = this.ItemDiscount + this.CouponDiscount + this.PromoDiscount;
+        // console.log(this.totalSavings)
+        this.spinner.hide();
+        this.isloading = false;
+        if(this.orderDetails.OrderStatusId != 8 && this.orderDetails.OrderStatusId != 5){
+          this.getcancelReasonList();
+        }
+        this.orderDetailsWebEngage(this.orderDetails, this.orderItems)
+      } else {
+        this.orderDetails = '';
+        this.orderItems = [];
+        this.orderTracker = [];
+        this.orderInfo = '';
+        this.orderUrl = '';
+        this.totalSavings = 0;
+        this.spinner.hide();
+        this.isloading = false;
+      }
+    })
   }
 
   getPaymentGatewayList(param: any) {
@@ -67,6 +114,11 @@ export class PayNowComponent implements OnInit {
       this.orderDetails = res['data']['orderDetails'];
       this.paymentGateways = res['data']['pgList'];
       this.totalPayableAmount = res['data']['totalPayableAmount'];
+      let count = 0;
+      for(let od of this.orderDetails){
+        count += od.total_count;
+      }
+      this.totalItemsOrdered = count;
       console.log(this.paymentGateways);
       console.log("order details", this.orderDetails);
     })

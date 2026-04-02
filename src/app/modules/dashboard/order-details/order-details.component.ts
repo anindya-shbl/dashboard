@@ -52,6 +52,7 @@ export class OrderDetailsComponent implements OnInit {
   orderDetailById(param: any){
     this.spinner.show();
     this.isloading = true;
+    console.log(param);
     this.orderService.getOrderDetailById('webapi/order/viewOrder', param).subscribe((res: any) => {
       // this.orderDetails = res;
       // console.log(res);

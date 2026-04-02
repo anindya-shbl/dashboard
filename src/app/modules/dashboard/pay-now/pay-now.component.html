@@ -3,28 +3,31 @@
     <!-- Ordered-Items -->
     <div class="d-flex  bg-white w-100 mrg-1">
         <div class="w-100 p-3 relative">
-            <div class="ItemsHeading">Ordered Items ({{orderDetails.length}})</div>
+            <div class="ItemsHeading">Ordered Items ({{totalItemsOrdered}})</div>
 
-            <div class="item-grid" *ngFor="let od of orderDetails">
-                <div>Order Id :
-                    {{od.order_id}}
+            <div class="border-block p-0 rounded mb-3" *ngFor="let od of orderDetails">
+                <div class="d-flex justify-content-between p-3 border-bottom">
+                    <div><b>Order Id : {{od.order_id}}</b></div> <b>Qty : {{od.total_count}}</b> <b>Price : {{od.total_amount}}</b>
                 </div>
+
                 <div *ngFor="let item of od.order_items">
-                    <div class="d-flex align-items-start w-100 cursor-pointer border-block">
-                        <div class="buyagnImg">
+                    <div class="border-bottom">
+                        <!-- <div class="buyagnImg">
                             <img src="https://asset.sastasundar.com/incom/images/product/thumb/Telma-Beta-1653292290-10046531-1.jpg"
                                 class="ng-star-inserted">
-                        </div>
-                        <div class="px-3 w-100">
+                        </div> -->
+                        <div class="p-3 w-100">
                             <div class="fw-5 fs-5 mb-1">
                                 {{item}}
                             </div>
-                            <div class="mb-1 f12">Glenmark Pharmaceuticals Ltd.(M1)</div>
-                            <div class="fw-5 mb-2">
-                                <span class="fw-5">₹228.71</span>
-                                <span class="s-price px-2">MRP ₹278.91</span>
+                            <!-- <div class="mb-1 f12">Glenmark Pharmaceuticals Ltd.(M1)</div> -->
+                            <div class="d-flex justify-content-between fw-5 ">
+
+                                <!-- <small><del>MRP ₹278.91</del></small> -->
+                                <!-- <span>Ordered Qty : 3</span> -->
+                                <!-- <b>₹228.71</b> -->
                             </div>
-                            <div class="mb-1">Ordered Qty : 3</div>
+
                         </div>
                     </div>
                 </div>
@@ -65,7 +68,7 @@
             </div>
 
             <div class="w-100">
-                
+
                 <div class="seller-block">
                     <div class="auto">
                         <div class="mb-1"><b>Seller Information :</b></div>
@@ -80,52 +83,57 @@
             </div>
 
             <!-- Payment-Process -->
-    <div class="pt-3">
-        <div class="border rounded item-shadow p-3 mb-3">
-            <div class="d-flex justify-content-between mb-2">
-                <div class="AddCFH">Add CFH Health Card</div>
-            </div>
-            <div class="mb-3">
-                <form class="ng-pristine">
-                    <div class="position-relative w-100">
-                        <input type="text" id="code" formcontrolname="code" placeholder="Enter Health Card Code"
-                            class="form-control radius6 hgt-50">
-                        <button type="submit" class="applybtn position-absolute border-0">Add Card</button>
+            <div class="pt-3">
+                <div class="border rounded item-shadow p-3 mb-3">
+                    <div class="d-flex justify-content-between mb-2">
+                        <div class="AddCFH">Add CFH Health Card</div>
                     </div>
-                </form>
-            </div>
-            <div class="d-flex justify-content-between rounded p-3 align-items-center radius6"
-                style="background-color: #e3fbf0;">
-                <div>
-                    <div class="mb-2 fs-3 text-secondary">Available Balance</div>
-                    <b class="fs-6 fw-6">₹0.00</b>
-                </div>
-                <label class="switchButton">
-                    <input type="checkbox" disabled>
-                    <span class="sliderButton"></span>
-                </label>
-            </div>
-        </div>
-
-
-        <div class="address-List-Block">
-
-            <label class="address-List-item">
-                <input type="radio" name="payment" id="upi">
-                <span class="chrckBlock"></span>
-
-                <div class="ListFlex">
-                    <div class="pay-img">
-                        <img src="https://asset.sastasundar.com/incom/PaymentgatewayImages/web/UPI.png" alt="">
+                    <div class="mb-3">
+                        <form class="ng-pristine">
+                            <div class="position-relative w-100">
+                                <input type="text" id="code" formcontrolname="code" placeholder="Enter Health Card Code"
+                                    class="form-control radius6 hgt-50">
+                                <button type="submit" class="applybtn position-absolute border-0">Add Card</button>
+                            </div>
+                        </form>
                     </div>
-
-                    <div class="fw-5">UPI <span class="priceValue"> ₹172.00</span></div>
-                    <button type="button" class="proceed">Place &nbsp;Order</button>
+                    <div class="d-flex justify-content-between rounded p-3 align-items-center radius6"
+                        style="background-color: #e3fbf0;">
+                        <div>
+                            <div class="mb-2 fs-3 text-secondary">Available Balance</div>
+                            <b class="fs-6 fw-6">₹0.00</b>
+                        </div>
+                        <label class="switchButton">
+                            <input type="checkbox" disabled>
+                            <span class="sliderButton"></span>
+                        </label>
+                    </div>
                 </div>
-                <div class="checkBG"></div>
-            </label>
 
-            <label class="address-List-item">
+
+                <div class="address-List-Block">
+                    <ng-container *ngFor="let pg of paymentGateways">
+                        <label class="address-List-item">
+                            <input type="radio" name="PayOption" id="PayOption" value="{{pg.PgType}}">
+                            <span class="chrckBlock"></span>
+
+                            <div class="ListFlex">
+                                <div class="pay-img">
+                                    <img src="https://asset.sastasundar.com/incom/PaymentgatewayImages/web/{{pg.Image}}"
+                                        alt="">
+                                </div>
+
+                                <div class="fw-5">{{pg.Title}} <span class="priceValue"> ₹{{totalPayableAmount}}</span>
+                                </div>
+                                <button type="button" class="proceed" (click)="placeOrder(pg)">Place
+                                    &nbsp;Order</button>
+                            </div>
+                            <div class="checkBG"></div>
+                        </label>
+                    </ng-container>
+
+
+                    <!-- <label class="address-List-item">
                 <input type="radio" name="payment" id="NetBanking">
                 <span class="chrckBlock"></span>
 
@@ -153,11 +161,11 @@
                     <button type="button" class="proceed">Place &nbsp;Order</button>
                 </div>
                 <div class="checkBG"></div>
-            </label>
+            </label> -->
 
-        </div>
+                </div>
 
-    </div>
+            </div>
 
         </div>
         <div class=" bg-white mrg-1 border-bottom border-start" style="width: 460px; word-break: break-all;">
@@ -299,7 +307,7 @@
     </div>
 
 
-    
+
 
 </ng-container>
 
