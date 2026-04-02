@@ -129,6 +129,8 @@ export class MainHeaderComponent implements OnInit {
   }
 
   setDetails(){
+    console.log(this.authService);
+    debugger;
     this.isLoggedIn = this.cookieService.get('isLoggedIn');
     this.UserName = this.authService.UserName;
     this.PinCode = this.authService.PinCode;

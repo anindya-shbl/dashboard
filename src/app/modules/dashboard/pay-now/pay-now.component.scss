@@ -378,3 +378,6 @@ input:checked + .sliderButton {
 input:checked + .sliderButton:before {
     transform: translateX(20px);
 }
+.border-bottom {
+    border-bottom: 1px solid #efefef !important;
+}

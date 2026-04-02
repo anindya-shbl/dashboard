@@ -35,6 +35,7 @@ export class PayNowComponent implements OnInit {
   totalPayableAmount: any = 0;
   gatewayDetails: any = '';
   msgText: string = '';
+  totalItemsOrdered: number = 0;
 
   respMsg: any = '';
   @ViewChild('cnlsRspModal') cnlsRspModal: any;
@@ -48,11 +49,58 @@ export class PayNowComponent implements OnInit {
     // console.log(orderId, typeof('orderId'))
     if (orderId != undefined || orderId != '') {
       let fd = new FormData();
-      // fd.append('orderId', atob(orderId));
+      // fd.append('OrderId', atob(orderId));
       fd.append('OrderId', '101002485118');
       this.getPaymentGatewayList(fd);
+      this.orderDetailById(fd);
     }
 
+  }
+
+  orderDetailById(param: any){
+    this.spinner.show();
+    this.isloading = true;
+    this.orderService.getOrderDetailById('webapi/order/viewOrder', param).subscribe((res: any) => {
+      res = {"data":{"ShortInfo":{"heading":"Delivery by 29 March 2026","desc":"","colorStatus":"GREEN","color":"#039855","bgColor":"#EBFFF6","cancelButton":{"isVisible":true,"heading":"Cancel Order","desc":""},"returnButton":{"isVisible":false,"heading":"","desc":""}},"OrderHeaders":{"OrderId":101002485326,"OrderDate":"2026-03-27 15:15:20.140","InvoiceId":null,"FullName":"test HB","PatientName":"\"Anindya\"  ","ItemDiscount":9,"OrderAmount":60,"ShippingCharge":0,"CourierCharge":0,"OrderBillAmount":51,"RoundOfSign":"-","RoundOfVal":0.58,"EwalletVal":0,"DueAmount":51,"TypeofPayment":"COD","PaymentMode":"","Addline":"Innovation Tower","City":"Kolkata","StateName":"West Bengal","PinCode":700156,"PromoId":null,"PromoCode":null,"PromoDesc":null,"ApplicationType":" ","OrderType":"P","OrderStatusId":1,"CouponPromoId":null,"CouponPromoCode":null,"CouponPromoDesc":null,"PromoDiscount":0,"CouponDiscount":0,"InvoiceNo":"Not Assigned","IsCourierOrder":0,"DocketNo":"","CompanyName":"","CustOrderStatusDesc":"Pending Order Confirmation","PaidAmount":null,"IsSalesReturnActive":0,"IsEdited":0,"EditComment":"","PayStatusDesc":"","PGTitle":null,"IsRefundInitiated":0,"RefundAmount":null,"RefundInitiatedDate":null,"SalesReturnStatusId":null,"SalesReturnStatusDesc":null,"ReturnUpdatedDate":null,"IsCancel":"Y","SellerMasId":null,"DeliveryDate":"2026-03-29 15:15:19.000","SubscriptionId":null,"SubscriptionDiscount":null,"NickName":"Anindya Bhattacharya","CustContactNo":null,"Landmark":"","ServiceArea":null,"WarehouseId":1,"IsOutStation":1,"IsPrescriptionUploaded":1,"HBId":11010,"ContactNo":"0332356025844,03325905856\/58,","HBAddLine":"HNBVKOYDXI","HBCity":"Baruipur","HBStateName":"West Bengal","HBPinCode":700144,"ConvienceFee":0.58,"SmallOrderFee":0,"AWBNo":null,"TrackingLink":null,"OnlinePaid":null,"ScheduleDeliveryDate":"2026-03-29 15:15:19.000","GiftCardValue":null,"IsTrackReturnAvailable":0,"GigtCardValue":null,"IsOrderTrackAvailable":1,"IsRatingReviewEnabled":0,"IsReorderActive":0,"InvoiceURL":"","PaymentModeOld":"","TypeofPaymentOld":"COD","0":"","DeliveryMsg":"","RefundMessage":""},"OrderItems":[{"ProductId":11723,"DisplayName":"Mext F 7.5 mg Tab (28 Tab)","MRP":60,"ProductImage":"MEXT-F-1408541348-10011683.jpg","PromoId":null,"PromoCode":null,"PromoDesc":null,"SSCurrencyValue":0,"OrderItemVal":51,"OfferPrice":51,"CustomProductName":"","Rating":0,"ProductName":"Mext F","CouponPromoId":null,"CouponPromoCode":null,"CouponPromoDesc":null,"IsCustomizeProduct":0,"XplorPoint":0,"XplorPointVal":0,"PrescriptionOTC":"P","InteractiveModule":"PetCare","InteractiveHealthProfileId":null,"MfgGroup":"WALLACE PHARMACEUTRICALS PVT LTD","SaltName":"FOLIC ACID + COMBINATIONS","EncodeProdId":"4bkzb8","IsGiftableProduct":null,"DosageForm":"Tablet","SellerMasId":null,"ItemQuantity":1,"ItemDiscount":9,"ProductImageURL":"https:\/\/asset.sastasundar.com\/incom\/images\/product\/thumb\/MEXT-F-1408541348-10011683.jpg"}],"trackDetails":[{"OrderStatusHistoryId":10955641,"OrderStatusId":1,"OrderStatusDesc":"Pending Approval by HB","Comments":null,"UpdatedBy":588795,"UpdatedByName":"\"Anindya\"","UpdatedDate":"2026-03-27 15:15:20.140","UserType":"C","0":"","4":""}],"returnUrl":"","OriginalItems":[],"order_track_details":[{"DisplaySequence":1,"StatusType":"Order Placed","orderProcessStatus":1,"lastActiveStatus":1,"orderProcessCancelStatus":0,"UpdatedDate":"27 March, 03:15 PM","StatusMessage":""},{"DisplaySequence":2,"StatusType":"Order Confirmed","orderProcessStatus":0,"lastActiveStatus":0,"orderProcessCancelStatus":0,"UpdatedDate":"","StatusMessage":""},{"DisplaySequence":4,"StatusType":"Order Shipped","orderProcessStatus":0,"lastActiveStatus":0,"orderProcessCancelStatus":0,"UpdatedDate":"","StatusMessage":""},{"DisplaySequence":5,"StatusType":"Order Delivered","orderProcessStatus":0,"lastActiveStatus":0,"orderProcessCancelStatus":0,"UpdatedDate":"","StatusMessage":""}],"RefundHygiene":[]},"message":"success","response_code":"0"};
+      // this.orderDetails = res;
+      // console.log(res);
+      if(res && res['response_code'] == 0){
+        this.orderDetails = res['data']['OrderHeaders'];
+        this.orderItems = res['data']['OrderItems'];
+        this.orderTracker = res['data']['order_track_details'];
+        this.orderInfo = res['data']['ShortInfo'];
+        // console.log(this.orderDetails, this.orderItems, this.orderTracker);
+        // this.totalSavings = res['data']['OrderHeaders']['ItemDiscount'] +  res['data']['OrderHeaders']['PromoDiscount'];
+        this.ItemDiscount= res['data']['OrderHeaders']['ItemDiscount'] == null ? 0 : res['data']['OrderHeaders']['ItemDiscount'];
+        this.CouponDiscount = res['data']['OrderHeaders']['CouponDiscount']== null ? 0 : res['data']['OrderHeaders']['CouponDiscount'];
+        // this.CouponPromoDesc = res['data']['OrderHeaders']['CouponPromoDesc']== null ? 0 : res['data']['OrderHeaders']['CouponPromoDesc'];
+        this.PromoDiscount = res['data']['OrderHeaders']['PromoDiscount']== null ? 0 : res['data']['OrderHeaders']['PromoDiscount'];
+        if(this.orderInfo['returnButton']['desc'] != undefined && this.orderInfo['returnButton']['desc'] != null && this.orderInfo['returnButton']['desc'] != ''){
+          this.returnDesc = this.orderInfo['returnButton']['desc'];
+        }
+        if(this.orderInfo['cancelButton']['desc'] != undefined && this.orderInfo['cancelButton']['desc'] != null && this.orderInfo['cancelButton']['desc'] != ''){
+          this.cancelDesc = this.orderInfo['cancelButton']['desc'];
+        }
+
+        this.totalSavings = this.ItemDiscount + this.CouponDiscount + this.PromoDiscount;
+        // console.log(this.totalSavings)
+        this.spinner.hide();
+        this.isloading = false;
+        if(this.orderDetails.OrderStatusId != 8 && this.orderDetails.OrderStatusId != 5){
+          this.getcancelReasonList();
+        }
+        this.orderDetailsWebEngage(this.orderDetails, this.orderItems)
+      } else {
+        this.orderDetails = '';
+        this.orderItems = [];
+        this.orderTracker = [];
+        this.orderInfo = '';
+        this.orderUrl = '';
+        this.totalSavings = 0;
+        this.spinner.hide();
+        this.isloading = false;
+      }
+    })
   }
 
   getPaymentGatewayList(param: any) {
@@ -67,23 +115,24 @@ export class PayNowComponent implements OnInit {
         "data": {
           "orderDetails": [
             {
-              "order_id": 101002485118,
+              "order_id": 101002485458,
               "order_items": [
-                "Triple A Cal (New) Cap (10 Cap)"
+                "Cal 360 Tab (10 Tab)",
+                "Pan 20 mg Tab (15 Tab)"
               ],
-              "total_count": 1,
-              "total_amount": 57
+              "total_count": 2,
+              "total_amount": 260
             },
             {
-              "order_id": 101002485119,
+              "order_id": 101002485459,
               "order_items": [
                 "AB Flo SR Tab (10 Tab)"
               ],
               "total_count": 1,
-              "total_amount": 116
+              "total_amount": 346
             }
           ],
-          "totalPayableAmount": 173,
+          "totalPayableAmount": 606,
           "pgList": [
             {
               "Title": "UPI",
@@ -189,6 +238,11 @@ export class PayNowComponent implements OnInit {
       this.orderDetails = res['data']['orderDetails'];
       this.paymentGateways = res['data']['pgList'];
       this.totalPayableAmount = res['data']['totalPayableAmount'];
+      let count = 0;
+      for(let od of this.orderDetails){
+        count += od.total_count;
+      }
+      this.totalItemsOrdered = count;
       console.log(this.paymentGateways);
       console.log("order details", this.orderDetails);
     })
