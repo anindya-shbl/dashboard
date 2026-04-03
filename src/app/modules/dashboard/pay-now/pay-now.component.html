@@ -101,10 +101,11 @@
                         style="background-color: #e3fbf0;">
                         <div>
                             <div class="mb-2 fs-3 text-secondary">Available Balance</div>
-                            <b class="fs-6 fw-6">₹0.00</b>
+                            <b class="fs-6 fw-6">{{cardBalance.searched_beneficiary_remaining_balance | currency: 'INR'}}</b>
                         </div>
                         <label class="switchButton">
-                            <input type="checkbox" disabled>
+                            <input type="checkbox" *ngIf="cardBalance.searched_beneficiary_remaining_balance==0" disabled>
+                            <input type="checkbox" *ngIf="cardBalance.searched_beneficiary_remaining_balance>0" (click)=useCardToggle()>
                             <span class="sliderButton"></span>
                         </label>
                     </div>
@@ -173,18 +174,18 @@
             <div class="p-3">
                 <div class="fs-7 fw-6 mb-2 pb-2">Delivery Address</div>
                 <div class="mb-2 pb-2">
-                    <div class="mb-2">{{orderDetails.Addline}}</div>
-                    <div class="mb-2" *ngIf="orderDetails.Landmark != null"><span>Landmark : </span>
-                        {{orderDetails.Landmark}}</div>
-                    <div>{{orderDetails.City}}, {{orderDetails.PinCode}} {{orderDetails.StateName}}</div>
+                    <div class="mb-2">{{orderDetailsInfo.Addline}}</div>
+                    <div class="mb-2" *ngIf="orderDetailsInfo.Landmark != null"><span>Landmark : </span>
+                        {{orderDetailsInfo.Landmark}}</div>
+                    <div>{{orderDetailsInfo.City}}, {{orderDetailsInfo.PinCode}} {{orderDetailsInfo.StateName}}</div>
                 </div>
                 <div class="mb-2">
-                    <div class="mb-2"><span>Customer : </span><span class="fw-5">{{orderDetails.PatientName}}</span>
+                    <div class="mb-2"><span>Customer : </span><span class="fw-5">{{orderDetailsInfo.PatientName}}</span>
                     </div>
                     <div><span>Contact No : </span>
-                        <span *ngIf="orderDetails.CustContactNo != null && orderDetails.CustContactNo!= ''"
-                            class="fw-5">{{orderDetails.CustContactNo}}</span>
-                        <span *ngIf="orderDetails.CustContactNo == null || orderDetails.CustContactNo == ''"
+                        <span *ngIf="orderDetailsInfo.CustContactNo != null && orderDetailsInfo.CustContactNo!= ''"
+                            class="fw-5">{{orderDetailsInfo.CustContactNo}}</span>
+                        <span *ngIf="orderDetailsInfo.CustContactNo == null || orderDetailsInfo.CustContactNo == ''"
                             class="fw-5">N/A</span>
                     </div>
                 </div>
@@ -195,60 +196,60 @@
                     <div class="fs-7 fw-6 mb-2 pb-2">Order Summary</div>
                     <div class="d-flex justify-content-between mb-2">
                         <span>Order ID</span>
-                        <span class="fw-5">{{orderDetails.OrderId}}</span>
+                        <span class="fw-5">{{orderDetailsInfo.OrderId}}</span>
                     </div>
                     <div class="d-flex justify-content-between mb-3">
                         <span>Order Date</span>
-                        <span class="fw-5">{{orderDetails.OrderDate | date: 'd MMM, y'}}</span>
+                        <span class="fw-5">{{orderDetailsInfo.OrderDate | date: 'd MMM, y'}}</span>
                     </div>
                     <div class="d-flex justify-content-between mb-2">
                         <span>Subtotal</span>
-                        <span class="fw-5">{{orderDetails.OrderAmount | currency : 'INR'}}</span>
+                        <span class="fw-5">{{orderDetailsInfo.OrderAmount | currency : 'INR'}}</span>
                     </div>
                     <div class="d-flex justify-content-between mb-2"
-                        [ngClass]="orderDetails.ItemDiscount>0? 'text-success': ''">
+                        [ngClass]="orderDetailsInfo.ItemDiscount>0? 'text-success': ''">
                         <span>Discount(-)</span>
-                        <span class="fw-5">{{orderDetails.ItemDiscount | currency : 'INR'}}</span>
+                        <span class="fw-5">{{orderDetailsInfo.ItemDiscount | currency : 'INR'}}</span>
                     </div>
                     <div class="d-flex justify-content-between mb-2">
-                        <span>Round Off Value({{orderDetails.RoundOfSign}})</span>
-                        <span class="fw-5">{{orderDetails.RoundOfVal | currency : 'INR'}}</span>
+                        <span>Round Off Value({{orderDetailsInfo.RoundOfSign}})</span>
+                        <span class="fw-5">{{orderDetailsInfo.RoundOfVal | currency : 'INR'}}</span>
                     </div>
                     <div *ngIf="CouponDiscount>0" class="d-flex justify-content-between mb-2"
-                        [ngClass]="orderDetails.CouponDiscount>0? 'text-success': ''">
-                        <span>Coupon Discount(-) <span *ngIf="orderDetails.CouponPromoCode != null">(
-                                {{orderDetails.CouponPromoCode}} )</span></span>
-                        <span class="fw-5">{{orderDetails.CouponDiscount | currency : 'INR'}}</span>
+                        [ngClass]="orderDetailsInfo.CouponDiscount>0? 'text-success': ''">
+                        <span>Coupon Discount(-) <span *ngIf="orderDetailsInfo.CouponPromoCode != null">(
+                                {{orderDetailsInfo.CouponPromoCode}} )</span></span>
+                        <span class="fw-5">{{orderDetailsInfo.CouponDiscount | currency : 'INR'}}</span>
                     </div>
                     <div *ngIf="PromoDiscount>0" class="d-flex justify-content-between mb-2"
-                        [ngClass]="orderDetails.PromoDiscount>0? 'text-success': ''">
-                        <span>Promo Discount(-) <span *ngIf="orderDetails.PromoCode != null">(
-                                {{orderDetails.PromoCode}} )</span></span>
-                        <span class="fw-5">{{orderDetails.PromoDiscount | currency : 'INR'}}</span>
+                        [ngClass]="orderDetailsInfo.PromoDiscount>0? 'text-success': ''">
+                        <span>Promo Discount(-) <span *ngIf="orderDetailsInfo.PromoCode != null">(
+                                {{orderDetailsInfo.PromoCode}} )</span></span>
+                        <span class="fw-5">{{orderDetailsInfo.PromoDiscount | currency : 'INR'}}</span>
                     </div>
                     <div class="d-flex justify-content-between mb-2">
                         <span>Platform Fee(+)</span>
-                        <span class="fw-5">{{orderDetails.ConvienceFee | currency : 'INR'}}</span>
+                        <span class="fw-5">{{orderDetailsInfo.ConvienceFee | currency : 'INR'}}</span>
                     </div>
-                    <div *ngIf="orderDetails.SmallOrderFee != null && orderDetails.SmallOrderFee>0"
+                    <div *ngIf="orderDetailsInfo.SmallOrderFee != null && orderDetailsInfo.SmallOrderFee>0"
                         class="d-flex justify-content-between mb-2">
                         <span>Small Order Fee(+)</span>
-                        <span class="fw-5">{{orderDetails.SmallOrderFee | currency : 'INR'}}</span>
+                        <span class="fw-5">{{orderDetailsInfo.SmallOrderFee | currency : 'INR'}}</span>
                     </div>
                     <div class="d-flex justify-content-between mb-2">
                         <span>Shipping Charges(+)</span>
-                        <span class="fw-5">{{orderDetails.ShippingCharge | currency : 'INR'}}</span>
+                        <span class="fw-5">{{orderDetailsInfo.ShippingCharge | currency : 'INR'}}</span>
                     </div>
 
                     <hr>
                     <div class="d-flex justify-content-between mb-2">
                         <span class="">Total Amount</span>
-                        <span class="fw-5">{{orderDetails.OrderBillAmount | currency : 'INR'}}</span>
+                        <span class="fw-5">{{orderDetailsInfo.OrderBillAmount | currency : 'INR'}}</span>
                     </div>
-                    <div *ngIf="orderDetails.GiftCardValue != undefined && orderDetails.GiftCardValue != null && orderDetails.GiftCardValue != '' && orderDetails.GiftCardValue>0"
+                    <div *ngIf="orderDetailsInfo.GiftCardValue != undefined && orderDetailsInfo.GiftCardValue != null && orderDetailsInfo.GiftCardValue != '' && orderDetailsInfo.GiftCardValue>0"
                         class="d-flex justify-content-between mb-2 text-success">
                         <span>CFH Deduction(-)</span>
-                        <span class="fw-5">{{orderDetails.GiftCardValue | currency : 'INR'}}</span>
+                        <span class="fw-5">{{orderDetailsInfo.GiftCardValue | currency : 'INR'}}</span>
                     </div>
                     <!-- <div *ngIf="orderDetails.EwalletVal != undefined && orderDetails.EwalletVal != null && orderDetails.EwalletVal != '' && orderDetails.EwalletVal>0" class="d-flex justify-content-between mb-2 text-primary">
                 <span>Wallet Used(-)</span>
@@ -267,7 +268,7 @@
 
                     <div class="d-flex justify-content-between mb-2">
                         <span>Payment Method</span>
-                        <span class="fw-5">{{orderDetails.TypeofPayment}}</span>
+                        <span class="fw-5">{{orderDetailsInfo.TypeofPayment}}</span>
                     </div>
 
                     <div *ngIf="totalSavings > 0" class="d-flex justify-content-between mb-2"

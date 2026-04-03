@@ -5,6 +5,7 @@ import { PayNowService } from '../../../services/paynow.service';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { CommonService } from '../../../services/common.service';
 import { WebEngageService } from '../../../services/web-engage.service';
+import { AuthService } from '../../../services/auth.service';
 
 @Component({
   selector: 'app-pay-now',
@@ -14,6 +15,7 @@ import { WebEngageService } from '../../../services/web-engage.service';
 export class PayNowComponent implements OnInit {
 
   orderDetails: any = '';
+  orderDetailsInfo: any = '';
   orderItems: any = [];
   orderTracker: any = [];
   orderUrl: any = '';
@@ -36,12 +38,13 @@ export class PayNowComponent implements OnInit {
   gatewayDetails: any = '';
   msgText: string = '';
   totalItemsOrdered: number = 0;
-
+  cardBalance: any = 0;
+  useCardBalance: boolean = false;
   respMsg: any = '';
   @ViewChild('cnlsRspModal') cnlsRspModal: any;
   @ViewChild('cnlsOrd') cnlsOrd: any;
 
-  constructor(private router: Router, private activatedRoute: ActivatedRoute, private orderService: OrderService, private paynowService: PayNowService, private spinner: NgxSpinnerService, public CommonService: CommonService, private webengageService: WebEngageService) { }
+  constructor(private router: Router, private authService: AuthService,private activatedRoute: ActivatedRoute, private orderService: OrderService, private paynowService: PayNowService, private spinner: NgxSpinnerService, public CommonService: CommonService, private webengageService: WebEngageService) { }
 
   ngOnInit(): void {
     let orderId = this.activatedRoute.snapshot.params['orderID'];
@@ -53,6 +56,7 @@ export class PayNowComponent implements OnInit {
       fd.append('OrderId', '101002485118');
       this.getPaymentGatewayList(fd);
       this.orderDetailById(fd);
+      this.getBalance();
     }
 
   }
@@ -61,11 +65,11 @@ export class PayNowComponent implements OnInit {
     this.spinner.show();
     this.isloading = true;
     this.orderService.getOrderDetailById('webapi/order/viewOrder', param).subscribe((res: any) => {
-      res = {"data":{"ShortInfo":{"heading":"Delivery by 29 March 2026","desc":"","colorStatus":"GREEN","color":"#039855","bgColor":"#EBFFF6","cancelButton":{"isVisible":true,"heading":"Cancel Order","desc":""},"returnButton":{"isVisible":false,"heading":"","desc":""}},"OrderHeaders":{"OrderId":101002485326,"OrderDate":"2026-03-27 15:15:20.140","InvoiceId":null,"FullName":"test HB","PatientName":"\"Anindya\"  ","ItemDiscount":9,"OrderAmount":60,"ShippingCharge":0,"CourierCharge":0,"OrderBillAmount":51,"RoundOfSign":"-","RoundOfVal":0.58,"EwalletVal":0,"DueAmount":51,"TypeofPayment":"COD","PaymentMode":"","Addline":"Innovation Tower","City":"Kolkata","StateName":"West Bengal","PinCode":700156,"PromoId":null,"PromoCode":null,"PromoDesc":null,"ApplicationType":" ","OrderType":"P","OrderStatusId":1,"CouponPromoId":null,"CouponPromoCode":null,"CouponPromoDesc":null,"PromoDiscount":0,"CouponDiscount":0,"InvoiceNo":"Not Assigned","IsCourierOrder":0,"DocketNo":"","CompanyName":"","CustOrderStatusDesc":"Pending Order Confirmation","PaidAmount":null,"IsSalesReturnActive":0,"IsEdited":0,"EditComment":"","PayStatusDesc":"","PGTitle":null,"IsRefundInitiated":0,"RefundAmount":null,"RefundInitiatedDate":null,"SalesReturnStatusId":null,"SalesReturnStatusDesc":null,"ReturnUpdatedDate":null,"IsCancel":"Y","SellerMasId":null,"DeliveryDate":"2026-03-29 15:15:19.000","SubscriptionId":null,"SubscriptionDiscount":null,"NickName":"Anindya Bhattacharya","CustContactNo":null,"Landmark":"","ServiceArea":null,"WarehouseId":1,"IsOutStation":1,"IsPrescriptionUploaded":1,"HBId":11010,"ContactNo":"0332356025844,03325905856\/58,","HBAddLine":"HNBVKOYDXI","HBCity":"Baruipur","HBStateName":"West Bengal","HBPinCode":700144,"ConvienceFee":0.58,"SmallOrderFee":0,"AWBNo":null,"TrackingLink":null,"OnlinePaid":null,"ScheduleDeliveryDate":"2026-03-29 15:15:19.000","GiftCardValue":null,"IsTrackReturnAvailable":0,"GigtCardValue":null,"IsOrderTrackAvailable":1,"IsRatingReviewEnabled":0,"IsReorderActive":0,"InvoiceURL":"","PaymentModeOld":"","TypeofPaymentOld":"COD","0":"","DeliveryMsg":"","RefundMessage":""},"OrderItems":[{"ProductId":11723,"DisplayName":"Mext F 7.5 mg Tab (28 Tab)","MRP":60,"ProductImage":"MEXT-F-1408541348-10011683.jpg","PromoId":null,"PromoCode":null,"PromoDesc":null,"SSCurrencyValue":0,"OrderItemVal":51,"OfferPrice":51,"CustomProductName":"","Rating":0,"ProductName":"Mext F","CouponPromoId":null,"CouponPromoCode":null,"CouponPromoDesc":null,"IsCustomizeProduct":0,"XplorPoint":0,"XplorPointVal":0,"PrescriptionOTC":"P","InteractiveModule":"PetCare","InteractiveHealthProfileId":null,"MfgGroup":"WALLACE PHARMACEUTRICALS PVT LTD","SaltName":"FOLIC ACID + COMBINATIONS","EncodeProdId":"4bkzb8","IsGiftableProduct":null,"DosageForm":"Tablet","SellerMasId":null,"ItemQuantity":1,"ItemDiscount":9,"ProductImageURL":"https:\/\/asset.sastasundar.com\/incom\/images\/product\/thumb\/MEXT-F-1408541348-10011683.jpg"}],"trackDetails":[{"OrderStatusHistoryId":10955641,"OrderStatusId":1,"OrderStatusDesc":"Pending Approval by HB","Comments":null,"UpdatedBy":588795,"UpdatedByName":"\"Anindya\"","UpdatedDate":"2026-03-27 15:15:20.140","UserType":"C","0":"","4":""}],"returnUrl":"","OriginalItems":[],"order_track_details":[{"DisplaySequence":1,"StatusType":"Order Placed","orderProcessStatus":1,"lastActiveStatus":1,"orderProcessCancelStatus":0,"UpdatedDate":"27 March, 03:15 PM","StatusMessage":""},{"DisplaySequence":2,"StatusType":"Order Confirmed","orderProcessStatus":0,"lastActiveStatus":0,"orderProcessCancelStatus":0,"UpdatedDate":"","StatusMessage":""},{"DisplaySequence":4,"StatusType":"Order Shipped","orderProcessStatus":0,"lastActiveStatus":0,"orderProcessCancelStatus":0,"UpdatedDate":"","StatusMessage":""},{"DisplaySequence":5,"StatusType":"Order Delivered","orderProcessStatus":0,"lastActiveStatus":0,"orderProcessCancelStatus":0,"UpdatedDate":"","StatusMessage":""}],"RefundHygiene":[]},"message":"success","response_code":"0"};
+      res = {"data":{"ShortInfo":{"heading":"Delivery by 29 March 2026","desc":"","colorStatus":"GREEN","color":"#039855","bgColor":"#EBFFF6","cancelButton":{"isVisible":true,"heading":"Cancel Order","desc":""},"returnButton":{"isVisible":false,"heading":"","desc":""}},"OrderHeaders":{"OrderId":101002485326,"OrderDate":"2026-03-27 15:15:20.140","InvoiceId":null,"FullName":"test HB","PatientName":"Anindya","ItemDiscount":9,"OrderAmount":60,"ShippingCharge":0,"CourierCharge":0,"OrderBillAmount":51,"RoundOfSign":"-","RoundOfVal":0.58,"EwalletVal":0,"DueAmount":51,"TypeofPayment":"COD","PaymentMode":"","Addline":"Innovation Tower","City":"Kolkata","StateName":"West Bengal","PinCode":700156,"PromoId":null,"PromoCode":null,"PromoDesc":null,"ApplicationType":" ","OrderType":"P","OrderStatusId":1,"CouponPromoId":null,"CouponPromoCode":null,"CouponPromoDesc":null,"PromoDiscount":0,"CouponDiscount":0,"InvoiceNo":"Not Assigned","IsCourierOrder":0,"DocketNo":"","CompanyName":"","CustOrderStatusDesc":"Pending Order Confirmation","PaidAmount":null,"IsSalesReturnActive":0,"IsEdited":0,"EditComment":"","PayStatusDesc":"","PGTitle":null,"IsRefundInitiated":0,"RefundAmount":null,"RefundInitiatedDate":null,"SalesReturnStatusId":null,"SalesReturnStatusDesc":null,"ReturnUpdatedDate":null,"IsCancel":"Y","SellerMasId":null,"DeliveryDate":"2026-03-29 15:15:19.000","SubscriptionId":null,"SubscriptionDiscount":null,"NickName":"Anindya Bhattacharya","CustContactNo":null,"Landmark":"","ServiceArea":null,"WarehouseId":1,"IsOutStation":1,"IsPrescriptionUploaded":1,"HBId":11010,"ContactNo":"0332356025844,03325905856\/58,","HBAddLine":"HNBVKOYDXI","HBCity":"Baruipur","HBStateName":"West Bengal","HBPinCode":700144,"ConvienceFee":0.58,"SmallOrderFee":0,"AWBNo":null,"TrackingLink":null,"OnlinePaid":null,"ScheduleDeliveryDate":"2026-03-29 15:15:19.000","GiftCardValue":null,"IsTrackReturnAvailable":0,"GigtCardValue":null,"IsOrderTrackAvailable":1,"IsRatingReviewEnabled":0,"IsReorderActive":0,"InvoiceURL":"","PaymentModeOld":"","TypeofPaymentOld":"COD","0":"","DeliveryMsg":"","RefundMessage":""},"OrderItems":[{"ProductId":11723,"DisplayName":"Mext F 7.5 mg Tab (28 Tab)","MRP":60,"ProductImage":"MEXT-F-1408541348-10011683.jpg","PromoId":null,"PromoCode":null,"PromoDesc":null,"SSCurrencyValue":0,"OrderItemVal":51,"OfferPrice":51,"CustomProductName":"","Rating":0,"ProductName":"Mext F","CouponPromoId":null,"CouponPromoCode":null,"CouponPromoDesc":null,"IsCustomizeProduct":0,"XplorPoint":0,"XplorPointVal":0,"PrescriptionOTC":"P","InteractiveModule":"PetCare","InteractiveHealthProfileId":null,"MfgGroup":"WALLACE PHARMACEUTRICALS PVT LTD","SaltName":"FOLIC ACID + COMBINATIONS","EncodeProdId":"4bkzb8","IsGiftableProduct":null,"DosageForm":"Tablet","SellerMasId":null,"ItemQuantity":1,"ItemDiscount":9,"ProductImageURL":"https:\/\/asset.sastasundar.com\/incom\/images\/product\/thumb\/MEXT-F-1408541348-10011683.jpg"}],"trackDetails":[{"OrderStatusHistoryId":10955641,"OrderStatusId":1,"OrderStatusDesc":"Pending Approval by HB","Comments":null,"UpdatedBy":588795,"UpdatedByName":"\"Anindya\"","UpdatedDate":"2026-03-27 15:15:20.140","UserType":"C","0":"","4":""}],"returnUrl":"","OriginalItems":[],"order_track_details":[{"DisplaySequence":1,"StatusType":"Order Placed","orderProcessStatus":1,"lastActiveStatus":1,"orderProcessCancelStatus":0,"UpdatedDate":"27 March, 03:15 PM","StatusMessage":""},{"DisplaySequence":2,"StatusType":"Order Confirmed","orderProcessStatus":0,"lastActiveStatus":0,"orderProcessCancelStatus":0,"UpdatedDate":"","StatusMessage":""},{"DisplaySequence":4,"StatusType":"Order Shipped","orderProcessStatus":0,"lastActiveStatus":0,"orderProcessCancelStatus":0,"UpdatedDate":"","StatusMessage":""},{"DisplaySequence":5,"StatusType":"Order Delivered","orderProcessStatus":0,"lastActiveStatus":0,"orderProcessCancelStatus":0,"UpdatedDate":"","StatusMessage":""}],"RefundHygiene":[]},"message":"success","response_code":"0"};
       // this.orderDetails = res;
       // console.log(res);
       if(res && res['response_code'] == 0){
-        this.orderDetails = res['data']['OrderHeaders'];
+        this.orderDetailsInfo = res['data']['OrderHeaders'];
         this.orderItems = res['data']['OrderItems'];
         this.orderTracker = res['data']['order_track_details'];
         this.orderInfo = res['data']['ShortInfo'];
@@ -86,12 +90,12 @@ export class PayNowComponent implements OnInit {
         // console.log(this.totalSavings)
         this.spinner.hide();
         this.isloading = false;
-        if(this.orderDetails.OrderStatusId != 8 && this.orderDetails.OrderStatusId != 5){
+        if(this.orderDetailsInfo.OrderStatusId != 8 && this.orderDetailsInfo.OrderStatusId != 5){
           this.getcancelReasonList();
         }
-        this.orderDetailsWebEngage(this.orderDetails, this.orderItems)
+        this.orderDetailsWebEngage(this.orderDetailsInfo, this.orderItems)
       } else {
-        this.orderDetails = '';
+        this.orderDetailsInfo = '';
         this.orderItems = [];
         this.orderTracker = [];
         this.orderInfo = '';
@@ -371,8 +375,25 @@ export class PayNowComponent implements OnInit {
       fd.append('PaymentGateWay', data['Key']);
     }
     fd.append('OrderId', this.orderDetails[0].order_id);
-    console.log(this.orderDetails[0].order_id);
-    this.paynowService.getGatewayInfo('webapi/cartapp/paynow_gatewayinfo', fd).subscribe((response: any) => {
+    if(this.useCardBalance){
+      fd.append('IsGiftCardUse', '1');
+    }
+    else {
+      fd.append('IsGiftCardUse', '0');
+    }
+  
+    let endpoint = '';
+
+    if(this.cardBalance.searched_beneficiary_remaining_balance > 0 && this.cardBalance.searched_beneficiary_remaining_balance >= this.totalPayableAmount){
+      // payment fully through card balance
+      endpoint = 'webapi/cartapp/paynow_via_cfh';
+    }
+    else{
+      // payment through gateway + card balance
+      endpoint = 'webapi/cartapp/paynow_gatewayinfo';
+    }
+    console.log('endpoint',endpoint)
+    this.paynowService.getGatewayInfo(endpoint, fd).subscribe((response: any) => {
       console.log(response);
       response = {
         "status": 200,
@@ -406,5 +427,94 @@ export class PayNowComponent implements OnInit {
     let url = data.PayUrl;
     window.open(url, '_self');
   }
+
+  
+  getBalance() {
+    this.isloading = true;
+    // this.trnsHistory = [];
+    // this.loadMoreBtn = false;
+    // this.pageNo = 1;
+    // this.spinner.show();
+    let MobileNo = this.authService.Mobile;
+    this.orderService.getDetails(`webapi/cfh/get_balance?search=${MobileNo}`).subscribe((res: any) => {
+    if (res && res.status == 1) {
+      this.cardBalance = res.data;
+      console.log(this.cardBalance);
+      // this.isloading = false;
+      // this.spinner.hide();
+      // this.getTransationList();
+    } else {
+      this.isloading = false;
+      this.spinner.hide();
+    }
+    })
+  }
+useCardToggle(){
+    if (this.useCardBalance == true) {
+      this.useCardBalance = false;
+      // this.cfhBalance = this.headerDetails.CartVal;
+      // this.selectedPG = this.pglist[0].PGListingId;
+    } else {
+      this.useCardBalance = true;
+      // this.setCFHBalance();
+    }
+    console.log(this.useCardBalance);
+}
+  // getTransationList() {
+  //   // this.isloading = true;
+  //   // this.spinner.show();
+  //   let MobileNo = this.authService.Mobile;
+  //   this.orderService.getDetails(`webapi/cfh/trans_history?search=${MobileNo}&per_page=${this.pageSize}&page=${this.pageNo}`).subscribe((res: any) => {
+  //   if (res && res.status == 1) {
+  //     this.transationData = res.data;
+  //     if (res.data && res.data.data.length > 0) {
+  //       this.trnsHistory = [...this.trnsHistory, ...res.data.data];
+  //       if (this.pageNo < res.data.total_pages) {
+  //         this.loadMoreBtn = true;
+  //       } else {
+  //         this.loadMoreBtn = false;
+  //       }
+  //       this.isloading = false;
+  //       this.spinner.hide();
+  //     } else {
+  //       this.isloading = false;
+  //       this.spinner.hide();
+  //     }
+  //   } else {
+  //     this.isloading = false;
+  //     this.spinner.hide();
+  //   }
+  //   })
+  // }
+
+  // moreTransation() {
+  //   this.pageNo += 1;
+  //   this.isloading = true;
+  //   this.spinner.show();
+  //   this.getTransationList();
+  // }
+
+  // addCard() {
+  //   this.submitted = true;
+  //   if (this.AddCardForm.invalid) {
+  //     return;
+  //   } else {
+  //     let data = this.AddCardForm.value.code;
+  //     this.spinner.show();
+  //     this.orderService.getDetails(`webapi/cfh/assign_healthcard?HealthCardCode=${data}`).subscribe((res: any) => {
+  //       if (res && res.status == 1) {
+  //         this.toastr.success('Health Card Added Successfully');
+  //         this.AddCardForm.reset();
+  //         this.submitted = false;
+  //         this.getBalance();
+  //         // this.getTransationList();
+  //       } else {
+  //         this.spinner.hide();
+  //         this.toastr.error(res.data || 'Something went wrong');
+  //       }
+  //     })
+  //   }
+  // }
+
 
 }
