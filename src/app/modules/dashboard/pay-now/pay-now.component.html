@@ -113,57 +113,37 @@
 
 
                 <div class="address-List-Block">
-                    <ng-container *ngFor="let pg of paymentGateways">
+                    <div *ngif="onlyViaCfh">
                         <label class="address-List-item">
-                            <input type="radio" name="PayOption" id="PayOption" value="{{pg.PgType}}">
-                            <span class="chrckBlock"></span>
-
-                            <div class="ListFlex">
-                                <div class="pay-img">
-                                    <img src="https://asset.sastasundar.com/incom/PaymentgatewayImages/web/{{pg.Image}}"
-                                        alt="">
-                                </div>
-
-                                <div class="fw-5">{{pg.Title}} <span class="priceValue"> ₹{{totalPayableAmount}}</span>
-                                </div>
-                                <button type="button" class="proceed" (click)="placeOrder(pg)">Place
-                                    &nbsp;Order</button>
+                            <div>
+                                <div class="fw-5">GiftCard <span class="priceValue"> ₹{{totalPayableAmount}}</span></div>
+                                <button type="button" class="proceed" (click)="placeOrder([])">Place &nbsp;Order</button>
                             </div>
-                            <div class="checkBG"></div>
+                                <div class="checkBG"></div>
                         </label>
-                    </ng-container>
-
-
-                    <!-- <label class="address-List-item">
-                <input type="radio" name="payment" id="NetBanking">
-                <span class="chrckBlock"></span>
-
-                <div class="ListFlex">
-                    <div class="pay-img">
-                        <img src="https://asset.sastasundar.com/incom/PaymentgatewayImages/web/netbanking.png" alt="">
                     </div>
+                    <div *ngif="!onlyViaCfh">
+                        <ng-container *ngFor="let pg of paymentGateways" >
+                            <label class="address-List-item">
+                                <input type="radio" name="PayOption" id="PayOption" value="{{pg.PgType}}">
+                                <span class="chrckBlock"></span>
 
-                    <div class="fw-5">Net Banking <span class="priceValue"> ₹172.00</span></div>
-                    <button type="button" class="proceed">Place &nbsp;Order</button>
-                </div>
-                <div class="checkBG"></div>
-            </label>
+                                <div class="ListFlex">
+                                    <div class="pay-img">
+                                        <img src="https://asset.sastasundar.com/incom/PaymentgatewayImages/web/{{pg.Image}}"
+                                            alt="">
+                                    </div>
 
-            <label class="address-List-item">
-                <input type="radio" name="payment" id="CreditCard">
-                <span class="chrckBlock"></span>
-
-                <div class="ListFlex">
-                    <div class="pay-img">
-                        <img src="https://asset.sastasundar.com/incom/PaymentgatewayImages/web/creditcard.png" alt="">
+                                    <div class="fw-5">{{pg.Title}} <span class="priceValue"> ₹{{totalPayableAmount}}</span>
+                                    </div>
+                                    <button type="button" class="proceed" (click)="placeOrder(pg)">Place
+                                        &nbsp;Order</button>
+                                </div>
+                                <div class="checkBG"></div>
+                            </label>
+                        </ng-container>
                     </div>
-
-                    <div class="fw-5">Credit Card <span class="priceValue"> ₹172.00</span></div>
-                    <button type="button" class="proceed">Place &nbsp;Order</button>
-                </div>
-                <div class="checkBG"></div>
-            </label> -->
-
+                    
                 </div>
 
             </div>

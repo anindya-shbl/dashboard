@@ -40,6 +40,7 @@ export class PayNowComponent implements OnInit {
   totalItemsOrdered: number = 0;
   cardBalance: any = 0;
   useCardBalance: boolean = false;
+  onlyViaCfh: boolean = false;
   respMsg: any = '';
   @ViewChild('cnlsRspModal') cnlsRspModal: any;
   @ViewChild('cnlsOrd') cnlsOrd: any;
@@ -53,6 +54,7 @@ export class PayNowComponent implements OnInit {
     if (orderId != undefined || orderId != '') {
       let fd = new FormData();
       fd.append('OrderId', atob(orderId));
+      fd.append('orderId', atob(orderId));
       // fd.append('OrderId', '101002485118');
       this.getPaymentGatewayList(fd);
       this.orderDetailById(fd);
@@ -247,24 +249,27 @@ export class PayNowComponent implements OnInit {
     }
     if (data['Key'] == 'PAYTMPG') {
       fd.append('PaymentGateWay', 'PAYTMPG');
-    } else {
+    } else if(data['Key'] != '') {
       fd.append('PaymentGateWay', data['Key']);
     }
-    fd.append('OrderId', this.orderDetails[0].order_id);
+    else{
+     fd.append('PaymentGateWay', ''); 
+    }
     if(this.useCardBalance){
       fd.append('IsGiftCardUse', '1');
     }
     else {
       fd.append('IsGiftCardUse', '0');
     }
-  
+    fd.append('OrderId', this.orderDetails[0].order_id);
     let endpoint = '';
 
-    if(this.cardBalance.searched_beneficiary_remaining_balance > 0 && this.cardBalance.searched_beneficiary_remaining_balance >= this.totalPayableAmount){
+    if(this.useCardBalance && this.cardBalance.searched_beneficiary_remaining_balance > 0 && this.cardBalance.searched_beneficiary_remaining_balance >= this.totalPayableAmount){
       // payment fully through card balance
       endpoint = 'webapi/cartapp/paynow_via_cfh';
+      this.onlyViaCfh = true;
     }
-    else{
+    else {
       // payment through gateway + card balance
       endpoint = 'webapi/cartapp/paynow_gatewayinfo';
     }
