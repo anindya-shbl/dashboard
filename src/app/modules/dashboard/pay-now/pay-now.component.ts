@@ -269,23 +269,34 @@ export class PayNowComponent implements OnInit {
     }
     fd.append('OrderId', this.orderDetails[0].order_id);
     let endpoint = '';
-
+    let cfhFlag = false;
     if(this.useCardBalance && this.cardBalance.searched_beneficiary_remaining_balance > 0 && this.cardBalance.searched_beneficiary_remaining_balance >= this.totalPayableAmount){
       // payment fully through card balance
       endpoint = 'webapi/cartapp/paynow_via_cfh';
+      cfhFlag = true;
     }
     else {
       // payment through gateway + card balance
       endpoint = 'webapi/cartapp/paynow_gatewayinfo';
+      cfhFlag = false;
     }
     console.log('endpoint',endpoint)
     this.paynowService.getGatewayInfo(endpoint, fd).subscribe((response: any) => {
       console.log(response);
-      console.log(response['data']['data']['EasebuzzDetails']['PayUrl']);
+      // console.log(response['data']['data']['EasebuzzDetails']['PayUrl']);
       if (response && response['status'] == 200) {
-        let EZdata = response['data']['data']['EasebuzzDetails'];
-        this.EASEBUZZPepayment(EZdata);
-        this.spinner.hide();
+        if(cfhFlag){
+          this.msgText = 'Your payment is being processed through your Health Buddy Card balance. Please do not refresh or close the window.';
+          this.spinner.hide();
+          this.orderService.redirectToSuccess();
+        }
+        else {
+          this.msgText = 'Redirecting to payment gateway. Please do not refresh or close the window.';
+          let EZdata = response['data']['data']['EasebuzzDetails'];
+          this.EASEBUZZPepayment(EZdata);
+          this.spinner.hide();
+        }
+        
       }
     });
   }
