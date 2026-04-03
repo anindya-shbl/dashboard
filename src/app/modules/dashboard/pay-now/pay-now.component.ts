@@ -41,6 +41,7 @@ export class PayNowComponent implements OnInit {
   cardBalance: any = 0;
   useCardBalance: boolean = false;
   onlyViaCfh: boolean = false;
+  showCFHBlock: boolean = false;  // Add this property
   respMsg: any = '';
   @ViewChild('cnlsRspModal') cnlsRspModal: any;
   @ViewChild('cnlsOrd') cnlsOrd: any;
@@ -58,7 +59,12 @@ export class PayNowComponent implements OnInit {
       // fd.append('OrderId', '101002485118');
       this.getPaymentGatewayList(fd);
       this.orderDetailById(fd);
-      this.getBalance();
+      
+      if (this.authService.ConfigData.IsCFHActive) {
+          this.showCFHBlock = true;
+          this.getBalance();
+      }
+      console.log("this.showCFHBlock",this.showCFHBlock);
     }
 
   }
@@ -267,7 +273,6 @@ export class PayNowComponent implements OnInit {
     if(this.useCardBalance && this.cardBalance.searched_beneficiary_remaining_balance > 0 && this.cardBalance.searched_beneficiary_remaining_balance >= this.totalPayableAmount){
       // payment fully through card balance
       endpoint = 'webapi/cartapp/paynow_via_cfh';
-      this.onlyViaCfh = true;
     }
     else {
       // payment through gateway + card balance
@@ -315,13 +320,19 @@ export class PayNowComponent implements OnInit {
 useCardToggle(){
     if (this.useCardBalance == true) {
       this.useCardBalance = false;
+      this.onlyViaCfh = false;
       // this.cfhBalance = this.headerDetails.CartVal;
       // this.selectedPG = this.pglist[0].PGListingId;
     } else {
       this.useCardBalance = true;
+      if(this.cardBalance.searched_beneficiary_remaining_balance > 0 && this.cardBalance.searched_beneficiary_remaining_balance >= this.totalPayableAmount){
+        this.onlyViaCfh = true;
+      }
+      
       // this.setCFHBalance();
     }
     console.log(this.useCardBalance);
+    console.log(this.onlyViaCfh);
 }
   // getTransationList() {
   //   // this.isloading = true;
