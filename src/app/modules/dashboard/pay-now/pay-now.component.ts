@@ -5,6 +5,7 @@ import { PayNowService } from '../../../services/paynow.service';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { CommonService } from '../../../services/common.service';
 import { WebEngageService } from '../../../services/web-engage.service';
+import { AuthService } from '../../../services/auth.service';
 
 @Component({
   selector: 'app-pay-now',
@@ -14,6 +15,7 @@ import { WebEngageService } from '../../../services/web-engage.service';
 export class PayNowComponent implements OnInit {
 
   orderDetails: any = '';
+  orderDetailsInfo: any = '';
   orderItems: any = [];
   orderTracker: any = [];
   orderUrl: any = '';
@@ -36,12 +38,13 @@ export class PayNowComponent implements OnInit {
   gatewayDetails: any = '';
   msgText: string = '';
   totalItemsOrdered: number = 0;
-
+  cardBalance: any = 0;
+  useCardBalance: boolean = false;
   respMsg: any = '';
   @ViewChild('cnlsRspModal') cnlsRspModal: any;
   @ViewChild('cnlsOrd') cnlsOrd: any;
 
-  constructor(private router: Router, private activatedRoute: ActivatedRoute, private orderService: OrderService, private paynowService: PayNowService, private spinner: NgxSpinnerService, public CommonService: CommonService, private webengageService: WebEngageService) { }
+  constructor(private router: Router, private authService: AuthService,private activatedRoute: ActivatedRoute, private orderService: OrderService, private paynowService: PayNowService, private spinner: NgxSpinnerService, public CommonService: CommonService, private webengageService: WebEngageService) { }
 
   ngOnInit(): void {
     let orderId = this.activatedRoute.snapshot.params['orderID'];
@@ -53,6 +56,7 @@ export class PayNowComponent implements OnInit {
       // fd.append('OrderId', '101002485118');
       this.getPaymentGatewayList(fd);
       this.orderDetailById(fd);
+      this.getBalance();
     }
 
   }
@@ -64,7 +68,7 @@ export class PayNowComponent implements OnInit {
       // this.orderDetails = res;
       // console.log(res);
       if(res && res['response_code'] == 0){
-        this.orderDetails = res['data']['OrderHeaders'];
+        this.orderDetailsInfo = res['data']['OrderHeaders'];
         this.orderItems = res['data']['OrderItems'];
         this.orderTracker = res['data']['order_track_details'];
         this.orderInfo = res['data']['ShortInfo'];
@@ -85,12 +89,12 @@ export class PayNowComponent implements OnInit {
         // console.log(this.totalSavings)
         this.spinner.hide();
         this.isloading = false;
-        if(this.orderDetails.OrderStatusId != 8 && this.orderDetails.OrderStatusId != 5){
+        if(this.orderDetailsInfo.OrderStatusId != 8 && this.orderDetailsInfo.OrderStatusId != 5){
           this.getcancelReasonList();
         }
-        this.orderDetailsWebEngage(this.orderDetails, this.orderItems)
+        this.orderDetailsWebEngage(this.orderDetailsInfo, this.orderItems)
       } else {
-        this.orderDetails = '';
+        this.orderDetailsInfo = '';
         this.orderItems = [];
         this.orderTracker = [];
         this.orderInfo = '';
@@ -247,8 +251,25 @@ export class PayNowComponent implements OnInit {
       fd.append('PaymentGateWay', data['Key']);
     }
     fd.append('OrderId', this.orderDetails[0].order_id);
-    console.log(this.orderDetails[0].order_id);
-    this.paynowService.getGatewayInfo('webapi/cartapp/paynow_gatewayinfo', fd).subscribe((response: any) => {
+    if(this.useCardBalance){
+      fd.append('IsGiftCardUse', '1');
+    }
+    else {
+      fd.append('IsGiftCardUse', '0');
+    }
+  
+    let endpoint = '';
+
+    if(this.cardBalance.searched_beneficiary_remaining_balance > 0 && this.cardBalance.searched_beneficiary_remaining_balance >= this.totalPayableAmount){
+      // payment fully through card balance
+      endpoint = 'webapi/cartapp/paynow_via_cfh';
+    }
+    else{
+      // payment through gateway + card balance
+      endpoint = 'webapi/cartapp/paynow_gatewayinfo';
+    }
+    console.log('endpoint',endpoint)
+    this.paynowService.getGatewayInfo(endpoint, fd).subscribe((response: any) => {
       console.log(response);
       console.log(response['data']['data']['EasebuzzDetails']['PayUrl']);
       if (response && response['status'] == 200) {
@@ -264,5 +285,94 @@ export class PayNowComponent implements OnInit {
     let url = data.PayUrl;
     window.open(url, '_self');
   }
+
+  
+  getBalance() {
+    this.isloading = true;
+    // this.trnsHistory = [];
+    // this.loadMoreBtn = false;
+    // this.pageNo = 1;
+    // this.spinner.show();
+    let MobileNo = this.authService.Mobile;
+    this.orderService.getDetails(`webapi/cfh/get_balance?search=${MobileNo}`).subscribe((res: any) => {
+    if (res && res.status == 1) {
+      this.cardBalance = res.data;
+      console.log(this.cardBalance);
+      // this.isloading = false;
+      // this.spinner.hide();
+      // this.getTransationList();
+    } else {
+      this.isloading = false;
+      this.spinner.hide();
+    }
+    })
+  }
+useCardToggle(){
+    if (this.useCardBalance == true) {
+      this.useCardBalance = false;
+      // this.cfhBalance = this.headerDetails.CartVal;
+      // this.selectedPG = this.pglist[0].PGListingId;
+    } else {
+      this.useCardBalance = true;
+      // this.setCFHBalance();
+    }
+    console.log(this.useCardBalance);
+}
+  // getTransationList() {
+  //   // this.isloading = true;
+  //   // this.spinner.show();
+  //   let MobileNo = this.authService.Mobile;
+  //   this.orderService.getDetails(`webapi/cfh/trans_history?search=${MobileNo}&per_page=${this.pageSize}&page=${this.pageNo}`).subscribe((res: any) => {
+  //   if (res && res.status == 1) {
+  //     this.transationData = res.data;
+  //     if (res.data && res.data.data.length > 0) {
+  //       this.trnsHistory = [...this.trnsHistory, ...res.data.data];
+  //       if (this.pageNo < res.data.total_pages) {
+  //         this.loadMoreBtn = true;
+  //       } else {
+  //         this.loadMoreBtn = false;
+  //       }
+  //       this.isloading = false;
+  //       this.spinner.hide();
+  //     } else {
+  //       this.isloading = false;
+  //       this.spinner.hide();
+  //     }
+  //   } else {
+  //     this.isloading = false;
+  //     this.spinner.hide();
+  //   }
+  //   })
+  // }
+
+  // moreTransation() {
+  //   this.pageNo += 1;
+  //   this.isloading = true;
+  //   this.spinner.show();
+  //   this.getTransationList();
+  // }
+
+  // addCard() {
+  //   this.submitted = true;
+  //   if (this.AddCardForm.invalid) {
+  //     return;
+  //   } else {
+  //     let data = this.AddCardForm.value.code;
+  //     this.spinner.show();
+  //     this.orderService.getDetails(`webapi/cfh/assign_healthcard?HealthCardCode=${data}`).subscribe((res: any) => {
+  //       if (res && res.status == 1) {
+  //         this.toastr.success('Health Card Added Successfully');
+  //         this.AddCardForm.reset();
+  //         this.submitted = false;
+  //         this.getBalance();
+  //         // this.getTransationList();
+  //       } else {
+  //         this.spinner.hide();
+  //         this.toastr.error(res.data || 'Something went wrong');
+  //       }
+  //     })
+  //   }
+  // }
+
 
 }
