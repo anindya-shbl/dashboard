@@ -393,41 +393,61 @@ export class PayNowComponent implements OnInit {
     }
     fd.append('OrderId', this.orderDetails[0].order_id);
     let endpoint = '';
-
+    let cfhFlag = false;
     if(this.useCardBalance && this.cardBalance.searched_beneficiary_remaining_balance > 0 && this.cardBalance.searched_beneficiary_remaining_balance >= this.totalPayableAmount){
       // payment fully through card balance
       endpoint = 'webapi/cartapp/paynow_via_cfh';
+      cfhFlag = true;
     }
     else {
       // payment through gateway + card balance
       endpoint = 'webapi/cartapp/paynow_gatewayinfo';
+      cfhFlag = false;
     }
     console.log('endpoint',endpoint)
     this.paynowService.getGatewayInfo(endpoint, fd).subscribe((response: any) => {
-      console.log(response);
+      // console.log(response);
+      // response = {
+      //   "status": 200,
+      //   "data": {
+      //     "status": 1,
+      //     "message": "api successfully call",
+      //     "data": {
+      //       "EasebuzzDetails": {
+      //         "status": 1,
+      //         "data": "c06eea86b5e3a0734b18cc09a8bd5f5602bb4efc7d907c0c17060f78a30c3938",
+      //         "PayUrl": "https://testpay.easebuzz.in/pay/c06eea86b5e3a0734b18cc09a8bd5f5602bb4efc7d907c0c17060f78a30c3938",
+      //         "CallbackUrl": "https://stage.sastasundar.com/payment_return/paynow_easebuzz_callback"
+      //       },
+      //       "PayGatewayTransacNo": "686A5813-AD1E-49E8-9177-C17550F2EED0",
+      //       "PaymentMethod": "EASEBUZZ"
+      //     }
+      //   },
+      //   "message": "Success"
+      // };
+      // console.log(response['data']['data']['EasebuzzDetails']['PayUrl']);
       response = {
-        "status": 200,
-        "data": {
-          "status": 1,
-          "message": "api successfully call",
+          "status": 200,
           "data": {
-            "EasebuzzDetails": {
-              "status": 1,
-              "data": "c06eea86b5e3a0734b18cc09a8bd5f5602bb4efc7d907c0c17060f78a30c3938",
-              "PayUrl": "https://testpay.easebuzz.in/pay/c06eea86b5e3a0734b18cc09a8bd5f5602bb4efc7d907c0c17060f78a30c3938",
-              "CallbackUrl": "https://stage.sastasundar.com/payment_return/paynow_easebuzz_callback"
-            },
-            "PayGatewayTransacNo": "686A5813-AD1E-49E8-9177-C17550F2EED0",
-            "PaymentMethod": "EASEBUZZ"
-          }
-        },
-        "message": "Success"
+              "redeemtion_amount": 76,
+              "gift_card_trans_id": "83AA1C59-DF71-4B8D-A93D-441808F81235"
+          },
+          "message": "Gift card redeemed successfully"
       };
-      console.log(response['data']['data']['EasebuzzDetails']['PayUrl']);
+      cfhFlag = true;
       if (response && response['status'] == 200) {
-        let EZdata = response['data']['data']['EasebuzzDetails'];
-        this.EASEBUZZPepayment(EZdata);
-        this.spinner.hide();
+        if(cfhFlag){
+          this.msgText = 'Your payment is being processed through your Health Buddy Card balance. Please do not refresh or close the window.';
+          this.spinner.hide();
+          this.orderService.redirectToSuccess();
+        }
+        else {
+          this.msgText = 'Redirecting to payment gateway. Please do not refresh or close the window.';
+          let EZdata = response['data']['data']['EasebuzzDetails'];
+          this.EASEBUZZPepayment(EZdata);
+          this.spinner.hide();
+        }
+        
       }
     });
   }

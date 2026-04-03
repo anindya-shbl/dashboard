@@ -178,4 +178,8 @@ export class OrderService {
     return this.http.post(postUrl, params);
   }
 
+  redirectToSuccess(){
+    let url = this.apiUrl + 'customercart/paynow_using_cfh';
+    window.open(url, '_self');
+  }
 }
