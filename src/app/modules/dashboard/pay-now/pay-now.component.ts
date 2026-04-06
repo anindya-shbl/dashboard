@@ -270,7 +270,7 @@ export class PayNowComponent implements OnInit {
     fd.append('OrderId', this.orderDetails[0].order_id);
     let endpoint = '';
     let cfhFlag = false;
-    if(this.useCardBalance && this.cardBalance.searched_beneficiary_remaining_balance > 0 && this.cardBalance.searched_beneficiary_remaining_balance >= this.totalPayableAmount){
+    if(this.useCardBalance && this.cardBalance.searched_beneficiary_remaining_balance > 0 && this.cardBalance.searched_beneficiary_remaining_balance < this.totalPayableAmount){
       // payment fully through card balance
       endpoint = 'webapi/cartapp/paynow_via_cfh';
       cfhFlag = true;
@@ -288,7 +288,16 @@ export class PayNowComponent implements OnInit {
         if(cfhFlag){
           this.msgText = 'Your payment is being processed through your Health Buddy Card balance. Please do not refresh or close the window.';
           this.spinner.hide();
-          this.orderService.redirectToSuccess();
+          
+          let orderInfoResponse = {
+            'orderDetails': this.orderDetails,
+            'paymentResponse': response['data']
+          };
+          fd.append('orderInfoResponse', JSON.stringify(orderInfoResponse));
+          this.orderService.cfhPayment('customercart/paynow_using_cfh', fd).subscribe((res: any) => {
+            console.log('CFH payment response', res);
+            this.orderService.redirectToSuccess();
+          })
         }
         else {
           this.msgText = 'Redirecting to payment gateway. Please do not refresh or close the window.';
@@ -306,6 +315,8 @@ export class PayNowComponent implements OnInit {
     let url = data.PayUrl;
     window.open(url, '_self');
   }
+
+  
 
   
   getBalance() {

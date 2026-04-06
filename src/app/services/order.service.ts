@@ -179,7 +179,12 @@ export class OrderService {
   }
 
   redirectToSuccess(){
-    let url = this.apiUrl + 'customercart/paynow_using_cfh';
+    let url = this.apiUrl + 'customercart/paynow_order_success';
     window.open(url, '_self');
+  }
+
+  cfhPayment(url: any, params: any) {
+    let postUrl = this.apiUrl + url;
+    return this.http.post(postUrl, params);
   }
 }
