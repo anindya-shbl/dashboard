@@ -115,7 +115,7 @@
                 </div>
 
                 <div class="address-List-Block" *ngIf="onlyViaCfh == true">
-                    <label class="address-List-item">
+                    <!-- <label class="address-List-item">
                         <div class="ListFlex">
                                 <div class="pay-img">
                                     <img src="" alt="CFH">
@@ -126,7 +126,27 @@
                                     &nbsp;Order</button>
                             </div>
                             <div class="checkBG"></div>
-                    </label>
+                    </label> -->
+                    <label class="address-List-item">
+                            <input type="radio" name="PayOption" id="PayOption" value="CFH" checked>
+                            <span class="chrckBlock"></span>
+
+                            <div class="ListFlex">
+                                <div class="pay-img">
+                                    <!-- <img src="https://asset.sastasundar.com/incom/PaymentgatewayImages/web/{{'CFH.png'}}"
+                                        alt="CFH"> -->
+                                        <i class="fa-solid fa-gift" style="font-size: 35px;color: #ff6363; padding-top: 10px;"></i>
+                                </div>
+
+                                <div class="fw-5">
+                                    <!-- CFH  -->
+                                    <span class="priceValue"> ₹{{totalPayableAmount}}</span>
+                                </div>
+                                <button type="button" class="proceed" (click)="placeOrder([])">Place
+                                    &nbsp;Order</button>
+                            </div>
+                            <div class="checkBG"></div>
+                        </label>
                 </div>
 
                 <div class="address-List-Block" *ngIf="onlyViaCfh == false">

@@ -407,48 +407,13 @@ export class PayNowComponent implements OnInit {
     console.log('endpoint',endpoint)
     this.paynowService.getGatewayInfo(endpoint, fd).subscribe((response: any) => {
       // console.log(response);
-      // response = {
-      //   "status": 200,
-      //   "data": {
-      //     "status": 1,
-      //     "message": "api successfully call",
-      //     "data": {
-      //       "EasebuzzDetails": {
-      //         "status": 1,
-      //         "data": "c06eea86b5e3a0734b18cc09a8bd5f5602bb4efc7d907c0c17060f78a30c3938",
-      //         "PayUrl": "https://testpay.easebuzz.in/pay/c06eea86b5e3a0734b18cc09a8bd5f5602bb4efc7d907c0c17060f78a30c3938",
-      //         "CallbackUrl": "https://stage.sastasundar.com/payment_return/paynow_easebuzz_callback"
-      //       },
-      //       "PayGatewayTransacNo": "686A5813-AD1E-49E8-9177-C17550F2EED0",
-      //       "PaymentMethod": "EASEBUZZ"
-      //     }
-      //   },
-      //   "message": "Success"
-      // };
-      // console.log(response['data']['data']['EasebuzzDetails']['PayUrl']);
-      response = {
-          "status": 200,
-          "data": {
-              "redeemtion_amount": 76,
-              "gift_card_trans_id": "83AA1C59-DF71-4B8D-A93D-441808F81235"
-          },
-          "message": "Gift card redeemed successfully"
-      };
       cfhFlag = true;
       if (response && response['status'] == 200) {
         if(cfhFlag){
           this.msgText = 'Your payment is being processed through your Health Buddy Card balance. Please do not refresh or close the window.';
           this.spinner.hide();
-          
-          let orderInfoResponse = {
-            'orderDetails': this.orderDetails,
-            'paymentResponse': response['data']
-          };
-          fd.append('orderInfoResponse', JSON.stringify(orderInfoResponse));
-          this.orderService.cfhPayment('customercart/paynow_using_cfh', fd).subscribe((res: any) => {
-            console.log('CFH payment response', res);
-            this.orderService.redirectToSuccess();
-          })
+          this.CFHPayPayment(response);
+          this.spinner.hide();
         }
         else {
           this.msgText = 'Redirecting to payment gateway. Please do not refresh or close the window.';
@@ -460,7 +425,19 @@ export class PayNowComponent implements OnInit {
       }
     });
   }
-
+  CFHPayPayment(res: any) {
+    // console.log(res);
+    let fd = new FormData();
+    let orderInfoResponse = {
+      'orderDetails': this.orderDetails,
+      'paymentResponse': res['data']
+    };
+    fd.append('orderInfoResponse', JSON.stringify(orderInfoResponse));
+    this.orderService.cfhPayment('customercart/paynow_using_cfh', fd).subscribe((res: any) => {
+      console.log('CFH payment response', res);
+      this.orderService.redirectToSuccess();
+    })
+  }
   EASEBUZZPepayment(data: any) {
     // console.log(data);
     let url = data.PayUrl;
