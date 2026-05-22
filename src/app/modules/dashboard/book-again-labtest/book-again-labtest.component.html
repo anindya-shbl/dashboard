@@ -34,8 +34,9 @@
                     </div>
                     <div class="col-md-3">
                         <div class="mb-1 fs-4 light-text">
-                            <ng-container *ngIf="item.IsHomeCollectionAvailable">Home Collection Available</ng-container>
-                            <ng-container *ngIf="!item.IsHomeCollectionAvailable">Lab Visit Only</ng-container>
+                            Lab Visit<ng-container *ngIf="!item.IsHomeCollection"> Only</ng-container>
+                            <ng-container *ngIf="item.IsHomeCollection"> & Home Collection Available</ng-container>
+                           
                         </div>
                     </div>
                     <div class="col-md-3">
