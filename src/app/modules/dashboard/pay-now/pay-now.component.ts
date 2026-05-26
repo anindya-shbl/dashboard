@@ -280,6 +280,8 @@ export class PayNowComponent implements OnInit {
     }
     console.log('endpoint',endpoint)
     this.paynowService.getGatewayInfo(endpoint, fd).subscribe((response: any) => {
+      // console.log(response);
+      cfhFlag = true;
       if (response && response['status'] == 200) {
         if(cfhFlag){
           this.msgText = 'Your payment is being processed through your Health Buddy Card balance. Please do not refresh or close the window.';
@@ -293,6 +295,7 @@ export class PayNowComponent implements OnInit {
           this.EASEBUZZPepayment(EZdata);
           this.spinner.hide();
         }
+        
       }
     });
   }
@@ -352,5 +355,63 @@ useCardToggle(){
     console.log(this.useCardBalance);
     console.log(this.onlyViaCfh);
 }
+
+
+  // getTransationList() {
+  //   // this.isloading = true;
+  //   // this.spinner.show();
+  //   let MobileNo = this.authService.Mobile;
+  //   this.orderService.getDetails(`webapi/cfh/trans_history?search=${MobileNo}&per_page=${this.pageSize}&page=${this.pageNo}`).subscribe((res: any) => {
+  //   if (res && res.status == 1) {
+  //     this.transationData = res.data;
+  //     if (res.data && res.data.data.length > 0) {
+  //       this.trnsHistory = [...this.trnsHistory, ...res.data.data];
+  //       if (this.pageNo < res.data.total_pages) {
+  //         this.loadMoreBtn = true;
+  //       } else {
+  //         this.loadMoreBtn = false;
+  //       }
+  //       this.isloading = false;
+  //       this.spinner.hide();
+  //     } else {
+  //       this.isloading = false;
+  //       this.spinner.hide();
+  //     }
+  //   } else {
+  //     this.isloading = false;
+  //     this.spinner.hide();
+  //   }
+  //   })
+  // }
+
+  // moreTransation() {
+  //   this.pageNo += 1;
+  //   this.isloading = true;
+  //   this.spinner.show();
+  //   this.getTransationList();
+  // }
+
+  // addCard() {
+  //   this.submitted = true;
+  //   if (this.AddCardForm.invalid) {
+  //     return;
+  //   } else {
+  //     let data = this.AddCardForm.value.code;
+  //     this.spinner.show();
+  //     this.orderService.getDetails(`webapi/cfh/assign_healthcard?HealthCardCode=${data}`).subscribe((res: any) => {
+  //       if (res && res.status == 1) {
+  //         this.toastr.success('Health Card Added Successfully');
+  //         this.AddCardForm.reset();
+  //         this.submitted = false;
+  //         this.getBalance();
+  //         // this.getTransationList();
+  //       } else {
+  //         this.spinner.hide();
+  //         this.toastr.error(res.data || 'Something went wrong');
+  //       }
+  //     })
+  //   }
+  // }
+
 
 }

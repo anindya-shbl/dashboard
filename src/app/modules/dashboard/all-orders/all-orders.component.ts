@@ -92,7 +92,7 @@ export class AllOrdersComponent implements OnInit {
     this.orderService.getAllOrders('webapi/order/myOrderList', fd).subscribe((res: any) => {
       let data = Object.values(res['data']);
       if(data.length >0){
-        
+        console.log("data>"+(res['data']));
         data.forEach((elm: any) =>{
           elm.OrderLists.forEach((order: any) => {
             // this.respOrders.push(order);
@@ -149,7 +149,7 @@ export class AllOrdersComponent implements OnInit {
 
   getServeiceDetails(){
     this.orderService.openServiceRequest('webapi/order/getFeedbackOptions').subscribe((res: any) => {
-      if(res['data'] != undefined){
+      if((res['data']['ServiceCategory'] != undefined) && (res['data']['ServiceCategory'] != null)){
         this.serviceDetails = res['data']['ServiceCategory']['record'];
         // console.log('srreq', this.serviceDetails);
       }
@@ -563,6 +563,11 @@ export class AllOrdersComponent implements OnInit {
       }
       // console.log('ttt', this.reorderItems);
     });
+  }
+
+  getPGlistForCOD(id: any){
+    let orderId = btoa(id)
+    this.router.navigate(['customers/dashboard/paynow', orderId]);
   }
 
   checkuncheck(dts: any){

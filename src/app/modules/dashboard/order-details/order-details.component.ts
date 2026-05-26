@@ -55,7 +55,7 @@ export class OrderDetailsComponent implements OnInit {
     console.log(param);
     this.orderService.getOrderDetailById('webapi/order/viewOrder', param).subscribe((res: any) => {
       // this.orderDetails = res;
-      // console.log(res);
+      console.log(res);
       if(res && res['response_code'] == 0){
         this.orderDetails = res['data']['OrderHeaders'];
         this.orderItems = res['data']['OrderItems'];

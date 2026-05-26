@@ -10,6 +10,7 @@ import { HealthFeedsComponent } from './health-feeds/health-feeds.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ArticleHomeComponent } from './article-home/article-home.component';
 import { TrendingSliderComponent } from './trending-slider/trending-slider.component';
+import { LatestSliderComponent } from './latest-slider/latest-slider.component';
 import { CarouselModule } from 'ngx-owl-carousel-o';
 import { RelatedArticlesComponent } from './related-articles/related-articles.component';
 import { HealthTopicsComponent } from './health-topics/health-topics.component';
@@ -28,6 +29,7 @@ import { TabListsComponent } from './tab-lists/tab-lists.component';
     HealthFeedsComponent,
     ArticleHomeComponent,
     TrendingSliderComponent,
+    LatestSliderComponent,
     RelatedArticlesComponent,
     HealthTopicsComponent,
     CategoryWiseArticlesComponent,
