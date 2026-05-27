@@ -73,7 +73,6 @@ export class PayNowComponent implements OnInit {
     this.spinner.show();
     this.isloading = true;
     this.orderService.getOrderDetailById('webapi/order/viewOrder', param).subscribe((res: any) => {
-      res = {"data":{"ShortInfo":{"heading":"Delivery by 29 March 2026","desc":"","colorStatus":"GREEN","color":"#039855","bgColor":"#EBFFF6","cancelButton":{"isVisible":true,"heading":"Cancel Order","desc":""},"returnButton":{"isVisible":false,"heading":"","desc":""}},"OrderHeaders":{"OrderId":101002485326,"OrderDate":"2026-03-27 15:15:20.140","InvoiceId":null,"FullName":"test HB","PatientName":"Anindya","ItemDiscount":9,"OrderAmount":60,"ShippingCharge":0,"CourierCharge":0,"OrderBillAmount":51,"RoundOfSign":"-","RoundOfVal":0.58,"EwalletVal":0,"DueAmount":51,"TypeofPayment":"COD","PaymentMode":"","Addline":"Innovation Tower","City":"Kolkata","StateName":"West Bengal","PinCode":700156,"PromoId":null,"PromoCode":null,"PromoDesc":null,"ApplicationType":" ","OrderType":"P","OrderStatusId":1,"CouponPromoId":null,"CouponPromoCode":null,"CouponPromoDesc":null,"PromoDiscount":0,"CouponDiscount":0,"InvoiceNo":"Not Assigned","IsCourierOrder":0,"DocketNo":"","CompanyName":"","CustOrderStatusDesc":"Pending Order Confirmation","PaidAmount":null,"IsSalesReturnActive":0,"IsEdited":0,"EditComment":"","PayStatusDesc":"","PGTitle":null,"IsRefundInitiated":0,"RefundAmount":null,"RefundInitiatedDate":null,"SalesReturnStatusId":null,"SalesReturnStatusDesc":null,"ReturnUpdatedDate":null,"IsCancel":"Y","SellerMasId":null,"DeliveryDate":"2026-03-29 15:15:19.000","SubscriptionId":null,"SubscriptionDiscount":null,"NickName":"Anindya Bhattacharya","CustContactNo":null,"Landmark":"","ServiceArea":null,"WarehouseId":1,"IsOutStation":1,"IsPrescriptionUploaded":1,"HBId":11010,"ContactNo":"0332356025844,03325905856\/58,","HBAddLine":"HNBVKOYDXI","HBCity":"Baruipur","HBStateName":"West Bengal","HBPinCode":700144,"ConvienceFee":0.58,"SmallOrderFee":0,"AWBNo":null,"TrackingLink":null,"OnlinePaid":null,"ScheduleDeliveryDate":"2026-03-29 15:15:19.000","GiftCardValue":null,"IsTrackReturnAvailable":0,"GigtCardValue":null,"IsOrderTrackAvailable":1,"IsRatingReviewEnabled":0,"IsReorderActive":0,"InvoiceURL":"","PaymentModeOld":"","TypeofPaymentOld":"COD","0":"","DeliveryMsg":"","RefundMessage":""},"OrderItems":[{"ProductId":11723,"DisplayName":"Mext F 7.5 mg Tab (28 Tab)","MRP":60,"ProductImage":"MEXT-F-1408541348-10011683.jpg","PromoId":null,"PromoCode":null,"PromoDesc":null,"SSCurrencyValue":0,"OrderItemVal":51,"OfferPrice":51,"CustomProductName":"","Rating":0,"ProductName":"Mext F","CouponPromoId":null,"CouponPromoCode":null,"CouponPromoDesc":null,"IsCustomizeProduct":0,"XplorPoint":0,"XplorPointVal":0,"PrescriptionOTC":"P","InteractiveModule":"PetCare","InteractiveHealthProfileId":null,"MfgGroup":"WALLACE PHARMACEUTRICALS PVT LTD","SaltName":"FOLIC ACID + COMBINATIONS","EncodeProdId":"4bkzb8","IsGiftableProduct":null,"DosageForm":"Tablet","SellerMasId":null,"ItemQuantity":1,"ItemDiscount":9,"ProductImageURL":"https:\/\/asset.sastasundar.com\/incom\/images\/product\/thumb\/MEXT-F-1408541348-10011683.jpg"}],"trackDetails":[{"OrderStatusHistoryId":10955641,"OrderStatusId":1,"OrderStatusDesc":"Pending Approval by HB","Comments":null,"UpdatedBy":588795,"UpdatedByName":"\"Anindya\"","UpdatedDate":"2026-03-27 15:15:20.140","UserType":"C","0":"","4":""}],"returnUrl":"","OriginalItems":[],"order_track_details":[{"DisplaySequence":1,"StatusType":"Order Placed","orderProcessStatus":1,"lastActiveStatus":1,"orderProcessCancelStatus":0,"UpdatedDate":"27 March, 03:15 PM","StatusMessage":""},{"DisplaySequence":2,"StatusType":"Order Confirmed","orderProcessStatus":0,"lastActiveStatus":0,"orderProcessCancelStatus":0,"UpdatedDate":"","StatusMessage":""},{"DisplaySequence":4,"StatusType":"Order Shipped","orderProcessStatus":0,"lastActiveStatus":0,"orderProcessCancelStatus":0,"UpdatedDate":"","StatusMessage":""},{"DisplaySequence":5,"StatusType":"Order Delivered","orderProcessStatus":0,"lastActiveStatus":0,"orderProcessCancelStatus":0,"UpdatedDate":"","StatusMessage":""}],"RefundHygiene":[]},"message":"success","response_code":"0"};
       // this.orderDetails = res;
       // console.log(res);
       if(res && res['response_code'] == 0){
@@ -122,131 +121,6 @@ export class PayNowComponent implements OnInit {
     this.paynowService.getPgListById('webapi/cartapp/paynow_pg_list', param).subscribe((res: any) => {
       // console.log(res);
       this.spinner.hide();
-      res = {
-        "status": 200,
-        "data": {
-          "orderDetails": [
-            {
-              "order_id": 101002485458,
-              "order_items": [
-                "Cal 360 Tab (10 Tab)",
-                "Pan 20 mg Tab (15 Tab)"
-              ],
-              "total_count": 2,
-              "total_amount": 260
-            },
-            {
-              "order_id": 101002485459,
-              "order_items": [
-                "AB Flo SR Tab (10 Tab)"
-              ],
-              "total_count": 1,
-              "total_amount": 346
-            }
-          ],
-          "totalPayableAmount": 606,
-          "pgList": [
-            {
-              "Title": "UPI",
-              "Key": "EASEBUZZ",
-              "Image": "UPI.png",
-              "PgType": "UPI",
-              "Desc": "NULL",
-              "IsDefault": 1,
-              "DisplaySeq": 6,
-              "LongDesc": null,
-              "LongImage": null,
-              "GateWayPayMode": null
-            },
-            {
-              "Title": "Net Banking",
-              "Key": "EASEBUZZ",
-              "Image": "netbanking.png",
-              "PgType": "NB",
-              "Desc": "NULL",
-              "IsDefault": 1,
-              "DisplaySeq": 7,
-              "LongDesc": null,
-              "LongImage": null,
-              "GateWayPayMode": null
-            },
-            {
-              "Title": "Credit Card",
-              "Key": "EASEBUZZ",
-              "Image": "creditcard.png",
-              "PgType": "CC",
-              "Desc": "NULL",
-              "IsDefault": 1,
-              "DisplaySeq": 8,
-              "LongDesc": null,
-              "LongImage": null,
-              "GateWayPayMode": null
-            },
-            {
-              "Title": "Debit Card",
-              "Key": "EASEBUZZ",
-              "Image": "debitcard.png",
-              "PgType": "DC",
-              "Desc": "NULL",
-              "IsDefault": 1,
-              "DisplaySeq": 9,
-              "LongDesc": null,
-              "LongImage": null,
-              "GateWayPayMode": null
-            },
-            {
-              "Title": "EMI",
-              "Key": "EASEBUZZ",
-              "Image": "emi.png",
-              "PgType": "EMI",
-              "Desc": "NULL",
-              "IsDefault": 1,
-              "DisplaySeq": 9,
-              "LongDesc": null,
-              "LongImage": null,
-              "GateWayPayMode": null
-            },
-            {
-              "Title": "Wallet",
-              "Key": "EASEBUZZ",
-              "Image": "wallet.png",
-              "PgType": "MW",
-              "Desc": "NULL",
-              "IsDefault": 1,
-              "DisplaySeq": 9,
-              "LongDesc": null,
-              "LongImage": null,
-              "GateWayPayMode": null
-            },
-            {
-              "Title": "UPI / Net Banking / Credit Card / Debit Card",
-              "Key": "PHONEPE",
-              "Image": "razorpay_web.png",
-              "PgType": "PG",
-              "Desc": "NULL",
-              "IsDefault": 1,
-              "DisplaySeq": 10,
-              "LongDesc": "NULL",
-              "LongImage": "NULL",
-              "GateWayPayMode": "NULL"
-            },
-            {
-              "Title": "UPI / Net Banking / Credit Card / Debit Card",
-              "Key": "RAZORPAY",
-              "Image": "razorpay_web.png",
-              "PgType": "PG",
-              "Desc": "NULL",
-              "IsDefault": 1,
-              "DisplaySeq": 10,
-              "LongDesc": "NULL",
-              "LongImage": "NULL",
-              "GateWayPayMode": "NULL"
-            }
-          ]
-        },
-        "message": "Success"
-      };
-      console.log(res);
       this.orderDetails = res['data']['orderDetails'];
       this.paymentGateways = res['data']['pgList'];
       this.totalPayableAmount = res['data']['totalPayableAmount'];
@@ -255,8 +129,8 @@ export class PayNowComponent implements OnInit {
         count += od.total_count;
       }
       this.totalItemsOrdered = count;
-      console.log(this.paymentGateways);
-      console.log("order details", this.orderDetails);
+      // console.log(this.paymentGateways);
+      // console.log("order details", this.orderDetails);
     })
   }
 
