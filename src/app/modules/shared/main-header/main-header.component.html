@@ -7,11 +7,6 @@
 </div>
 
 <ng-container *ngIf="authService.currentModule != 'OrderOnline' && authService.currentModule != 'Article'">
-    <div class="searchArea relative">
-        <div style="width: 100%; max-width: 700px;">
-            <app-header-search (newItemEvent)="count()"></app-header-search>
-        </div>
-    </div>
 
     <div>
         <div *ngIf="authService.LocationSkipped == 0 && authService.PinCode != ''" class="text-nowrap deliverySec">
@@ -22,6 +17,12 @@
             <small>Service Pincode</small>
             <strong data-bs-toggle="modal" data-bs-target="#piChangeModal">Select Pincode <i class="icon-angle-down"></i></strong>
             <div class="padmar0" style="font-size: 12px; color: #1d2939; font-weight: 400; white-space: nowrap;"></div>
+        </div>
+    </div>
+
+    <div class="searchArea relative">
+        <div style="width: 100%; max-width: 700px;">
+            <app-header-search (newItemEvent)="count()"></app-header-search>
         </div>
     </div>
 </ng-container>
