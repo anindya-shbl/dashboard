@@ -71,6 +71,7 @@
                                 (click)="CommonService.getProductDetailsPageURL(product[ProductId], product[productIndex], product[PrescriptionOTC])">
                                 <div class="d-flex">
                                     <div class="imglistblock" style="display: block;height: auto;width: 80px;">
+                                        <div class="RxTag"><i class="icon-Rx"></i></div>
                                         <ng-container
                                             *ngIf="product[ProductImage] != '' && product[ProductImage] != null">
                                             <img src="https://asset.sastasundar.com/incom/images/product/thumb/{{product[ProductImage]}}"
