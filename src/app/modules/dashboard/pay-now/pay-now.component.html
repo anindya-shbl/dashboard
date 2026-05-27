@@ -142,8 +142,8 @@
                                     <!-- CFH  -->
                                     <span class="priceValue"> ₹{{totalPayableAmount}}</span>
                                 </div>
-                                <button type="button" class="proceed" (click)="placeOrder([])">Place
-                                    &nbsp;Order</button>
+                                <button type="button" class="proceed" (click)="placeOrder([])">Pay
+                                    &nbsp;Now</button>
                             </div>
                             <div class="checkBG"></div>
                         </label>
@@ -157,14 +157,14 @@
 
                             <div class="ListFlex">
                                 <div class="pay-img">
-                                    <img src="https://asset.sastasundar.com/incom/PaymentgatewayImages/web/{{pg.Image}}"
+                                    <img src="{{pg.Image}}"
                                         alt="">
                                 </div>
 
                                 <div class="fw-5">{{pg.Title}} <span class="priceValue"> ₹{{totalPayableAmount}}</span>
                                 </div>
-                                <button type="button" class="proceed" (click)="placeOrder(pg)">Place
-                                    &nbsp;Order</button>
+                                <button type="button" class="proceed" (click)="placeOrder(pg)">Pay
+                                    &nbsp;Now</button>
                             </div>
                             <div class="checkBG"></div>
                         </label>

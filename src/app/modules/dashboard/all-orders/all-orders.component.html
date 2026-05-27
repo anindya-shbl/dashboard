@@ -74,11 +74,9 @@
     
                         </div>
                         <div class="right">
+                            <button type="button" *ngIf="order.IsPaynow" (click)="getPGlistForCOD(order.OrderId)" class="btn btn-outline-success btn-sm fw-5 my-2 py-2 ng-star-inserted" style="min-width: 100%;">Pay Now</button>
                             <ul>
                                 <li *ngIf="order.IsReorder == 'Y'" (click)="getReOrders(order.OrderId)">Re Order</li>
-                                <!-- <li *ngIf="order.IsPaynow" (click)="getPGlistForCOD(order.OrderId)" class="btn btn-outline-success btn-sm fw-5 mx-1 my-2" type="button" style="min-width: 146px;">Paynow</li> -->
-                                <li *ngIf="order.IsPaynow" (click)="getPGlistForCOD(order.OrderId)" type="button" style="border-color: #198754;color: #198754;">Pay Now</li>
-                                <!-- <li *ngIf="order.IsReorder == 'Y'" (click)="setReorder(order)">Re Order</li> -->
                                 <li (click)="viewOrderDetails(order.OrderId)">View Details</li>
                                 <li data-bs-toggle="modal" data-bs-target="#SRModal" (click)="ServiceRequest(order)">Raise Service Request</li>
                                 <li (click)="viewSRstatus(order.OrderId)">Service Request Status</li>
