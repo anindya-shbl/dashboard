@@ -10,14 +10,14 @@ export class CommonService {
 
   // ===============  Live ==========
 
-  // public baseurl = 'https://sastasundar.com/';
-  // public apiUrl = 'https://sastasundar.com/index.php/';
-  // public searchUrl = 'https://search.sastasundar.com/search_list/?';
-  // public searchTab = 'https://search.sastasundar.com/searchv2/?';
-  // public labsearch = 'https://search.sastasundar.com/service/search/?';
-  // public ImageUrl = 'https://asset.sastasundar.com/';
-  // public catalogUrl = 'https://serv-catalog.sastasundar.com/';
-  // public searchBaseUrl = 'https://search.sastasundar.com/';
+  public baseurl = 'https://sastasundar.com/';
+  public apiUrl = 'https://sastasundar.com/index.php/';
+  public searchUrl = 'https://search.sastasundar.com/search_list/?';
+  public searchTab = 'https://search.sastasundar.com/searchv2/?';
+  public labsearch = 'https://search.sastasundar.com/service/search/?';
+  public ImageUrl = 'https://asset.sastasundar.com/';
+  public catalogUrl = 'https://serv-catalog.sastasundar.com/';
+  public searchBaseUrl = 'https://search.sastasundar.com/';
 
 
   // ================ stage ==============
@@ -31,14 +31,14 @@ export class CommonService {
   // public searchBaseUrl = 'https://stage-search.sastasundar.com/';
 
   // ================= Local =============
-  public baseurl = 'http://192.168.5.236:8081/sspl_com/';
-  public apiUrl = 'http://192.168.5.236:8081/sspl_com/index.php/';
-  public searchUrl = 'http://192.168.5.192:4200/search_list/?';
-  public searchTab = 'http://192.168.5.192:4200/searchv2/?';
-  public labsearch = 'http://192.168.5.192:4200/service/search/?';
-  public ImageUrl = 'https://res.sastasundar.com/';
-  public catalogUrl = 'http://192.168.5.236:8003/';
-  public searchBaseUrl = 'http://192.168.5.192:4200/';
+  // public baseurl = 'http://192.168.5.236:8081/sspl_com/';
+  // public apiUrl = 'http://192.168.5.236:8081/sspl_com/index.php/';
+  // public searchUrl = 'http://192.168.5.192:4200/search_list/?';
+  // public searchTab = 'http://192.168.5.192:4200/searchv2/?';
+  // public labsearch = 'http://192.168.5.192:4200/service/search/?';
+  // public ImageUrl = 'https://res.sastasundar.com/';
+  // public catalogUrl = 'http://192.168.5.236:8003/';
+  // public searchBaseUrl = 'http://192.168.5.192:4200/';
 
   private subject: any = new Subject<any>();
 
