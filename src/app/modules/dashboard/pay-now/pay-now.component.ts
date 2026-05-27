@@ -407,7 +407,7 @@ export class PayNowComponent implements OnInit {
     console.log('endpoint',endpoint)
     this.paynowService.getGatewayInfo(endpoint, fd).subscribe((response: any) => {
       // console.log(response);
-      cfhFlag = true;
+      // cfhFlag = true;
       if (response && response['status'] == 200) {
         if(cfhFlag){
           this.msgText = 'Your payment is being processed through your Health Buddy Card balance. Please do not refresh or close the window.';
