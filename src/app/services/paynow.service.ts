@@ -26,8 +26,8 @@ export class PayNowService {
   constructor(private http: HttpClient, private cookieService: CookieService) {}
 
   private getHeaders(): HttpHeaders {
-    // const authToken = localStorage.getItem(this.authSecretKey);
-    const authToken = 12345;
+    const authToken = localStorage.getItem(this.authSecretKey);
+    // const authToken = 12345;
     return new HttpHeaders({
       'Content-Type': 'application/json',
       Authorization: `Bearer ${authToken}`,

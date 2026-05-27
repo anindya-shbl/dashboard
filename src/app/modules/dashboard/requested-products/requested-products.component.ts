@@ -76,7 +76,6 @@ export class RequestedProductsComponent implements OnInit {
 
     this.orderService.getRequestedProducts('webapi/request_product/getProductRequestList', fd).subscribe((res: any) => {
       // console.log(res);
-      res = {"result":{"rs":{"feedbackList":{"status":2000,"message":"ok","data":{"Response":{"Lists":[{"ProductId":212284,"ProductName":"Flamingo Knee Stabilizer XL","ProductType":"O","ProductImage":"Flamingo-Knee-Stabilizer-1572600430-10041289-1.jpg","RequestedDate":"2026-05-12 18:31:51.630","AvailableDate":null,"ExpectedDate":null,"RequestedQuantity":1,"TotalUserRequestCount":1,"ProductRequestStatus":"","LastStatusUpdatedDate":"","ProductRequestId":84774014,"ProductRequestStatusMasId":10,"AdminComments":[],"Comment":"Request Received"}],"TotalRecords":10000},"pageNumber":1,"recordPerPage":15}}}}};
       if (res && res['result']['rs']['feedbackList']['status'] == 2000) {
         let tempList = res['result']['rs']['feedbackList']['data']['Response']['Lists'];
         this.totalRequested = res['result']['rs']['feedbackList']['data']['Response']['TotalRecords'];
