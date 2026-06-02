@@ -84,22 +84,10 @@
 
             <!-- Payment-Process -->
             <div class="pt-3">
-                <div class="border rounded item-shadow p-3 mb-3" *ngIf="showCFHBlock">
+                <!-- <div class="border rounded item-shadow p-3 mb-3" *ngIf="showCFHBlock">
                     <div class="d-flex justify-content-between mb-2">
                         <div class="AddCFH">CFH Health Card</div>
                     </div>
-                    <!-- <div class="mb-3">  
-                        <form [formGroup]="AddCardForm" (ngSubmit)="addCard()" class="ng-pristine">
-                            <div class="position-relative w-100">
-                                <input type="text" id="code" formcontrolname="code" placeholder="Enter Health Card Code"
-                                    class="form-control radius6 hgt-50">
-                                <button type="submit" class="applybtn position-absolute border-0">Add Card</button>
-                            </div>
-                            <div *ngIf="cfhsubmit && cfh['code'].errors" class="text-danger fs-3 mt-2">
-                                <div *ngIf="cfh['code'].errors['required']">* Please enter card code</div>
-                            </div>
-                        </form>
-                    </div> -->
                     <div class="d-flex justify-content-between rounded p-3 align-items-center radius6"
                         style="background-color: #e3fbf0;">
                         <div>
@@ -112,34 +100,21 @@
                             <span class="sliderButton"></span>
                         </label>
                     </div>
-                </div>
+                </div> -->
 
-                <div class="address-List-Block" *ngIf="onlyViaCfh == true">
-                    <!-- <label class="address-List-item">
-                        <div class="ListFlex">
-                                <div class="pay-img">
-                                    <img src="" alt="CFH">
-                                </div>
-                                <div class="fw-5">CFH <span class="priceValue"> ₹{{totalPayableAmount}}</span>
-                                </div>
-                                <button type="button" class="proceed" (click)="placeOrder([])">Place
-                                    &nbsp;Order</button>
-                            </div>
-                            <div class="checkBG"></div>
-                    </label> -->
+                <!-- <div class="address-List-Block" *ngIf="onlyViaCfh">
                     <label class="address-List-item">
                             <input type="radio" name="PayOption" id="PayOption" value="CFH" checked>
                             <span class="chrckBlock"></span>
 
                             <div class="ListFlex">
                                 <div class="pay-img">
-                                    <!-- <img src="https://asset.sastasundar.com/incom/PaymentgatewayImages/web/{{'CFH.png'}}"
-                                        alt="CFH"> -->
+                                    <img src="https://asset.sastasundar.com/incom/PaymentgatewayImages/web/{{'CFH.png'}}"
+                                        alt="CFH">
                                         <i class="fa-solid fa-gift" style="font-size: 35px;color: #ff6363; padding-top: 10px;"></i>
                                 </div>
 
                                 <div class="fw-5">
-                                    <!-- CFH  -->
                                     <span class="priceValue"> ₹{{totalPayableAmount}}</span>
                                 </div>
                                 <button type="button" class="proceed" (click)="placeOrder([])">Pay
@@ -147,9 +122,10 @@
                             </div>
                             <div class="checkBG"></div>
                         </label>
-                </div>
+                </div> -->
 
-                <div class="address-List-Block" *ngIf="onlyViaCfh == false">
+                <!-- <div class="address-List-Block" *ngIf="!onlyViaCfh"> -->
+                <div class="address-List-Block">
                     <ng-container *ngFor="let pg of paymentGateways" >
                         <label class="address-List-item">
                             <input type="radio" name="PayOption" id="PayOption" value="{{pg.PgType}}">
