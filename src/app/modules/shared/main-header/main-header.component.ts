@@ -117,15 +117,15 @@ export class MainHeaderComponent implements OnInit {
 
   logOut(){
     // this.router.navigate(['CustomarCart/ViewCart']);
-    this.dbService.clear('cartItems').subscribe((res: any) => {
-      if(res==true){
+    // this.dbService.clear('cartItems').subscribe((res: any) => {
+    //   if(res==true){
         this.cookieService.delete('isLoggedIn');
         this.isLoggedIn = 'false';
         this.UserName = '';
         this.PinCode = '';
         window.location.href=this.CommonService.baseurl+"index.php/user/logout";
-      }
-    })
+      // }
+    // })
   }
 
   setDetails(){
