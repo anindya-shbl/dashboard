@@ -2,7 +2,7 @@ import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 
 import { AppModule } from './app/app.module';
 
-// "deployUrl": "https://sastasundar.com/ngdashboard/V2_30/",
+// "deployUrl": "https://sastasundar.com/ngdashboard/V2_31/",
 // "deployUrl": "https://stage.sastasundar.com/ngdashboard/",
 
 
