@@ -14,7 +14,7 @@ export class ProfileService {
   // public apiUrl = 'https://stage.sastasundar.com/index.php/';
 
   // =============  Local  ==================
-  private apiUrl = 'http://192.168.5.236:8081/sspl_com/index.php/';
+  private apiUrl = 'http://192.168.5.236/sspl_com/index.php/';
 
   private authSecretKey = 'Bearer Token';
 

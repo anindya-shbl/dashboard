@@ -31,8 +31,8 @@ export class CommonService {
   // public searchBaseUrl = 'https://stage-search.sastasundar.com/';
 
   // ================= Local =============
-  public baseurl = 'http://192.168.5.236:8081/sspl_com/';
-  public apiUrl = 'http://192.168.5.236:8081/sspl_com/index.php/';
+  public baseurl = 'http://192.168.5.236/sspl_com/';
+  public apiUrl = 'http://192.168.5.236/sspl_com/index.php/';
   // public searchUrl = 'http://192.168.5.192:4200/search_list/?';
   // public searchTab = 'http://192.168.5.192:4200/searchv2/?';
   public labsearch = 'http://192.168.5.192:4200/service/search/?';
