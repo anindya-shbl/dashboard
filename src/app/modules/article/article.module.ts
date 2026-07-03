@@ -18,6 +18,7 @@ import { CategoryWiseArticlesComponent } from './category-wise-articles/category
 import { SharedModule } from '../shared/shared.module';
 import { ArticlePathComponent } from './article-path/article-path.component';
 import { TabListsComponent } from './tab-lists/tab-lists.component';
+import { MostViewedSliderComponent } from './most-viewed-slider/most-viewed-slider.component';
 
 
 @NgModule({
@@ -30,6 +31,7 @@ import { TabListsComponent } from './tab-lists/tab-lists.component';
     ArticleHomeComponent,
     TrendingSliderComponent,
     LatestSliderComponent,
+    MostViewedSliderComponent,
     RelatedArticlesComponent,
     HealthTopicsComponent,
     CategoryWiseArticlesComponent,
