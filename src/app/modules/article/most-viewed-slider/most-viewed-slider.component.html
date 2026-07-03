@@ -1,0 +1,50 @@
+<ng-container *ngIf="mostViewedArticlesData.length > 0">
+    <div class="fw-7 p-3 text-center" style="font-size: 22px;">
+        <span class="me-3" style="color: orangered;"><i class="fa-solid fa-arrow-trend-up"></i></span>
+        <span>Most Viewed Health Articles</span> 
+    </div>
+    <div class="p-2">
+        <owl-carousel-o [options]="customOptions">
+        <ng-container *ngFor="let latest of mostViewedArticlesData">
+            <ng-template carouselSlide [id]="latest.id">
+                <div class="p-2">
+                    <div class="border rounded bg-white position-relative">
+                        <div class="tag-containers">
+                            <div *ngFor="let cat of latest.Category" class="tag" [style.background-color]="cat.ColorCode">{{cat.Name}}</div>
+                        </div>
+                        <div (click)="viewArtical(latest.Permalink)" class="hvr">
+                            <div class="">
+                                <!-- <img [src]="latest.HomePageSmallBanner" alt="" class="img-fluid rounded-top"> -->
+                                <img [src]="latest.Thumbnail" alt="" class="img-fluid rounded-top">
+                            </div>
+                            <div class="p-3">
+                                <div class="mb-3 fs-5 fw-6 line-clamp-2" style="height: 44px;">{{latest.Title}}</div>
+                                <div class="d-flex justify-content-between align-items-center text-secondary">
+                                    <div class="fs-3">
+                                        <span class="pe-3">{{latest.UpdatedDate | date : "MMM yy"}}</span>
+                                    </div>
+                                    <div class="fs-3">
+                                        <span class="pe-3">
+                                            <span *ngIf="!latest.IsLiked" class=""><i class="fa-regular fa-heart"></i></span>
+                                            <span *ngIf="latest.IsLiked" class=""><i class="fa-solid fa-heart text-danger"></i></span>
+                                            {{latest.LikeCount}}
+                                        </span>
+                                        <span class="pe-3">
+                                            <span class="hvr"><i class="fa-regular fa-eye fs-7"></i></span>
+                                            {{latest.Viewcount}}
+                                        </span>
+                                        <span class="hvr">
+                                            <span *ngIf="!latest.IsBookmarked"><i class="fa-regular fa-bookmark"></i></span>
+                                            <span *ngIf="latest.IsBookmarked"><i class="fa-solid fa-bookmark text-success"></i></span>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </ng-template>
+        </ng-container>
+    </owl-carousel-o>
+    </div>
+</ng-container>
