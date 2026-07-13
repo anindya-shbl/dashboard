@@ -5,7 +5,9 @@
     <div class="article-heading mb-4">Personalise Your Health Feed</div>
     <div *ngIf="healthTopicList.length>0" class="trnd-grid mb-3">
         <ng-container *ngFor="let category of healthTopicList">
-            <div class="cat-item" [style.background-color]="category.ColorCode">
+
+            <!-- <div ngIf=category.DisplayCategoryImage class="cat-item" [style.background-color]="category.ColorCode"> -->
+            <div class="cat-item" [style.background-image]="'url('+category.CategoryImage+')'">
                 <div class="cat-name" (click)="viewDetails(category)">{{category.CategoryName}}</div>
                 <div class="f-btn">
                     <span *ngIf="!category.isFollowed" class="text-primary hvr" (click)="follow_Unfollow(category)">+ Follow</span>
