@@ -535,6 +535,9 @@ export class AllOrdersComponent implements OnInit {
     this.orderService.getReorderItems('webapi/order/get_order_items', fd).subscribe((res: any) => {
       // console.log(res)
       // debugger
+
+      res = {"result":{"rs":{"orderDetails":[{"ProductId":"254821","Quantity":"1.00","DisplayName":"Dapaone M 5 mg\/500 mg Tablet (10 Tab)","DosageAlert":0,"DosageRestriction":0,"CustomProductName":null,"CustomProductPackSize":null,"InteractiveHealthProfileId":null,"MRP":"87.09","DiscountPercent":"18.00","OrderId":"101003388223","OrderItemId":null,"OfferPrice":"71.41","Iscourierable":1,"ProductImage":"","IsGiftableProduct":0,"PrescriptionOTC":"P","IsShow":"Y","LastMRP":"87.09","ExpiryDate":"2027-04-30","Brand":"Dapaone M 5\/500","MfgGroup":"Msn Laboratories Private Limited","SaltName":"Dapagliflozin 5mg + Metformin 500mg","AvgRating":null,"TotalRating":null,"IsFoodProduct":0,"WarehouseId":1,"IsPanIndia":0},{"ProductId":"276116","Quantity":"1.00","DisplayName":"Tvs 10 mg Tablet (15 Tab)","DosageAlert":0,"DosageRestriction":0,"CustomProductName":null,"CustomProductPackSize":null,"InteractiveHealthProfileId":null,"MRP":"77.77","DiscountPercent":"18.00","OrderId":"101003388223","OrderItemId":null,"OfferPrice":"63.77","Iscourierable":1,"ProductImage":"Tvs-1668585861-10105501-1.jpg","IsGiftableProduct":0,"PrescriptionOTC":"P","IsShow":"Y","LastMRP":"77.77","ExpiryDate":"2027-12-31","Brand":"Tvs 10","MfgGroup":"Shine Pharmaceuticals Limited","SaltName":"Atorvastatin 10mg","AvgRating":null,"TotalRating":null,"IsFoodProduct":0,"WarehouseId":1,"IsPanIndia":0},{"ProductId":"328950","Quantity":"1.00","DisplayName":"Cilacar M 10\/50 Tablet (15 Tab)","DosageAlert":0,"DosageRestriction":0,"CustomProductName":null,"CustomProductPackSize":null,"InteractiveHealthProfileId":null,"MRP":"275.32","DiscountPercent":"18.00","OrderId":"101003388223","OrderItemId":null,"OfferPrice":"225.76","Iscourierable":1,"ProductImage":"Cilacar-M-1749619370-10158323-a.jpg","IsGiftableProduct":0,"PrescriptionOTC":"P","IsShow":"Y","LastMRP":"275.32","ExpiryDate":"2027-02-28","Brand":"","MfgGroup":"J.B. Chemicals & Pharmaceuticals Ltd.(M)","SaltName":"Cilnidipine 10mg + Metoprolol 50mg","AvgRating":null,"TotalRating":null,"IsFoodProduct":0,"WarehouseId":1,"IsPanIndia":0}]}},"status":200,"message":"Success"};
+
       if (res && res['message'] == 'Success') {
         // let data  = res['data']['OrderData'];
         let data = res['result']['rs']['orderDetails'];
@@ -627,11 +630,12 @@ export class AllOrdersComponent implements OnInit {
       }
   }
   checkoutCart_123(){
-    // console.log('checkout',this.reorderItems)
+    console.log('checkout',this.reorderItems)
     this.spinner.show();
-    this.dbService.clear('cartItems').subscribe((res: any) => {
-      // console.log(res);
-      if (res == true) {
+    // this.dbService.clear('cartItems').subscribe((res: any) => {
+          // console.log(res);
+    this.dbService.clear('cartItems').subscribe(() => {
+      // if (res == true) {
         this.reorderItems.forEach((productObj: any)=>{
           if(productObj.selected == true){
             let productId = productObj.ProductId;
@@ -676,10 +680,10 @@ export class AllOrdersComponent implements OnInit {
         let d: Date = new Date();
         this.cookieService.set('cartsynch', '0', d.getTime() + 86400 * 30, '/');
         window.location.href=this.commonService.baseurl +"customercart";
-      }else{
-        this.spinner.hide();
-        alert('something went wrong')
-      }
+      // }else{
+      //   this.spinner.hide();
+      //   alert('something went wrong')
+      // }
     })
   }
 
