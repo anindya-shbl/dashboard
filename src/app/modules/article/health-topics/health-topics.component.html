@@ -6,8 +6,14 @@
     <div *ngIf="healthTopicList.length>0" class="trnd-grid mb-3">
         <ng-container *ngFor="let category of healthTopicList">
 
-            <!-- <div ngIf=category.DisplayCategoryImage class="cat-item" [style.background-color]="category.ColorCode"> -->
-            <div class="cat-item" [style.background-image]="'url('+category.CategoryImage+')'">
+            <div *ngIf="!category.DisplayCategoryImage" class="cat-item" [style.background-color]="category.ColorCode">
+                <div class="cat-name" (click)="viewDetails(category)">{{category.CategoryName}}</div>
+                <div class="f-btn">
+                    <span *ngIf="!category.isFollowed" class="text-primary hvr" (click)="follow_Unfollow(category)">+ Follow</span>
+                    <span *ngIf="category.isFollowed" class="text-success hvr" (click)="follow_Unfollow(category)"><i class="fa-solid fa-check pe-1"></i> Following</span>
+                </div>
+            </div>
+            <div *ngIf="category.DisplayCategoryImage" class="cat-item" [style.background-image]="'url('+category.CategoryImage+')'">
                 <div class="cat-name" (click)="viewDetails(category)">{{category.CategoryName}}</div>
                 <div class="f-btn">
                     <span *ngIf="!category.isFollowed" class="text-primary hvr" (click)="follow_Unfollow(category)">+ Follow</span>
