@@ -7,6 +7,7 @@ import { NgxSpinnerService } from 'ngx-spinner';
 import { AuthService } from '../../../services/auth.service';
 import { CookieService } from 'ngx-cookie-service';
 import { NgxIndexedDBService } from 'ngx-indexed-db';
+import { catchError, forkJoin, of } from 'rxjs';
 
 @Component({
   selector: 'app-all-orders',
@@ -630,63 +631,137 @@ export class AllOrdersComponent implements OnInit {
         });
       }
   }
+  // checkoutCart_123(){
+  //   console.log('checkout',this.reorderItems)
+  //   this.spinner.show();
+  //   // this.dbService.clear('cartItems').subscribe((res: any) => {
+  //         // console.log(res);
+  //   this.dbService.clear('cartItems').subscribe(() => {
+  //     // if (res == true) {
+  //       this.reorderItems.forEach((productObj: any)=>{
+  //         if(productObj.selected == true){
+  //           let productId = productObj.ProductId;
+  //           let LotId = 0;
+  //           let CPId = 0;
+       
+  //           let tmp = {
+  //             id: productId + '_' + CPId + '_' + LotId,
+  //             ProductId: parseInt(productId),
+  //             ProductName: productObj.DisplayName,
+  //             CustProductName: '',
+  //             InteractiveHealthProfileId: '',
+  //             DosageRestriction: productObj.DosageRestriction,
+  //             OfferPrice: productObj.OfferPrice,
+  //             ProductCount: productObj.Quantity,
+  //             ItemVal: productObj.OfferPrice,
+  //             SSCurrencyValue: ".00",
+  //             Iscourierable: productObj.IsCourierable,
+  //             ProductImage: productObj.ProductImage,
+  //             ProductPrice: productObj.MRP,
+  //             // IsGiftProduct: productObj[this.getKeyIndex("IsGiftableProduct")],
+  //             PrescriptionOTC: productObj.PrescriptionOTC,
+  //             WarehouseId: this.authService.WHId,
+  //             CPId: 0,
+  //             MyFamilyId: 0,
+  //             PKLotId: LotId,
+  //             MfgGroup: productObj.MfgGroup,
+  //             ExpiryDate: productObj.ExpiryDate,
+  //             ProductInteractiveModule: '',
+  //             ProductInteractiveSubModule: '',
+  //             IsNonReturnable: '',
+  //             RefOrderId: productObj.OrderId,
+  //             Brand: productObj.Brand,
+  //             DiscountPercent: productObj.DiscountPercent
+  //           };
+       
+  //           this.dbService.add('cartItems', tmp).subscribe((res: any) => {
+  //             console.log('Record added successfully.', res);
+  //           });
+  //         } 
+  //       });
+  //       let d: Date = new Date();
+  //       this.cookieService.set('cartsynch', '0', d.getTime() + 86400 * 30, '/');
+  //       window.location.href=this.commonService.baseurl +"customercart";
+  //     // }else{
+  //     //   this.spinner.hide();
+  //     //   alert('something went wrong')
+  //     // }
+  //   })
+  // }
+
   checkoutCart_123(){
-    console.log('checkout',this.reorderItems)
-    this.spinner.show();
-    // this.dbService.clear('cartItems').subscribe((res: any) => {
-          // console.log(res);
-    this.dbService.clear('cartItems').subscribe(() => {
-      // if (res == true) {
-        this.reorderItems.forEach((productObj: any)=>{
-          if(productObj.selected == true){
-            let productId = productObj.ProductId;
-            let LotId = 0;
-            let CPId = 0;
-       
-            let tmp = {
-              id: productId + '_' + CPId + '_' + LotId,
-              ProductId: parseInt(productId),
-              ProductName: productObj.DisplayName,
-              CustProductName: '',
-              InteractiveHealthProfileId: '',
-              DosageRestriction: productObj.DosageRestriction,
-              OfferPrice: productObj.OfferPrice,
-              ProductCount: productObj.Quantity,
-              ItemVal: productObj.OfferPrice,
-              SSCurrencyValue: ".00",
-              Iscourierable: productObj.IsCourierable,
-              ProductImage: productObj.ProductImage,
-              ProductPrice: productObj.MRP,
-              // IsGiftProduct: productObj[this.getKeyIndex("IsGiftableProduct")],
-              PrescriptionOTC: productObj.PrescriptionOTC,
-              WarehouseId: this.authService.WHId,
-              CPId: 0,
-              MyFamilyId: 0,
-              PKLotId: LotId,
-              MfgGroup: productObj.MfgGroup,
-              ExpiryDate: productObj.ExpiryDate,
-              ProductInteractiveModule: '',
-              ProductInteractiveSubModule: '',
-              IsNonReturnable: '',
-              RefOrderId: productObj.OrderId,
-              Brand: productObj.Brand,
-              DiscountPercent: productObj.DiscountPercent
-            };
-       
-            this.dbService.add('cartItems', tmp).subscribe((res: any) => {
-              // console.log('Record added successfully.', res);
-            });
-          } 
-        });
-        let d: Date = new Date();
-        this.cookieService.set('cartsynch', '0', d.getTime() + 86400 * 30, '/');
-        window.location.href=this.commonService.baseurl +"customercart";
-      // }else{
-      //   this.spinner.hide();
-      //   alert('something went wrong')
-      // }
-    })
-  }
+  console.log('checkout', this.reorderItems);
+  this.spinner.show();
+  
+  this.dbService.clear('cartItems').subscribe(() => {
+    // Build array of add observables for selected items
+    const addObservables = this.reorderItems
+      .filter((productObj: any) => productObj.selected === true)
+      .map((productObj: any) => {
+        let productId = productObj.ProductId;
+        let LotId = 0;
+        let CPId = 0;
+        
+        let tmp = {
+          id: productId + '_' + CPId + '_' + LotId,
+          ProductId: parseInt(productId),
+          ProductName: productObj.DisplayName,
+          CustProductName: '',
+          InteractiveHealthProfileId: '',
+          DosageRestriction: productObj.DosageRestriction,
+          OfferPrice: productObj.OfferPrice,
+          ProductCount: productObj.Quantity,
+          ItemVal: productObj.OfferPrice,
+          SSCurrencyValue: ".00",
+          Iscourierable: productObj.IsCourierable,
+          ProductImage: productObj.ProductImage,
+          ProductPrice: productObj.MRP,
+          PrescriptionOTC: productObj.PrescriptionOTC,
+          WarehouseId: this.authService.WHId,
+          CPId: 0,
+          MyFamilyId: 0,
+          PKLotId: LotId,
+          MfgGroup: productObj.MfgGroup,
+          ExpiryDate: productObj.ExpiryDate,
+          ProductInteractiveModule: '',
+          ProductInteractiveSubModule: '',
+          IsNonReturnable: '',
+          RefOrderId: productObj.OrderId,
+          Brand: productObj.Brand,
+          DiscountPercent: productObj.DiscountPercent
+        };
+        
+        return this.dbService.add('cartItems', tmp).pipe(
+          catchError((err) => {
+            console.error('Add failed for ProductId:', productId, err);
+            return of(null);
+          })
+        );
+      });
+    
+    // Wait for ALL add operations to complete
+    if (addObservables.length > 0) {
+      forkJoin(addObservables).subscribe({
+        next: (results: any) => {
+          console.log('All items added to cart:', results);
+          let d: Date = new Date();
+          this.cookieService.set('cartsynch', '0', d.getTime() + 86400 * 30, '/');
+          this.spinner.hide();
+          window.location.href = this.commonService.baseurl + "customercart";
+        },
+        error: (err) => {
+          console.error('Failed to add items:', err);
+          this.spinner.hide();
+          alert('Something went wrong');
+        }
+      });
+    } else {
+      // No items selected
+      this.spinner.hide();
+      alert('Please select items to add to cart');
+    }
+  });
+}
 
   resetReorder_123(){
     this.respMsg = '';
