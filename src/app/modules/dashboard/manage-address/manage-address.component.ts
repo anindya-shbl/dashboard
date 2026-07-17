@@ -19,6 +19,11 @@ export class ManageAddressComponent implements OnInit {
   isloading: boolean = false;
   respMsg: any = '';
 
+  latitude: number | null = null;
+  longitude: number | null = null;
+  locationError: string = '';
+  isLoadingLocation: boolean = false;
+
   actionType: any = 'ADD';
   @ViewChild('closebutton') closebutton: any;
   @ViewChild('addressModal') addressModal: any;
@@ -52,7 +57,10 @@ export class ManageAddressComponent implements OnInit {
     // this.profileService.getAddressList('customers/address/manageAddress').subscribe((data: any) => {
     this.profileService.getAddressList('webapi/user/manageAddress').subscribe((data: any) => {
       // console.log(data['result']['rs']['allAddressData']);
-      if(data && data['result']['rs']['allAddressData'].length >0){
+      // || treats empty string, 0, and false as “falsy” and replaces them
+      // ?? only replaces null or undefined
+      // ?. is optional chaining operator, it returns undefined if the property does not exist
+      if(data && data['result']['rs']['allAddressData']?.length >0){
         this.addressList = data['result']['rs']['allAddressData'];
         this.isloading = false;
         this.spinner.hide();
@@ -129,6 +137,58 @@ export class ManageAddressComponent implements OnInit {
     //     AddressName: ''
     //   });
     // }
+  }
+
+  useCurrentLocation(){
+    this.isLoadingLocation = true;
+    this.locationError = '';
+
+    // Check if Geolocation API is available
+    if (!navigator.geolocation) {
+      this.locationError = 'Geolocation is not supported by your browser';
+      this.isLoadingLocation = false;
+      return;
+    }
+
+    // Get current position
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        // Success callback
+        this.latitude = position.coords.latitude;
+        this.longitude = position.coords.longitude;
+        console.log('Location:', this.latitude, this.longitude);
+        this.isLoadingLocation = false;
+        
+        // Optional: Call your service to save location
+        // this.dashboardService.saveLocation(this.latitude, this.longitude);
+      },
+      (error) => {
+        // Error callback
+        this.isLoadingLocation = false;
+        this.handleLocationError(error);
+      },
+      {
+        enableHighAccuracy: true,  // Get more precise location
+        timeout: 10000,            // Wait max 10 seconds
+        maximumAge: 0              // Don't use cached position
+      }
+    );
+  }
+
+  private handleLocationError(error: GeolocationPositionError) {
+    switch (error.code) {
+      case error.PERMISSION_DENIED:
+        this.locationError = 'Permission denied. Enable location in browser settings.';
+        break;
+      case error.POSITION_UNAVAILABLE:
+        this.locationError = 'Location information is unavailable.';
+        break;
+      case error.TIMEOUT:
+        this.locationError = 'The request to get user location timed out.';
+        break;
+      default:
+        this.locationError = 'An unknown error occurred while retrieving location.';
+    }
   }
 
   addNewAddress(){
