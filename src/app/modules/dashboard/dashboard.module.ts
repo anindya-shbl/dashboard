@@ -40,6 +40,7 @@ import { AllDoctorConsultationsComponent } from './all-doctor-consultations/all-
 import { RateConsultationComponent } from './rate-consultation/rate-consultation.component';
 import { HealthCardDetailsComponent } from './health-card-details/health-card-details.component';
 import { HealthCardsListComponent } from './health-cards-list/health-cards-list.component';
+import { MapLocationPickerComponent } from '../../components/map-location-picker/map-location-picker.component';
 
 
 @NgModule({
@@ -79,7 +80,8 @@ import { HealthCardsListComponent } from './health-cards-list/health-cards-list.
     AllDoctorConsultationsComponent,
     RateConsultationComponent,
     HealthCardDetailsComponent,
-    HealthCardsListComponent
+    HealthCardsListComponent,
+    MapLocationPickerComponent
   ],
   imports: [
     CommonModule,

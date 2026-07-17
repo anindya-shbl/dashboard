@@ -6,9 +6,20 @@
         <div class="custNameSec">
             <strong>Manage Address</strong>
         </div>
-        <button class="btnSubmitOutline" type="button"  (click)="addNewAddress()">Add New Address</button>
+        <!-- <button class="btnSubmitOutline" type="button"  (click)="addNewAddress()">Add New Address</button> -->
+        <button class="btnSubmitOutline" type="button"  (click)="openAddressMap()">Add New Address</button>
+        <div *ngIf="selectedAddress" class="selected-address">
+            <h3>{{ selectedAddress.address }}</h3>
+            <p>Lat: {{ selectedAddress.latitude }}, Lng: {{ selectedAddress.longitude }}</p>
+        </div>
     </div>
-
+    <!-- Map Component -->
+    <!-- Map Component -->
+  <app-map-location-picker
+    [isOpen]="isMapOpen"
+    (locationSelected)="onLocationSelected($event)"
+    (closed)="onMapClosed()"
+  ></app-map-location-picker>
 
     <div class="p-3 w-100  bg-white">
         
