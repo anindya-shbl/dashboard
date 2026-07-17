@@ -1,0 +1,60 @@
+<!-- map-location-picker.component.html -->
+<div *ngIf="isOpen" class="modal-overlay" (click)="closeDialog()">
+  <div class="modal-container" (click)="$event.stopPropagation()">
+    
+    <!-- Header -->
+    <div class="modal-header">
+      <button class="close-btn" (click)="closeDialog()">←</button>
+      <h2>Select Delivery Location</h2>
+    </div>
+
+    <!-- Search Box -->
+    <div class="search-box">
+      <input
+        type="text"
+        placeholder="Search for an address or area"
+        [(ngModel)]="searchInput"
+        (input)="onSearchChange()"
+        class="search-input"
+      />
+      
+      <!-- Predictions List -->
+      <div *ngIf="predictions.length > 0" class="predictions-list">
+        <div
+          *ngFor="let prediction of predictions"
+          (click)="selectPrediction(prediction)"
+          class="prediction-item"
+        >
+          <span class="icon">📍</span>
+          <div>
+            <div class="main">{{ prediction.main_text }}</div>
+            <div class="secondary">{{ prediction.secondary_text }}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Map Container -->
+    <div #mapContainer class="map-container"></div>
+
+    <!-- Location Info -->
+    <div *ngIf="selectedLocation" class="location-info">
+      <div class="info-header">
+        <span>📍</span>
+        <h3>{{ selectedLocation.name }}</h3>
+      </div>
+      <p class="address">{{ selectedLocation.address }}</p>
+      <p class="coords">
+        {{ selectedLocation.latitude | number:'1.6-6' }}, 
+        {{ selectedLocation.longitude | number:'1.6-6' }}
+      </p>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="modal-footer">
+      <button (click)="confirmLocation()" class="confirm-btn">
+        Confirm & Proceed
+      </button>
+    </div>
+  </div>
+</div>

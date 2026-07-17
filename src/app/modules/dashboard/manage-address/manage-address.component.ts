@@ -19,6 +19,21 @@ export class ManageAddressComponent implements OnInit {
   isloading: boolean = false;
   respMsg: any = '';
 
+  isMapOpen: boolean = false;
+
+  openAddressMap() {
+    this.isMapOpen = true;
+  }
+
+  onLocationSelected(location: any) {
+    this.selectedAddress = location;
+    console.log('Selected Address:', location);
+    // Send to backend
+  }
+
+  onMapClosed() {
+    this.isMapOpen = false;
+  }
   actionType: any = 'ADD';
   @ViewChild('closebutton') closebutton: any;
   @ViewChild('addressModal') addressModal: any;
@@ -52,7 +67,7 @@ export class ManageAddressComponent implements OnInit {
     // this.profileService.getAddressList('customers/address/manageAddress').subscribe((data: any) => {
     this.profileService.getAddressList('webapi/user/manageAddress').subscribe((data: any) => {
       // console.log(data['result']['rs']['allAddressData']);
-      if(data && data['result']['rs']['allAddressData'].length >0){
+      if(data && data['result']['rs']['allAddressData']?.length >0){
         this.addressList = data['result']['rs']['allAddressData'];
         this.isloading = false;
         this.spinner.hide();
