@@ -13,7 +13,7 @@ export class MapLocationPickerComponent implements OnInit, AfterViewInit, OnChan
   @Input() isOpen: boolean = false;
   @Output() locationSelected = new EventEmitter<any>();
   @Output() closed = new EventEmitter<void>();
-
+  
   map: any = null;
   marker: any = null;
 
@@ -38,6 +38,7 @@ export class MapLocationPickerComponent implements OnInit, AfterViewInit, OnChan
   }
 
   ngAfterViewInit() {
+    console.log('ngAfterViewInit-MapLocationPickerComponent initialized. isOpen:', this.isOpen);
     if (this.isOpen && this.mapContainer) {
       this.mapLoading = true;
       this.mapError = '';
@@ -49,7 +50,10 @@ export class MapLocationPickerComponent implements OnInit, AfterViewInit, OnChan
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    if (changes['isOpen'] && this.isOpen && this.mapContainer && !this.map) {
+    console.log('ngOnChanges-MapLocationPickerComponent initialized. isOpen:', this.isOpen);
+    // if (changes['isOpen'] && this.isOpen && this.mapContainer && !this.map) {
+    if (this.isOpen && !this.map) {
+      console.log('before initializing map, isOpen:', this.isOpen);
       this.mapLoading = true;
       setTimeout(() => {
         this.initMap();
