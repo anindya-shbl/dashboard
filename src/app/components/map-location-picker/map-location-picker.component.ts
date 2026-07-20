@@ -20,7 +20,6 @@ export class MapLocationPickerComponent implements OnInit, AfterViewInit, OnChan
   sessionToken: any = null;
 
   searchInput: string = '';
-  pincodeInput: string = '';
   predictions: any[] = [];
   selectedLocation: any = null;
   isSearching: boolean = false;
@@ -94,43 +93,34 @@ export class MapLocationPickerComponent implements OnInit, AfterViewInit, OnChan
     this.placesService = new google.maps.places.PlacesService(this.map);
   }
 
-  // Search by area name
+  // Unified search - handles pincode, area, city
   onSearchChange(): void {
-    if (this.searchInput.length < 3) {
+    const input = this.searchInput.trim();
+
+    if (input.length === 0) {
       this.predictions = [];
       return;
     }
 
-    const service = new google.maps.places.AutocompleteService();
-    
-    const request = {
-      input: this.searchInput,
-      componentRestrictions: { country: 'in' },
-      sessionToken: this.sessionToken
-    };
+    // Check if input is a pincode (5-6 digits)
+    const isPincode = /^\d{5,6}$/.test(input);
 
-    service.getPlacePredictions(request, (predictions: any, status: any) => {
-      if (status === google.maps.places.PlacesServiceStatus.OK && predictions) {
-        this.predictions = predictions;
-        this.cdr.detectChanges();
-      } else {
-        this.predictions = [];
-      }
-    });
+    if (isPincode) {
+      // Search by pincode
+      this.searchByPincode(input);
+    } else if (input.length >= 3) {
+      // Search by area/city name
+      this.searchByAreaName(input);
+    }
   }
 
   // Search by pincode
-  searchByPincode(): void {
-    if (!this.pincodeInput || this.pincodeInput.length < 5) {
-      alert('Please enter a valid pincode');
-      return;
-    }
-
+  searchByPincode(pincode: string): void {
     this.isSearching = true;
+    this.predictions = [];
 
-    // Search for pincode location
     const request = {
-      address: this.pincodeInput + ', India'
+      address: pincode + ', India'
     };
 
     this.geocoder.geocode(request, (results: any, status: any) => {
@@ -145,7 +135,7 @@ export class MapLocationPickerComponent implements OnInit, AfterViewInit, OnChan
           latitude: location.lat(),
           longitude: location.lng(),
           name: results[0].address_components[0]?.long_name || 'Selected Location',
-          pincode: this.pincodeInput
+          pincode: pincode
         };
 
         if (this.map) {
@@ -154,12 +144,42 @@ export class MapLocationPickerComponent implements OnInit, AfterViewInit, OnChan
         }
         this.cdr.detectChanges();
       } else {
-        alert('Pincode not found. Please try another pincode.');
+        this.predictions = [{
+          description: `Pincode "${pincode}" not found`,
+          main_text: 'Not Found',
+          secondary_text: 'Try another pincode or area name',
+          isError: true
+        }];
       }
     });
   }
 
+  // Search by area/city name
+  searchByAreaName(input: string): void {
+    const service = new google.maps.places.AutocompleteService();
+    
+    const request = {
+      input: input,
+      componentRestrictions: { country: 'in' },
+      sessionToken: this.sessionToken
+    };
+
+    service.getPlacePredictions(request, (predictions: any, status: any) => {
+      if (status === google.maps.places.PlacesServiceStatus.OK && predictions) {
+        this.predictions = predictions;
+      } else {
+        this.predictions = [];
+      }
+      this.cdr.detectChanges();
+    });
+  }
+
   selectPrediction(prediction: any): void {
+    // Skip if it's an error prediction
+    if (prediction.isError) {
+      return;
+    }
+
     this.searchInput = prediction.description;
     this.predictions = [];
 
@@ -230,6 +250,8 @@ export class MapLocationPickerComponent implements OnInit, AfterViewInit, OnChan
 
   closeDialog(): void {
     this.isOpen = false;
+    this.predictions = [];
+    this.searchInput = '';
     this.closed.emit();
   }
 }
