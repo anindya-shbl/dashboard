@@ -8,13 +8,13 @@ import { Observable } from 'rxjs';
 export class AddressService {
 
   // ============== Live ================
-  // public catalogurl = 'https://serv-catalog.sastasundar.com/geocode/';
+  // public catalogurl = 'https://serv-catalog.sastasundar.com/geocode';
 
   // ============== stage ================
-  // public catalogurl = 'https://stage-serv-catalog.sastasundar.com/geocode/';
+  // public catalogurl = 'https://stage-serv-catalog.sastasundar.com/geocode';
 
   // ============== local ================
-  public catalogurl = 'http://192.168.5.236:7003/geocode/';
+  public catalogurl = 'http://192.168.5.236:8003/geocode';
 
   constructor(private http: HttpClient) { }
 
