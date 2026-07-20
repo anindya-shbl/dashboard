@@ -81,20 +81,37 @@
   position: relative;
   padding: 12px;
   border-bottom: 1px solid #e0e0e0;
+}
+
+.search-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+
+  .search-icon {
+    position: absolute;
+    left: 12px;
+    font-size: 16px;
+    pointer-events: none;
+  }
 
   .search-input {
     width: 100%;
-    padding: 10px 12px;
+    padding: 12px 12px 12px 40px;
     border: 1px solid #ddd;
     border-radius: 6px;
     font-size: 14px;
     box-sizing: border-box;
     outline: none;
-    transition: border-color 0.2s;
+    transition: border-color 0.2s, box-shadow 0.2s;
 
     &:focus {
       border-color: #007bff;
       box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+    }
+
+    &::placeholder {
+      color: #999;
     }
   }
 }
@@ -107,10 +124,10 @@
   background: white;
   border: 1px solid #ddd;
   border-radius: 6px;
-  max-height: 200px;
+  max-height: 250px;
   overflow-y: auto;
   z-index: 1000;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
 .prediction-item {
@@ -125,14 +142,27 @@
     border-bottom: none;
   }
 
-  &:hover {
+  &:hover:not(.error-item) {
     background: #f5f5f5;
+  }
+
+  &.error-item {
+    cursor: default;
+    background: #fff3cd;
+
+    &:hover {
+      background: #fff3cd;
+    }
   }
 
   .icon {
     font-size: 18px;
     margin-top: 2px;
     flex-shrink: 0;
+
+    &.error-icon {
+      font-size: 16px;
+    }
   }
 
   .main {
@@ -148,60 +178,41 @@
   }
 }
 
-.pincode-search {
+.searching-indicator {
   padding: 12px;
-  border-bottom: 1px solid #e0e0e0;
-  background: #f9f9f9;
-}
-
-.pincode-input-group {
+  text-align: center;
+  color: #666;
+  font-size: 14px;
   display: flex;
+  align-items: center;
+  justify-content: center;
   gap: 8px;
 
-  .pincode-input {
-    flex: 1;
-    padding: 10px 12px;
-    border: 1px solid #ddd;
-    border-radius: 6px;
-    font-size: 14px;
-    outline: none;
-    transition: border-color 0.2s;
-
-    &:focus {
-      border-color: #007bff;
-    }
+  .spinner {
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    border: 2px solid #e0e0e0;
+    border-top-color: #007bff;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
   }
+}
 
-  .pincode-btn {
-    padding: 10px 16px;
-    background: #28a745;
-    color: white;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    font-weight: 600;
-    transition: background 0.2s;
-
-    &:hover:not(:disabled) {
-      background: #218838;
-    }
-
-    &:disabled {
-      opacity: 0.6;
-      cursor: not-allowed;
-    }
-  }
+@keyframes spin {
+  to { transform: rotate(360deg); }
 }
 
 .map-info {
-  padding: 8px 12px;
-  background: #fff3cd;
-  border-bottom: 1px solid #ffeaa7;
+  padding: 10px 12px;
+  background: #e7f3ff;
+  border-bottom: 1px solid #b3d9ff;
 
   .map-instruction {
     margin: 0;
-    font-size: 12px;
-    color: #856404;
+    font-size: 13px;
+    color: #004085;
+    font-weight: 500;
   }
 }
 
@@ -209,7 +220,6 @@
   flex: 1;
   position: relative;
   overflow: hidden;
-  border-top: 1px solid #e0e0e0;
 
   &::after {
     content: '';
@@ -228,42 +238,41 @@
 .location-info {
   padding: 16px;
   background: #f0f8ff;
-  border-top: 1px solid #ddd;
+  border-top: 1px solid #b3d9ff;
 
   .info-header {
     display: flex;
-    gap: 8px;
-    align-items: center;
-    margin-bottom: 8px;
+    gap: 12px;
+    align-items: flex-start;
 
     .location-icon {
       font-size: 20px;
+      margin-top: 2px;
     }
 
-    h3 {
-      margin: 0;
-      font-size: 14px;
-      font-weight: 600;
+    div {
+      flex: 1;
+
+      h3 {
+        margin: 0 0 4px 0;
+        font-size: 14px;
+        font-weight: 600;
+        color: #333;
+      }
+
+      .address {
+        margin: 0;
+        font-size: 12px;
+        color: #666;
+        line-height: 1.4;
+      }
     }
-  }
-
-  .address {
-    font-size: 13px;
-    color: #555;
-    margin: 6px 0;
-    font-weight: 500;
-  }
-
-  .coords {
-    font-size: 12px;
-    color: #999;
-    margin: 4px 0;
   }
 }
 
 .modal-footer {
   padding: 12px;
-  border-top: 1px solid #ddd;
+  border-top: 1px solid #e0e0e0;
   background: white;
 }
 
@@ -277,7 +286,7 @@
   font-size: 14px;
   font-weight: 600;
   cursor: pointer;
-  transition: background 0.3s;
+  transition: background 0.3s, transform 0.1s;
 
   &:hover {
     background: #0056b3;
@@ -305,11 +314,7 @@
     max-height: 150px;
   }
 
-  .pincode-input-group {
-    flex-direction: column;
-
-    .pincode-btn {
-      width: 100%;
-    }
+  .search-input-wrapper .search-input {
+    font-size: 16px; // Prevents zoom on iOS
   }
 }
