@@ -1,6 +1,7 @@
 declare const google: any;
 
 import { Component, OnInit, ViewChild, Output, EventEmitter, Input, ChangeDetectorRef, AfterViewInit, OnChanges, SimpleChanges } from '@angular/core';
+import { AddressService } from '../../services/address.service';
 
 @Component({
   selector: 'app-map-location-picker',
@@ -15,82 +16,91 @@ export class MapLocationPickerComponent implements OnInit, AfterViewInit, OnChan
 
   map: any = null;
   marker: any = null;
-  placesService: any = null;
-  geocoder: any = null;
-  sessionToken: any = null;
 
   searchInput: string = '';
   predictions: any[] = [];
   selectedLocation: any = null;
   isSearching: boolean = false;
+  mapLoading: boolean = true;
+  mapError: string = '';
 
   defaultLatitude: number = 28.7041;
   defaultLongitude: number = 77.1025;
 
-  constructor(private cdr: ChangeDetectorRef) {}
+  constructor(
+    private cdr: ChangeDetectorRef,
+    private addressService: AddressService
+  ) {}
 
   ngOnInit() {
-    this.sessionToken = new google.maps.places.AutocompleteSessionToken();
-    this.geocoder = new google.maps.Geocoder();
+    // Initialize with default location from API
+    this.getAddressFromCoordinates(this.defaultLatitude, this.defaultLongitude);
   }
 
   ngAfterViewInit() {
     if (this.isOpen && this.mapContainer) {
+      this.mapLoading = true;
+      this.mapError = '';
       setTimeout(() => {
         this.initMap();
-        this.initPlacesService();
+        this.mapLoading = false;
       }, 100);
     }
   }
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes['isOpen'] && this.isOpen && this.mapContainer && !this.map) {
+      this.mapLoading = true;
       setTimeout(() => {
         this.initMap();
-        this.initPlacesService();
+        this.mapLoading = false;
       }, 100);
     }
   }
 
   initMap(): void {
-    if (!this.mapContainer) return;
+    if (!this.mapContainer) {
+      this.mapError = 'Map container not found';
+      return;
+    }
 
-    const mapOptions = {
-      zoom: 15,
-      center: { lat: this.defaultLatitude, lng: this.defaultLongitude },
-      mapTypeControl: true,
-      fullscreenControl: false,
-      streetViewControl: true,
-      zoomControl: true
-    };
+    try {
+      const mapOptions = {
+        zoom: 15,
+        center: { lat: this.defaultLatitude, lng: this.defaultLongitude },
+        mapTypeControl: true,
+        fullscreenControl: false,
+        streetViewControl: true,
+        zoomControl: true
+      };
 
-    this.map = new google.maps.Map(this.mapContainer.nativeElement, mapOptions);
+      this.map = new google.maps.Map(this.mapContainer.nativeElement, mapOptions);
 
-    this.marker = new google.maps.Marker({
-      map: this.map,
-      position: { lat: this.defaultLatitude, lng: this.defaultLongitude },
-      draggable: true,
-      title: 'Drag to select location'
-    });
+      this.marker = new google.maps.Marker({
+        map: this.map,
+        position: { lat: this.defaultLatitude, lng: this.defaultLongitude },
+        draggable: true,
+        title: 'Drag to select location'
+      });
 
-    this.map.addListener('click', (event: any) => {
-      if (event.latLng) {
-        this.placeMarker(event.latLng);
-      }
-    });
-
-    if (this.marker) {
-      this.marker.addListener('dragend', () => {
-        const pos = this.marker.getPosition();
-        if (pos) {
-          this.getAddressFromCoordinates(pos.lat(), pos.lng());
+      this.map.addListener('click', (event: any) => {
+        if (event.latLng) {
+          this.placeMarker(event.latLng);
         }
       });
-    }
-  }
 
-  initPlacesService(): void {
-    this.placesService = new google.maps.places.PlacesService(this.map);
+      if (this.marker) {
+        this.marker.addListener('dragend', () => {
+          const pos = this.marker.getPosition();
+          if (pos) {
+            this.getAddressFromCoordinates(pos.lat(), pos.lng());
+          }
+        });
+      }
+    } catch (error) {
+      this.mapError = 'Failed to initialize map: ' + (error as any).message;
+      console.error(this.mapError, error);
+    }
   }
 
   // Unified search - handles pincode, area, city
@@ -106,71 +116,95 @@ export class MapLocationPickerComponent implements OnInit, AfterViewInit, OnChan
     const isPincode = /^\d{5,6}$/.test(input);
 
     if (isPincode) {
-      // Search by pincode
       this.searchByPincode(input);
     } else if (input.length >= 3) {
-      // Search by area/city name
-      this.searchByAreaName(input);
+      this.searchByArea(input);
     }
   }
 
-  // Search by pincode
+  // Search by pincode via API
   searchByPincode(pincode: string): void {
     this.isSearching = true;
     this.predictions = [];
 
-    const request = {
-      address: pincode + ', India'
-    };
+    this.addressService.searchByPincode(pincode).subscribe({
+      next: (response: any) => {
+        this.isSearching = false;
 
-    this.geocoder.geocode(request, (results: any, status: any) => {
-      this.isSearching = false;
+        if (response.success && response.data) {
+          // Update map with pincode location
+          const location = response.data;
+          const lat = location.latitude || location.lat;
+          const lng = location.longitude || location.lng;
 
-      if (status === google.maps.GeocoderStatus.OK && results && results[0]) {
-        const location = results[0].geometry.location;
-        this.placeMarker(location);
+          this.placeMarkerByCoordinates(lat, lng);
 
-        this.selectedLocation = {
-          address: results[0].formatted_address,
-          latitude: location.lat(),
-          longitude: location.lng(),
-          name: results[0].address_components[0]?.long_name || 'Selected Location',
-          pincode: pincode
-        };
+          this.selectedLocation = {
+            address: location.formatted_address || location.address,
+            latitude: lat,
+            longitude: lng,
+            name: location.name || 'Selected Location',
+            pincode: pincode
+          };
 
-        if (this.map) {
-          this.map.setCenter(location);
-          this.map.setZoom(15);
+          if (this.map) {
+            this.map.setCenter({ lat, lng });
+            this.map.setZoom(15);
+          }
+
+          this.cdr.detectChanges();
+        } else {
+          this.predictions = [{
+            description: `Pincode "${pincode}" not found`,
+            main_text: 'Not Found',
+            secondary_text: response.message || 'Try another pincode or area name',
+            isError: true
+          }];
         }
-        this.cdr.detectChanges();
-      } else {
+      },
+      error: (error) => {
+        this.isSearching = false;
+        console.error('Pincode search error:', error);
         this.predictions = [{
-          description: `Pincode "${pincode}" not found`,
-          main_text: 'Not Found',
-          secondary_text: 'Try another pincode or area name',
+          description: 'Error searching pincode',
+          main_text: 'Error',
+          secondary_text: error.message || 'Failed to search. Please try again.',
           isError: true
         }];
       }
     });
   }
 
-  // Search by area/city name
-  searchByAreaName(input: string): void {
-    const service = new google.maps.places.AutocompleteService();
-    
-    const request = {
-      input: input,
-      componentRestrictions: { country: 'in' },
-      sessionToken: this.sessionToken
-    };
+  // Search by area/city via API
+  searchByArea(searchText: string): void {
+    this.isSearching = true;
 
-    service.getPlacePredictions(request, (predictions: any, status: any) => {
-      if (status === google.maps.places.PlacesServiceStatus.OK && predictions) {
-        this.predictions = predictions;
-      } else {
+    this.addressService.searchByArea(searchText).subscribe({
+      next: (response: any) => {
+        this.isSearching = false;
+
+        if (response.success && response.data && response.data.length > 0) {
+          // Convert backend response to predictions format
+          this.predictions = response.data.map((item: any) => ({
+            description: item.formatted_address || item.address,
+            main_text: item.main_text || item.name,
+            secondary_text: item.secondary_text || item.address,
+            place_id: item.place_id || item.id,
+            latitude: item.latitude || item.lat,
+            longitude: item.longitude || item.lng,
+            formatted_address: item.formatted_address || item.address,
+            name: item.name
+          }));
+        } else {
+          this.predictions = [];
+        }
+        this.cdr.detectChanges();
+      },
+      error: (error) => {
+        this.isSearching = false;
+        console.error('Area search error:', error);
         this.predictions = [];
       }
-      this.cdr.detectChanges();
     });
   }
 
@@ -183,60 +217,100 @@ export class MapLocationPickerComponent implements OnInit, AfterViewInit, OnChan
     this.searchInput = prediction.description;
     this.predictions = [];
 
-    if (!this.placesService) return;
+    // If we already have coordinates from the search response, use them
+    if (prediction.latitude && prediction.longitude) {
+      this.placeMarkerByCoordinates(prediction.latitude, prediction.longitude);
 
-    const request = {
-      placeId: prediction.place_id,
-      fields: ['geometry', 'formatted_address', 'name', 'address_components'],
-      sessionToken: this.sessionToken
-    };
+      this.selectedLocation = {
+        address: prediction.formatted_address || prediction.description,
+        latitude: prediction.latitude,
+        longitude: prediction.longitude,
+        name: prediction.name || 'Selected Location'
+      };
 
-    this.placesService.getDetails(request, (place: any, status: any) => {
-      if (status === google.maps.places.PlacesServiceStatus.OK && place?.geometry?.location) {
-        const location = place.geometry.location;
-        this.placeMarker(location);
+      if (this.map) {
+        this.map.setCenter({
+          lat: prediction.latitude,
+          lng: prediction.longitude
+        });
+      }
 
-        this.selectedLocation = {
-          address: place.formatted_address,
-          latitude: location.lat(),
-          longitude: location.lng(),
-          name: place.name || 'Selected Location'
-        };
+      this.cdr.detectChanges();
+    } else {
+      // Otherwise, get place details from API
+      this.getPlaceDetails(prediction.place_id);
+    }
+  }
 
-        if (this.map) {
-          this.map.setCenter(location);
+  // Get place details via API
+  getPlaceDetails(placeId: string): void {
+    this.addressService.getPlaceDetails(placeId).subscribe({
+      next: (response: any) => {
+        if (response.success && response.data) {
+          const place = response.data;
+          const lat = place.latitude || place.lat;
+          const lng = place.longitude || place.lng;
+
+          this.placeMarkerByCoordinates(lat, lng);
+
+          this.selectedLocation = {
+            address: place.formatted_address || place.address,
+            latitude: lat,
+            longitude: lng,
+            name: place.name || 'Selected Location'
+          };
+
+          if (this.map) {
+            this.map.setCenter({ lat, lng });
+          }
+
+          this.cdr.detectChanges();
         }
-        this.cdr.detectChanges();
-
-        this.sessionToken = new google.maps.places.AutocompleteSessionToken();
+      },
+      error: (error) => {
+        console.error('Place details error:', error);
       }
     });
+  }
+
+  // Get address from coordinates via API
+  getAddressFromCoordinates(latitude: number, longitude: number): void {
+    this.addressService.getAddressFromCoordinates(latitude, longitude).subscribe({
+      next: (response: any) => {
+        if (response.success && response.data) {
+          this.selectedLocation = {
+            address: response.data.formatted_address || response.data.address,
+            latitude: latitude,
+            longitude: longitude,
+            name: response.data.name || 'Selected Location'
+          };
+          this.cdr.detectChanges();
+        }
+      },
+      error: (error) => {
+        console.error('Reverse geocode error:', error);
+      }
+    });
+  }
+
+  placeMarkerByCoordinates(lat: number, lng: number): void {
+    const location = new google.maps.LatLng(lat, lng);
+    this.placeMarker(location);
   }
 
   placeMarker(location: any): void {
     if (this.marker) {
       this.marker.setPosition(location);
     }
-    this.getAddressFromCoordinates(location.lat(), location.lng());
+    
+    const lat = location.lat instanceof Function ? location.lat() : location.lat;
+    const lng = location.lng instanceof Function ? location.lng() : location.lng;
+    
+    this.getAddressFromCoordinates(lat, lng);
+    
     if (this.map) {
       this.map.setCenter(location);
     }
-  }
-
-  getAddressFromCoordinates(lat: number, lng: number): void {
-    const location = new google.maps.LatLng(lat, lng);
-
-    this.geocoder.geocode({ location }, (results: any, status: any) => {
-      if (status === google.maps.GeocoderStatus.OK && results && results[0]) {
-        this.selectedLocation = {
-          address: results[0].formatted_address,
-          latitude: lat,
-          longitude: lng,
-          name: results[0].address_components[0]?.long_name || 'Selected Location'
-        };
-        this.cdr.detectChanges();
-      }
-    });
   }
 
   confirmLocation(): void {
