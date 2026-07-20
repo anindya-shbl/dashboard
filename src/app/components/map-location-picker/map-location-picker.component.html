@@ -8,7 +8,7 @@
       <h2>Select Delivery Location</h2>
     </div>
 
-    <!-- Search Box -->
+    <!-- Search by Area -->
     <div class="search-box">
       <input
         type="text"
@@ -34,13 +34,36 @@
       </div>
     </div>
 
+    <!-- Search by Pincode -->
+    <div class="pincode-search">
+      <div class="pincode-input-group">
+        <input
+          type="text"
+          placeholder="Enter pincode"
+          [(ngModel)]="pincodeInput"
+          maxlength="6"
+          class="pincode-input"
+        />
+        <button 
+          (click)="searchByPincode()" 
+          [disabled]="isSearching"
+          class="pincode-btn"
+        >
+          {{ isSearching ? 'Searching...' : 'Search' }}
+        </button>
+      </div>
+    </div>
+
     <!-- Map Container -->
+    <div class="map-info">
+      <p class="map-instruction">Place the pin at the exact delivery location</p>
+    </div>
     <div #mapContainer class="map-container"></div>
 
     <!-- Location Info -->
     <div *ngIf="selectedLocation" class="location-info">
       <div class="info-header">
-        <span>📍</span>
+        <span class="location-icon">📍</span>
         <h3>{{ selectedLocation.name }}</h3>
       </div>
       <p class="address">{{ selectedLocation.address }}</p>
