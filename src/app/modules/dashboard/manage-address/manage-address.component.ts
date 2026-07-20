@@ -22,6 +22,7 @@ export class ManageAddressComponent implements OnInit {
   isMapOpen: boolean = false;
 
   openAddressMap() {
+    console.log('Opening map for address selection...');
     this.isMapOpen = true;
   }
 
