@@ -1,6 +1,6 @@
 declare const google: any;
 
-import { Component, OnInit, ViewChild, Output, EventEmitter, Input, ChangeDetectorRef, AfterViewInit, OnChanges, SimpleChanges, ElementRef } from '@angular/core';
+import { Component, OnInit, ViewChild, Output, EventEmitter, Input, ChangeDetectorRef, AfterViewInit, OnChanges, SimpleChanges } from '@angular/core';
 
 @Component({
   selector: 'app-map-location-picker',
@@ -9,49 +9,38 @@ import { Component, OnInit, ViewChild, Output, EventEmitter, Input, ChangeDetect
 })
 export class MapLocationPickerComponent implements OnInit, AfterViewInit, OnChanges {
   @ViewChild('mapContainer') mapContainer: any;
-  @ViewChild('mapContainer')
-  set mapElement(content: ElementRef) {
-    if (content) {
-      this.mapContainer = content;
-
-      if (this.isOpen && !this.map) {
-        setTimeout(() => {
-          this.initMap();
-          this.initAutocomplete();
-        });
-      }
-    }
-  }
   @Input() isOpen: boolean = false;
   @Output() locationSelected = new EventEmitter<any>();
   @Output() closed = new EventEmitter<void>();
 
   map: any = null;
   marker: any = null;
-  autocomplete: any = null;
   placesService: any = null;
+  geocoder: any = null;
+  sessionToken: any = null;
 
   searchInput: string = '';
+  pincodeInput: string = '';
   predictions: any[] = [];
   selectedLocation: any = null;
+  isSearching: boolean = false;
 
   defaultLatitude: number = 28.7041;
   defaultLongitude: number = 77.1025;
 
   constructor(private cdr: ChangeDetectorRef) {}
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.sessionToken = new google.maps.places.AutocompleteSessionToken();
+    this.geocoder = new google.maps.Geocoder();
+  }
 
   ngAfterViewInit() {
     if (this.isOpen && this.mapContainer) {
-      console.log('Map container is available, initializing map...');
       setTimeout(() => {
         this.initMap();
-        this.initAutocomplete();
+        this.initPlacesService();
       }, 100);
-    }
-    else{
-      console.log('Map container is not available or map is not open yet.');
     }
   }
 
@@ -59,7 +48,7 @@ export class MapLocationPickerComponent implements OnInit, AfterViewInit, OnChan
     if (changes['isOpen'] && this.isOpen && this.mapContainer && !this.map) {
       setTimeout(() => {
         this.initMap();
-        this.initAutocomplete();
+        this.initPlacesService();
       }, 100);
     }
   }
@@ -101,33 +90,71 @@ export class MapLocationPickerComponent implements OnInit, AfterViewInit, OnChan
     }
   }
 
-  initAutocomplete(): void {
-    this.autocomplete = new google.maps.places.AutocompleteService();
-    if (this.map) {
-      this.placesService = new google.maps.places.PlacesService(this.map);
-    }
+  initPlacesService(): void {
+    this.placesService = new google.maps.places.PlacesService(this.map);
   }
 
+  // Search by area name
   onSearchChange(): void {
     if (this.searchInput.length < 3) {
       this.predictions = [];
       return;
     }
 
-    if (!this.autocomplete) return;
-
+    const service = new google.maps.places.AutocompleteService();
+    
     const request = {
       input: this.searchInput,
       componentRestrictions: { country: 'in' },
-      types: ['address']
+      sessionToken: this.sessionToken
     };
 
-    this.autocomplete.getPlacePredictions(request, (predictions: any, status: any) => {
+    service.getPlacePredictions(request, (predictions: any, status: any) => {
       if (status === google.maps.places.PlacesServiceStatus.OK && predictions) {
         this.predictions = predictions;
         this.cdr.detectChanges();
       } else {
         this.predictions = [];
+      }
+    });
+  }
+
+  // Search by pincode
+  searchByPincode(): void {
+    if (!this.pincodeInput || this.pincodeInput.length < 5) {
+      alert('Please enter a valid pincode');
+      return;
+    }
+
+    this.isSearching = true;
+
+    // Search for pincode location
+    const request = {
+      address: this.pincodeInput + ', India'
+    };
+
+    this.geocoder.geocode(request, (results: any, status: any) => {
+      this.isSearching = false;
+
+      if (status === google.maps.GeocoderStatus.OK && results && results[0]) {
+        const location = results[0].geometry.location;
+        this.placeMarker(location);
+
+        this.selectedLocation = {
+          address: results[0].formatted_address,
+          latitude: location.lat(),
+          longitude: location.lng(),
+          name: results[0].address_components[0]?.long_name || 'Selected Location',
+          pincode: this.pincodeInput
+        };
+
+        if (this.map) {
+          this.map.setCenter(location);
+          this.map.setZoom(15);
+        }
+        this.cdr.detectChanges();
+      } else {
+        alert('Pincode not found. Please try another pincode.');
       }
     });
   }
@@ -140,7 +167,8 @@ export class MapLocationPickerComponent implements OnInit, AfterViewInit, OnChan
 
     const request = {
       placeId: prediction.place_id,
-      fields: ['geometry', 'formatted_address', 'name']
+      fields: ['geometry', 'formatted_address', 'name', 'address_components'],
+      sessionToken: this.sessionToken
     };
 
     this.placesService.getDetails(request, (place: any, status: any) => {
@@ -159,6 +187,8 @@ export class MapLocationPickerComponent implements OnInit, AfterViewInit, OnChan
           this.map.setCenter(location);
         }
         this.cdr.detectChanges();
+
+        this.sessionToken = new google.maps.places.AutocompleteSessionToken();
       }
     });
   }
@@ -174,10 +204,9 @@ export class MapLocationPickerComponent implements OnInit, AfterViewInit, OnChan
   }
 
   getAddressFromCoordinates(lat: number, lng: number): void {
-    const geocoder = new google.maps.Geocoder();
     const location = new google.maps.LatLng(lat, lng);
 
-    geocoder.geocode({ location }, (results: any, status: any) => {
+    this.geocoder.geocode({ location }, (results: any, status: any) => {
       if (status === google.maps.GeocoderStatus.OK && results && results[0]) {
         this.selectedLocation = {
           address: results[0].formatted_address,
