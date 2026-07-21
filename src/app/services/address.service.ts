@@ -1,5 +1,5 @@
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Injectable, input } from '@angular/core';
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -52,27 +52,29 @@ export class AddressService {
    * Search address by pincode
    */
   searchByPincode(pincode: string): Observable<any> {
-    const params = new HttpParams().set('pincode', pincode);
+    // const params = new HttpParams().set('input', pincode);
 
-    return this.http.get(`${this.catalogurl}/search-pincode`, { params });
+    // return this.http.get(`${this.catalogurl}/search-pincode`, { params });
+    return this.http.post(`${this.catalogurl}/places`, { input: pincode });
   }
 
   /**
    * Search address by area/city name
    */
   searchByArea(searchText: string): Observable<any> {
-    const params = new HttpParams().set('search', searchText);
+    // const params = new HttpParams().set('input', searchText);
 
-    return this.http.get(`${this.catalogurl}/search-area`, { params });
+    // return this.http.get(`${this.catalogurl}/search-area`, { params });
+    return this.http.post(`${this.catalogurl}/places`, { input: searchText });
   }
 
   /**
    * Get place details from place ID
    */
   getPlaceDetails(placeId: string): Observable<any> {
-    const params = new HttpParams().set('placeId', placeId);
+    // const params = new HttpParams().set('placeId', placeId);
 
-    return this.http.get(`${this.catalogurl}/place-details`, { params });
+    return this.http.get(`${this.catalogurl}/place-details/${placeId}`, {  });
   }
 
   /**

@@ -30,6 +30,7 @@ export class ManageAddressComponent implements OnInit {
     this.selectedAddress = location;
     console.log('Selected Address:', location);
     // Send to backend
+    this.addNewAddress2()
   }
 
   onMapClosed() {
@@ -54,6 +55,7 @@ export class ManageAddressComponent implements OnInit {
       ContactPerson: ['', Validators.required],
       MobileNo: ['', Validators.required],      
       Addressline: ['', Validators.required],
+      Addressline1: ['', Validators.required],
       Landmark: [''],
       Pincode: ['', Validators.required],
       // AddressName: [''],      
@@ -95,6 +97,7 @@ export class ManageAddressComponent implements OnInit {
       let fd = new FormData();
       fd.append('NickName', this.AddressForm.value.ContactPerson);
       fd.append('Addline', this.AddressForm.value.Addressline);
+      fd.append('Addline1', this.AddressForm.value.Addressline1);
       fd.append('AddressType', this.AddressForm.value.AddressType);
       fd.append('Landmark', this.AddressForm.value.Landmark);
       fd.append('PinCode', this.AddressForm.value.Pincode);
@@ -145,6 +148,21 @@ export class ManageAddressComponent implements OnInit {
     //     AddressName: ''
     //   });
     // }
+  }
+
+  addNewAddress2(){
+    this.actionType = 'ADD';
+    this.AddressForm.reset();
+    // this.selectedAddress = adr;
+    this.AddressForm.patchValue({
+      AddressType: 'H',
+      // ContactPerson: adr.NickName,
+      // MobileNo: adr.CustContactNo,
+      Addressline: this.selectedAddress.addresss,
+      // Landmark: adr.Landmark,
+      Pincode: this.selectedAddress.pincode,
+    });
+    this.AddressModal.nativeElement.click();
   }
 
   addNewAddress(){

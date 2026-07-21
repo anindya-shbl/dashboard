@@ -8,10 +8,6 @@
         </div>
         <!-- <button class="btnSubmitOutline" type="button"  (click)="addNewAddress()">Add New Address</button> -->
         <button class="btnSubmitOutline" type="button"  (click)="openAddressMap()">Add New Address</button>
-        <div *ngIf="selectedAddress" class="selected-address">
-            <h3>{{ selectedAddress.address }}</h3>
-            <p>Lat: {{ selectedAddress.latitude }}, Lng: {{ selectedAddress.longitude }}</p>
-        </div>
     </div>
     <!-- Map Component -->
     <app-map-location-picker [isOpen]="isMapOpen" (locationSelected)="onLocationSelected($event)" (closed)="onMapClosed()"></app-map-location-picker>
@@ -126,6 +122,17 @@
                             </div>
                             <div *ngIf="submitted && f['MobileNo'].errors" class="error-text">
                                 <div *ngIf="f['MobileNo'].errors['pattern']">*Invalid mobile no</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="ac-grid mb-2">
+                        <div class="mb-3">
+                            <label for="Addressline1" class="form-label">House No. <span class="text-danger">
+                                    *</span></label>
+                            <input type="text" rows="3" class="form-control" id="Addressline1"
+                                formControlName="Addressline1"/>
+                            <div *ngIf="submitted && f['Addressline1'].errors" class="error-text">
+                                <div *ngIf="f['Addressline1'].errors['required']">* House No. is required</div>
                             </div>
                         </div>
                     </div>
