@@ -24,8 +24,8 @@ export class MapLocationPickerComponent implements OnInit, AfterViewInit, OnChan
   mapLoading: boolean = true;
   mapError: string = '';
 
-  defaultLatitude: number = 28.7041;
-  defaultLongitude: number = 77.1025;
+  defaultLatitude: number = 22.4719;
+  defaultLongitude: number = 88.3666;
 
   constructor(
     private cdr: ChangeDetectorRef,
@@ -34,11 +34,11 @@ export class MapLocationPickerComponent implements OnInit, AfterViewInit, OnChan
 
   ngOnInit() {
     // Initialize with default location from API
-    this.getAddressFromCoordinates(this.defaultLatitude, this.defaultLongitude);
+    // this.getAddressFromCoordinates(this.defaultLatitude, this.defaultLongitude);
   }
 
   ngAfterViewInit() {
-    console.log('ngAfterViewInit-MapLocationPickerComponent initialized. isOpen:', this.isOpen);
+    // console.log('ngAfterViewInit-MapLocationPickerComponent initialized. isOpen:', this.isOpen);
     if (this.isOpen && this.mapContainer) {
       this.mapLoading = true;
       this.mapError = '';
@@ -50,9 +50,10 @@ export class MapLocationPickerComponent implements OnInit, AfterViewInit, OnChan
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    console.log('ngOnChanges-MapLocationPickerComponent initialized. isOpen:', this.isOpen);
+    // console.log('ngOnChanges-MapLocationPickerComponent initialized. isOpen:', this.isOpen);
     // if (changes['isOpen'] && this.isOpen && this.mapContainer && !this.map) {
     if (this.isOpen && !this.map) {
+      this.getAddressFromCoordinates(this.defaultLatitude, this.defaultLongitude);
       console.log('before initializing map, isOpen:', this.isOpen);
       this.mapLoading = true;
       setTimeout(() => {
@@ -135,26 +136,36 @@ export class MapLocationPickerComponent implements OnInit, AfterViewInit, OnChan
       next: (response: any) => {
         this.isSearching = false;
 
-        if (response.success && response.data) {
+        if (response.responseCode == 200 && response.data) {
           // Update map with pincode location
           const location = response.data;
-          const lat = location.latitude || location.lat;
-          const lng = location.longitude || location.lng;
+          const suggestedPincode = location.suggestions;
+          this.predictions = suggestedPincode.map((item:any) => {
+             return {
+                place_id: item.placePrediction.placeId,
+                main_text:item.placePrediction.structuredFormat.mainText.text,
+                secondary_text:item.placePrediction.text.text,
+                isError:false
+            }
+          });
+          // console.log(this.predictions);
+          // const lat = location.latitude || location.lat; 
+          // const lng = location.longitude || location.lng;
 
-          this.placeMarkerByCoordinates(lat, lng);
+          // this.placeMarkerByCoordinates(lat, lng);
 
-          this.selectedLocation = {
-            address: location.formatted_address || location.address,
-            latitude: lat,
-            longitude: lng,
-            name: location.name || 'Selected Location',
-            pincode: pincode
-          };
+          // this.selectedLocation = {
+          //   address: location.formatted_address || location.address,
+          //   latitude: lat,
+          //   longitude: lng,
+          //   name: location.name || 'Selected Location',
+          //   pincode: pincode
+          // };
 
-          if (this.map) {
-            this.map.setCenter({ lat, lng });
-            this.map.setZoom(15);
-          }
+          // if (this.map) {
+          //   this.map.setCenter({ lat, lng });
+          //   this.map.setZoom(15);
+          // }
 
           this.cdr.detectChanges();
         } else {
@@ -186,19 +197,32 @@ export class MapLocationPickerComponent implements OnInit, AfterViewInit, OnChan
     this.addressService.searchByArea(searchText).subscribe({
       next: (response: any) => {
         this.isSearching = false;
+        // console.log(response.responseCode);
 
-        if (response.success && response.data && response.data.length > 0) {
+        if (response.responseCode == 200 && response.data) {
+
+          const location = response.data;
+          const suggestedPincode = location.suggestions;
+          this.predictions = suggestedPincode.map((item:any) => {
+             return {
+                place_id: item.placePrediction.placeId,
+                main_text:item.placePrediction.structuredFormat.mainText.text,
+                secondary_text:item.placePrediction.text.text,
+                isError:false
+            }
+          });
+          // console.log(this.predictions);
           // Convert backend response to predictions format
-          this.predictions = response.data.map((item: any) => ({
-            description: item.formatted_address || item.address,
-            main_text: item.main_text || item.name,
-            secondary_text: item.secondary_text || item.address,
-            place_id: item.place_id || item.id,
-            latitude: item.latitude || item.lat,
-            longitude: item.longitude || item.lng,
-            formatted_address: item.formatted_address || item.address,
-            name: item.name
-          }));
+          // this.predictions = response.data.map((item: any) => ({
+          //   description: item.formatted_address || item.address,
+          //   main_text: item.main_text || item.name,
+          //   secondary_text: item.secondary_text || item.address,
+          //   place_id: item.place_id || item.id,
+          //   latitude: item.latitude || item.lat,
+          //   longitude: item.longitude || item.lng,
+          //   formatted_address: item.formatted_address || item.address,
+          //   name: item.name
+          // }));
         } else {
           this.predictions = [];
         }
@@ -250,18 +274,42 @@ export class MapLocationPickerComponent implements OnInit, AfterViewInit, OnChan
   getPlaceDetails(placeId: string): void {
     this.addressService.getPlaceDetails(placeId).subscribe({
       next: (response: any) => {
-        if (response.success && response.data) {
+        // console.log('Place details response:', response);
+        if (response.responseCode == 200 && response.data) {
           const place = response.data;
-          const lat = place.latitude || place.lat;
-          const lng = place.longitude || place.lng;
+          // const address = place.formattedAddress;
+          // const lat = place.location.latitude;
+          // const lng = place.location.longitude;
 
-          this.placeMarkerByCoordinates(lat, lng);
+          // this.placeMarkerByCoordinates(lat, lng);
 
+          // this.selectedLocation = {
+          //   address: address,
+          //   latitude: lat,
+          //   longitude: lng,
+          //   name: place.displayName.text || 'Selected Location'
+          // };
+          let addressComponents:any[] = place.addressComponents;
+          // console.log("addressComponents",addressComponents);
+          let pincode = addressComponents.find(comp => comp.types.includes('postal_code'))?.longText || '';
+          let street_number = addressComponents.find(comp => comp.types.includes('premise'))?.longText || '';
+          let administrative_area_level_3 = addressComponents.find(comp => comp.types.includes('administrative_area_level_3'))?.longText || '';
+          let sublocality_level_2 = addressComponents.find(comp => comp.types.includes('sublocality_level_2'))?.longText || '';
+          let sublocality_level_1 = addressComponents.find(comp => comp.types.includes('sublocality_level_1'))?.longText || '';
+          let locality = addressComponents.find(comp => comp.types.includes('locality'))?.longText || '';
+          let administrative_area_level_2 = addressComponents.find(comp => comp.types.includes('administrative_area_level_2'))?.longText || '';
+          let administrative_area_level_1 = addressComponents.find(comp => comp.types.includes('administrative_area_level_1'))?.longText || '';
+          let country = addressComponents.find(comp => comp.types.includes('country'))?.longText || '';
+          let displayName = response.data.displayName?.text;
+          const lat = response.data.location.latitude;
+          const lng = response.data.location.longitude;
           this.selectedLocation = {
-            address: place.formatted_address || place.address,
-            latitude: lat,
-            longitude: lng,
-            name: place.name || 'Selected Location'
+            pincode: pincode,
+            addresss: street_number + ' ' + displayName + ', ' + sublocality_level_1 + ', ' + administrative_area_level_3 + ', ' + administrative_area_level_1 + ', ' + country,
+            formatted_address: response.data.formattedAddress,
+            latitude: response.data.location.latitude,
+            longitude: response.data.location.longitude,
+            name: displayName
           };
 
           if (this.map) {
@@ -281,12 +329,24 @@ export class MapLocationPickerComponent implements OnInit, AfterViewInit, OnChan
   getAddressFromCoordinates(latitude: number, longitude: number): void {
     this.addressService.getAddressFromCoordinates(latitude, longitude).subscribe({
       next: (response: any) => {
-        if (response.success && response.data) {
+        if (response.responseCode == 200 && response.data) {
+          let addressComponents:any[] = response.data.results[0].address_components;
+          let pincode = addressComponents.find(comp => comp.types.includes('postal_code'))?.long_name || '';
+          let street_number = addressComponents.find(comp => comp.types.includes('street_number'))?.long_name || '';
+          let route = addressComponents.find(comp => comp.types.includes('route'))?.long_name || '';
+          let sublocality_level_2 = addressComponents.find(comp => comp.types.includes('sublocality_level_2'))?.long_name || '';
+          let sublocality_level_1 = addressComponents.find(comp => comp.types.includes('sublocality_level_1'))?.long_name || '';
+          let locality = addressComponents.find(comp => comp.types.includes('locality'))?.long_name || '';
+          let administrative_area_level_2 = addressComponents.find(comp => comp.types.includes('administrative_area_level_2'))?.long_name || '';
+          let administrative_area_level_1 = addressComponents.find(comp => comp.types.includes('administrative_area_level_1'))?.long_name || '';
+          let country = addressComponents.find(comp => comp.types.includes('country'))?.long_name || '';
           this.selectedLocation = {
-            address: response.data.formatted_address || response.data.address,
-            latitude: latitude,
-            longitude: longitude,
-            name: response.data.name || 'Selected Location'
+            pincode: pincode,
+            addresss: street_number + ' ' + route + ', ' + sublocality_level_2 + ', ' + sublocality_level_1 + ', ' + locality + ', ' + administrative_area_level_2 + ', ' + administrative_area_level_1 + ', ' + country,
+            formatted_address: response.data.results[0].formatted_address,
+            latitude: response.data.results[0].geometry.location.lat,
+            longitude: response.data.results[0].geometry.location.lng,
+            name: sublocality_level_2
           };
           this.cdr.detectChanges();
         }
@@ -307,10 +367,10 @@ export class MapLocationPickerComponent implements OnInit, AfterViewInit, OnChan
       this.marker.setPosition(location);
     }
     
-    const lat = location.lat instanceof Function ? location.lat() : location.lat;
-    const lng = location.lng instanceof Function ? location.lng() : location.lng;
+    // const lat = location.lat instanceof Function ? location.lat() : location.lat;
+    // const lng = location.lng instanceof Function ? location.lng() : location.lng;
     
-    this.getAddressFromCoordinates(lat, lng);
+    // this.getAddressFromCoordinates(lat, lng);
     
     if (this.map) {
       this.map.setCenter(location);
