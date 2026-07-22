@@ -127,12 +127,12 @@
                     </div>
                     <div class="ac-grid mb-2">
                         <div class="mb-3">
-                            <label for="Addressline1" class="form-label">House No. <span class="text-danger">
+                            <label for="Addressline1" class="form-label">Flat/House/Building Name <span class="text-danger">
                                     *</span></label>
                             <input type="text" rows="3" class="form-control" id="Addressline1"
                                 formControlName="Addressline1"/>
                             <div *ngIf="submitted && f['Addressline1'].errors" class="error-text">
-                                <div *ngIf="f['Addressline1'].errors['required']">* House No. is required</div>
+                                <div *ngIf="f['Addressline1'].errors['required']">*Building name is required</div>
                             </div>
                         </div>
                     </div>
@@ -141,7 +141,9 @@
                             <label for="Addressline" class="form-label">Address <span class="text-danger">
                                     *</span></label>
                             <textarea type="text" rows="3" class="form-control" id="Addressline"
-                                formControlName="Addressline"></textarea>
+                                formControlName="Addressline">
+                            </textarea>
+                            <button class="btnSubmitOutline" type="button"  (click)="changeLocation()">Change Locatinon ?</button>
                             <div *ngIf="submitted && f['Addressline'].errors" class="error-text">
                                 <div *ngIf="f['Addressline'].errors['required']">* Address is required</div>
                             </div>
