@@ -70,6 +70,7 @@ export class ManageAddressComponent implements OnInit {
     // this.profileService.getAddressList('customers/address/manageAddress').subscribe((data: any) => {
     this.profileService.getAddressList('webapi/user/manageAddress').subscribe((data: any) => {
       // console.log(data['result']['rs']['allAddressData']);
+      data = {"result":{"rs":{"allAddressData":[{"AddressId":3582555,"UserId":588795,"NickName":"Anindya Bhattacharya","AddressType":"H","IsPrimary":1,"Addline":"378\/1, Baidyapara, Baidyabati, West Bengal 712222, India","Landmark":"B S Park","City":"Hooghly","AreaId":null,"ServiceArea":null,"FamilyId":null,"StateId":35,"StateName":"West Bengal","PinCode":712222,"CountryId":1,"CountryName":"India","IsDeleted":0,"WarehouseId":1,"MedDiscPercent":18,"IsLab":1,"CustContactNo":9804750934,"RecepientName":null,"AddressName":null,"Latitude":0,"Longitude":0,"AddLine1":null},{"AddressId":3582586,"UserId":588795,"NickName":"DA","AddressType":"O","IsPrimary":0,"Addline":"DH Block(Newtown), Action Area I, Newtown, Chakpachuria, New Town, West Bengal 700160","Landmark":"Candor","City":"Kolkata","AreaId":null,"ServiceArea":null,"FamilyId":null,"StateId":35,"StateName":"West Bengal","PinCode":700156,"CountryId":1,"CountryName":"India","IsDeleted":0,"WarehouseId":1,"MedDiscPercent":18,"IsLab":1,"CustContactNo":9836370209,"RecepientName":null,"AddressName":"DA Serice","Latitude":0,"Longitude":0,"AddLine1":null},{"AddressId":3582672,"UserId":588795,"NickName":"A Bhattacharya","AddressType":"H","IsPrimary":0,"Addline":"B S PARK B S PARK, Market, Hooghly, West Bengal, India","Landmark":"null","City":"Hooghly","AreaId":null,"ServiceArea":null,"FamilyId":null,"StateId":35,"StateName":"West Bengal","PinCode":712222,"CountryId":1,"CountryName":"India","IsDeleted":0,"WarehouseId":1,"MedDiscPercent":18,"IsLab":1,"CustContactNo":9804750934,"RecepientName":null,"AddressName":null,"Latitude":0,"Longitude":0,"AddLine1":null},{"AddressId":3582673,"UserId":588795,"NickName":"A Bhattacharya","AddressType":"H","IsPrimary":0,"Addline":"B S PARK B S PARK, Market, Hooghly, West Bengal, India","Landmark":"null","City":"Hooghly","AreaId":null,"ServiceArea":null,"FamilyId":null,"StateId":35,"StateName":"West Bengal","PinCode":712222,"CountryId":1,"CountryName":"India","IsDeleted":0,"WarehouseId":1,"MedDiscPercent":18,"IsLab":1,"CustContactNo":9804750934,"RecepientName":null,"AddressName":null,"Latitude":0,"Longitude":0,"AddLine1":91},{"AddressId":3581129,"UserId":588795,"NickName":"Test From SS","AddressType":"O","IsPrimary":0,"Addline":"DH Block(Newtown), Action Area I, Newtown, Chakpachuria, New Town, West Bengal 700160","Landmark":"Test","City":"Others","AreaId":null,"ServiceArea":null,"FamilyId":null,"StateId":37,"StateName":"Others","PinCode":712200,"CountryId":1,"CountryName":"India","IsDeleted":0,"WarehouseId":1,"MedDiscPercent":null,"IsLab":0,"CustContactNo":9836370209,"RecepientName":null,"AddressName":null,"Latitude":0,"Longitude":0,"AddLine1":null},{"AddressId":3582557,"UserId":588795,"NickName":"TEST b","AddressType":"O","IsPrimary":0,"Addline":"TEST TESTQ","Landmark":"TEST","City":"Others","AreaId":null,"ServiceArea":null,"FamilyId":null,"StateId":37,"StateName":"Others","PinCode":700160,"CountryId":1,"CountryName":"India","IsDeleted":0,"WarehouseId":1,"MedDiscPercent":null,"IsLab":1,"CustContactNo":9804750934,"RecepientName":null,"AddressName":null,"Latitude":0,"Longitude":0,"AddLine1":null}],"CustomerType":"N"}}};
       if(data && data['result']['rs']['allAddressData']?.length >0){
         this.addressList = data['result']['rs']['allAddressData'];
         this.isloading = false;
@@ -150,9 +151,23 @@ export class ManageAddressComponent implements OnInit {
     // }
   }
 
+  changeLocation(){
+    // this.onReset();
+    // this.closebutton.nativeElement.click();
+    // this.openAddressMap();
+    this.isMapOpen = true;
+    this.AddressForm.patchValue({
+      AddressType: 'H',
+      Addressline: this.selectedAddress.addresss,
+      Pincode: this.selectedAddress.pincode,
+    });
+    this.AddressForm.get('Addressline')?.disable();
+    this.AddressModal.nativeElement.click();
+
+  }
   addNewAddress2(){
     this.actionType = 'ADD';
-    this.AddressForm.reset();
+    // this.AddressForm.reset();
     // this.selectedAddress = adr;
     this.AddressForm.patchValue({
       AddressType: 'H',
@@ -162,6 +177,7 @@ export class ManageAddressComponent implements OnInit {
       // Landmark: adr.Landmark,
       Pincode: this.selectedAddress.pincode,
     });
+    this.AddressForm.get('Addressline')?.disable();
     this.AddressModal.nativeElement.click();
   }
 
@@ -180,9 +196,11 @@ export class ManageAddressComponent implements OnInit {
       ContactPerson: adr.NickName,
       MobileNo: adr.CustContactNo,
       Addressline: adr.Addline,
+      Addressline1: adr.AddLine1,
       Landmark: adr.Landmark,
       Pincode: adr.PinCode,
     });
+    this.AddressForm.get('Addressline')?.disable();
     this.AddressModal.nativeElement.click();
   }
 
