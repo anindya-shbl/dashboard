@@ -50,9 +50,10 @@ export class MapLocationPickerComponent implements OnInit, AfterViewInit, OnChan
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    // console.log('ngOnChanges-MapLocationPickerComponent initialized. isOpen:', this.isOpen);
+    console.log('ngOnChanges-MapLocationPickerComponent initialized. isOpen:', this.isOpen);
+    // console.log(changes['isOpen']);
     // if (changes['isOpen'] && this.isOpen && this.mapContainer && !this.map) {
-    if (this.isOpen && !this.map) {
+    if(this.isOpen) {
       this.getAddressFromCoordinates(this.defaultLatitude, this.defaultLongitude);
       console.log('before initializing map, isOpen:', this.isOpen);
       this.mapLoading = true;

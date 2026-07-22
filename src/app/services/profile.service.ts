@@ -49,6 +49,11 @@ export class ProfileService {
     return this.http.post(postUrl, fd);
   }
 
+  addEditAddress(url: any, fd: any): Observable<any> {
+    let postUrl = this.apiUrl + url;
+    return this.http.post(postUrl, fd);
+  }
+
   saveNewAddress(url: any, fd: any): Observable<any> {
     // let postUrl = 'http://192.168.5.29:8074/sspl_com/index.php/' + url;
     let postUrl = this.apiUrl + url;
