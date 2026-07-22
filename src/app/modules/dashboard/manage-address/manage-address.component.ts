@@ -18,6 +18,7 @@ export class ManageAddressComponent implements OnInit {
   selectedAddress: any = '';
   isloading: boolean = false;
   respMsg: any = '';
+  isMapSelected: boolean = false;
 
   isMapOpen: boolean = false;
 
@@ -110,11 +111,10 @@ export class ManageAddressComponent implements OnInit {
       if(this.actionType == 'EDIT'){
         fd.append('AddressId', this.selectedAddress.AddressId);
         // 'customers/address/editAddress'
-        endpoint = 'customers/address/editAddress';
+        endpoint = 'webapi/customer/editAddress';
       }
       // console.log(this.AddressForm.value, fd);
       this.spinner.show();
-
       // this.profileService.saveNewAddress('customers/address/saveAddress', fd).subscribe((res: any) => {
       this.profileService.addEditAddress(endpoint, fd).subscribe((res: any) => {
         // console.log(res);
@@ -166,7 +166,9 @@ export class ManageAddressComponent implements OnInit {
       Addressline: this.selectedAddress.addresss,
       Pincode: this.selectedAddress.pincode,
     });
-    this.AddressForm.get('Addressline')?.disable();
+    // this.AddressForm.get('Addressline')?.disable();
+    // this.AddressForm.get('Pincode')?.disable();
+    this.isMapSelected = true;
     this.AddressModal.nativeElement.click();
 
   }
@@ -182,7 +184,9 @@ export class ManageAddressComponent implements OnInit {
       // Landmark: adr.Landmark,
       Pincode: this.selectedAddress.pincode,
     });
-    this.AddressForm.get('Addressline')?.disable();
+    this.isMapSelected = true;
+    // this.AddressForm.get('Addressline')?.disable();
+    // this.AddressForm.get('Pincode')?.disable();
     this.AddressModal.nativeElement.click();
   }
 
@@ -193,9 +197,12 @@ export class ManageAddressComponent implements OnInit {
   }
 
   setEditModal(adr: any){
+    console.log('edit');
     this.actionType = 'EDIT';
     this.AddressForm.reset();
     this.selectedAddress = adr;
+    this.isMapSelected = true;
+
     this.AddressForm.patchValue({
       AddressType: adr.AddressType,
       ContactPerson: adr.NickName,
@@ -205,7 +212,8 @@ export class ManageAddressComponent implements OnInit {
       Landmark: adr.Landmark,
       Pincode: adr.PinCode,
     });
-    this.AddressForm.get('Addressline')?.disable();
+    // this.AddressForm.get('Addressline')?.disable();
+    // this.AddressForm.get('Pincode')?.disable();
     this.AddressModal.nativeElement.click();
   }
 

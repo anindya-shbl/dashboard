@@ -140,10 +140,12 @@
                         <div class="mb-3">
                             <label for="Addressline" class="form-label">Address <span class="text-danger">
                                     *</span></label>
-                            <textarea type="text" rows="3" class="form-control" id="Addressline"
-                                formControlName="Addressline">
+                            <div style="position: relative;">
+                            <textarea type="text" rows="3" style="padding-right:180px !important;" class="form-control" id="Addressline"
+                                formControlName="Addressline" [readOnly]="isMapSelected">
                             </textarea>
-                            <button class="btnSubmitOutline" type="button"  (click)="changeLocation()">Change Locatinon ?</button>
+                            <button class="btnSubmitOutline" style="position: absolute; top: 25px; right: 15px; z-index: 2; padding: 6px 15px; font-size: 13px;" type="button"  (click)="changeLocation()">Change Location ?</button>
+                            </div>
                             <div *ngIf="submitted && f['Addressline'].errors" class="error-text">
                                 <div *ngIf="f['Addressline'].errors['required']">* Address is required</div>
                             </div>
