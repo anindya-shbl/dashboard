@@ -34,6 +34,7 @@ export class ManageAddressComponent implements OnInit {
   }
 
   onMapClosed() {
+     console.log('Closing map for address selection...');
     this.isMapOpen = false;
   }
   actionType: any = 'ADD';
@@ -95,7 +96,9 @@ export class ManageAddressComponent implements OnInit {
       this.addrsRspModal.nativeElement.click();
       return;
     }else{
+      let endpoint = 'webapi/customer/saveAddress';
       let fd = new FormData();
+      
       fd.append('NickName', this.AddressForm.value.ContactPerson);
       fd.append('Addline', this.AddressForm.value.Addressline);
       fd.append('Addline1', this.AddressForm.value.Addressline1);
@@ -106,12 +109,14 @@ export class ManageAddressComponent implements OnInit {
       
       if(this.actionType == 'EDIT'){
         fd.append('AddressId', this.selectedAddress.AddressId);
+        // 'customers/address/editAddress'
+        endpoint = 'customers/address/editAddress';
       }
       // console.log(this.AddressForm.value, fd);
       this.spinner.show();
 
       // this.profileService.saveNewAddress('customers/address/saveAddress', fd).subscribe((res: any) => {
-      this.profileService.saveNewAddress('webapi/customer/saveAddress', fd).subscribe((res: any) => {
+      this.profileService.addEditAddress(endpoint, fd).subscribe((res: any) => {
         // console.log(res);
         this.spinner.hide();
         if(res && res['status']==200){
