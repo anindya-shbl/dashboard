@@ -25,6 +25,8 @@ export class ManageAddressComponent implements OnInit {
   openAddressMap() {
     console.log('Opening map for address selection...');
     this.isMapOpen = true;
+    this.actionType = 'ADD';
+    console.log('type', this.actionType);
   }
 
   onLocationSelected(location: any) {
@@ -157,23 +159,25 @@ export class ManageAddressComponent implements OnInit {
   }
 
   changeLocation(){
+    console.log('type', this.actionType);
     // this.onReset();
     // this.closebutton.nativeElement.click();
     // this.openAddressMap();
     this.isMapOpen = true;
-    this.AddressForm.patchValue({
-      AddressType: 'H',
-      Addressline: this.selectedAddress.addresss,
-      Pincode: this.selectedAddress.pincode,
-    });
+    this.closebutton.nativeElement.click(); 
+    // this.AddressForm.patchValue({
+    //   AddressType: 'H',
+    //   Addressline: this.selectedAddress.addresss,
+    //   Pincode: this.selectedAddress.pincode,
+    // });
     // this.AddressForm.get('Addressline')?.disable();
     // this.AddressForm.get('Pincode')?.disable();
-    this.isMapSelected = true;
-    this.AddressModal.nativeElement.click();
+    // this.isMapSelected = true;
+    // this.AddressModal.nativeElement.click();
 
   }
   addNewAddress2(){
-    this.actionType = 'ADD';
+    // this.actionType = 'ADD';
     // this.AddressForm.reset();
     // this.selectedAddress = adr;
     this.AddressForm.patchValue({
