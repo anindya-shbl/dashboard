@@ -2,6 +2,7 @@ declare const google: any;
 
 import { Component, OnInit, ViewChild, Output, EventEmitter, Input, ChangeDetectorRef, AfterViewInit, OnChanges, SimpleChanges } from '@angular/core';
 import { AddressService } from '../../services/address.service';
+import { GeolocationService, CurrentLocation } from '../../services/geolocation.service';
 
 @Component({
   selector: 'app-map-location-picker',
@@ -26,15 +27,31 @@ export class MapLocationPickerComponent implements OnInit, AfterViewInit, OnChan
 
   defaultLatitude: number = 22.4719;
   defaultLongitude: number = 88.3666;
+  currentLocation: CurrentLocation | null = null;
 
   constructor(
     private cdr: ChangeDetectorRef,
-    private addressService: AddressService
+    private addressService: AddressService,
+    private geolocationService: GeolocationService
   ) {}
 
   ngOnInit() {
     // Initialize with default location from API
     // this.getAddressFromCoordinates(this.defaultLatitude, this.defaultLongitude);
+    // Get current location from geolocation service
+    this.geolocationService.currentLocation$.subscribe({
+      next: (location) => {
+        if (location) {
+          console.log('current location'+ JSON.stringify(location));
+          this.currentLocation = location;
+          this.defaultLatitude = location.latitude;
+          this.defaultLongitude = location.longitude;
+          console.log('Using current location:', location);
+        } else {
+          console.log('Using default India coordinates');
+        }
+      }
+    });
   }
 
   ngAfterViewInit() {
