@@ -37,15 +37,22 @@ export class AddressService {
   //   return this.http.post(postUrl, data, {headers});
   // }
 
+  // getAddressFromCoordinates_bkp_030826(latitude: number, longitude: number): Observable<any> {
+  //   const params = new HttpParams()
+  //     .set('lat', latitude.toString())
+  //     .set('lng', longitude.toString());
+
+  //   return this.http.get(`${this.catalogurl}/geocode-latlng`, { params });
+  // }
   /**
    * Get address from coordinates (Reverse Geocoding)
    */
   getAddressFromCoordinates(latitude: number, longitude: number): Observable<any> {
-    const params = new HttpParams()
-      .set('lat', latitude.toString())
-      .set('lng', longitude.toString());
+    // const params = new HttpParams()
+    //   .set('lat', latitude.toString())
+    //   .set('lng', longitude.toString());
 
-    return this.http.get(`${this.catalogurl}/geocode-latlng`, { params });
+    return this.http.post(`${this.catalogurl}/reverse-geocode`, { lat: latitude.toString(), lng: longitude.toString() });
   }
 
   /**
