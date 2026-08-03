@@ -348,24 +348,35 @@ export class MapLocationPickerComponent implements OnInit, AfterViewInit, OnChan
     this.addressService.getAddressFromCoordinates(latitude, longitude).subscribe({
       next: (response: any) => {
         if (response.responseCode == 200 && response.data) {
-          let addressComponents:any[] = response.data.results[0].address_components;
-          let pincode = addressComponents.find(comp => comp.types.includes('postal_code'))?.long_name || '';
-          let street_number = addressComponents.find(comp => comp.types.includes('street_number'))?.long_name || '';
-          let route = addressComponents.find(comp => comp.types.includes('route'))?.long_name || '';
-          let sublocality_level_2 = addressComponents.find(comp => comp.types.includes('sublocality_level_2'))?.long_name || '';
-          let sublocality_level_1 = addressComponents.find(comp => comp.types.includes('sublocality_level_1'))?.long_name || '';
-          let locality = addressComponents.find(comp => comp.types.includes('locality'))?.long_name || '';
-          let administrative_area_level_2 = addressComponents.find(comp => comp.types.includes('administrative_area_level_2'))?.long_name || '';
-          let administrative_area_level_1 = addressComponents.find(comp => comp.types.includes('administrative_area_level_1'))?.long_name || '';
-          let country = addressComponents.find(comp => comp.types.includes('country'))?.long_name || '';
+          // let addressComponents:any[] = response.data.results[0].address_components;
+          // let pincode = addressComponents.find(comp => comp.types.includes('postal_code'))?.long_name || '';
+          // let street_number = addressComponents.find(comp => comp.types.includes('street_number'))?.long_name || '';
+          // let route = addressComponents.find(comp => comp.types.includes('route'))?.long_name || '';
+          // let sublocality_level_2 = addressComponents.find(comp => comp.types.includes('sublocality_level_2'))?.long_name || '';
+          // let sublocality_level_1 = addressComponents.find(comp => comp.types.includes('sublocality_level_1'))?.long_name || '';
+          // let locality = addressComponents.find(comp => comp.types.includes('locality'))?.long_name || '';
+          // let administrative_area_level_2 = addressComponents.find(comp => comp.types.includes('administrative_area_level_2'))?.long_name || '';
+          // let administrative_area_level_1 = addressComponents.find(comp => comp.types.includes('administrative_area_level_1'))?.long_name || '';
+          // let country = addressComponents.find(comp => comp.types.includes('country'))?.long_name || '';
+          // this.selectedLocation = {
+          //   pincode: pincode,
+          //   addresss: street_number + ' ' + route + ', ' + sublocality_level_2 + ', ' + sublocality_level_1 + ', ' + locality + ', ' + administrative_area_level_2 + ', ' + administrative_area_level_1 + ', ' + country,
+          //   formatted_address: response.data.results[0].formatted_address,
+          //   latitude: response.data.results[0].geometry.location.lat,
+          //   longitude: response.data.results[0].geometry.location.lng,
+          //   name: sublocality_level_2
+          // };
+
           this.selectedLocation = {
-            pincode: pincode,
-            addresss: street_number + ' ' + route + ', ' + sublocality_level_2 + ', ' + sublocality_level_1 + ', ' + locality + ', ' + administrative_area_level_2 + ', ' + administrative_area_level_1 + ', ' + country,
-            formatted_address: response.data.results[0].formatted_address,
-            latitude: response.data.results[0].geometry.location.lat,
-            longitude: response.data.results[0].geometry.location.lng,
-            name: sublocality_level_2
+            pincode: response.data.pinCode,
+            addresss: response.data.address,
+            formatted_address: response.data.addressName,
+            latitude: response.data.lat,
+            longitude: response.data.lng,
+            name: response.data.addressName
           };
+
+
           this.cdr.detectChanges();
         }
       },
