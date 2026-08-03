@@ -97,7 +97,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h6 *ngIf="actionType == 'ADD'" class="modal-title mb-0" id="AddressModalLabel">Add New Address</h6>
-                <h6 *ngIf="actionType == 'EDIT'" class="modal-title mb-0" id="AddressModalLabel">Edit Address</h6>
+                <h6 *ngIf="actionType == 'EDIT'" class="modal-title mb-0" id="AddressModalLabel">Update Address</h6>
                 <!-- <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" (click)="onReset()"></button> -->
             </div>
             <div class="modal-body">
@@ -144,7 +144,7 @@
                             <textarea type="text" rows="3" style="padding-right:180px !important;" class="form-control" id="Addressline"
                                 formControlName="Addressline" [readOnly]="isMapSelected">
                             </textarea>
-                            <button class="btnSubmitOutline" style="position: absolute; top: 25px; right: 15px; z-index: 2; padding: 6px 15px; font-size: 13px;" type="button"  (click)="changeLocation()">Change Location ?</button>
+                            <button class="btnSubmitOutline" style="position: absolute; top: 25px; right: 15px; z-index: 2; padding: 6px 15px; font-size: 13px;" type="button"  (click)="changeLocation()">Need to remove ?</button>
                             </div>
                             <div *ngIf="submitted && f['Addressline'].errors" class="error-text">
                                 <div *ngIf="f['Addressline'].errors['required']">* Address is required</div>
@@ -217,7 +217,7 @@
                             <button class="btnCancel" #closebutton type="button" data-bs-dismiss="modal" aria-label="Close" (click)="onReset()"  style="min-width: 140px;">Cancel</button>
                             <button type="submit" class="btnSubmit" style="min-width: 140px;" [disabled]="serviceAreaMsg">
                                 <span *ngIf="actionType == 'ADD'">Add Address</span>
-                                <span *ngIf="actionType == 'EDIT'">Edit Address</span>
+                                <span *ngIf="actionType == 'EDIT'">Update Address</span>
                             </button>
                         </div>
                     </div>
