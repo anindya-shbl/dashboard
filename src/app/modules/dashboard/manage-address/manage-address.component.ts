@@ -212,7 +212,7 @@ export class ManageAddressComponent implements OnInit {
       MobileNo: adr.CustContactNo,
       Addressline: adr.Addline,
       Addressline1: adr.AddLine1,
-      Landmark: adr.Landmark,
+      Landmark: (adr.Landmark && adr.Landmark !== 'null') ? adr.Landmark : '',
       Pincode: adr.PinCode,
     });
     // this.AddressForm.get('Addressline')?.disable();
