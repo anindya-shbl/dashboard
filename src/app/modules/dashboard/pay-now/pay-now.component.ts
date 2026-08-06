@@ -406,6 +406,7 @@ export class PayNowComponent implements OnInit {
     }
     console.log('endpoint',endpoint)
     this.paynowService.getGatewayInfo(endpoint, fd).subscribe((response: any) => {
+      response = {"status":200,"data":{"status":1,"message":"api successfully call","data":{"RazorpayMerchantDetails":{"amount":16800,"amount_due":16800,"amount_paid":0,"attempts":0,"created_at":1786022650,"currency":"INR","entity":"order","id":"order_TMV1YhlkW9NN3B","notes":{"Module":"SSSPL","TransactionId":"7941BE66-B5CC-4B4B-A9A6-83B193892368","UserId":"588795"},"offer_id":null,"receipt":"7941BE66-B5CC-4B4B-A9A6-83B193892368","status":"created","http_code":200,"razorpay_key":"rzp_test_xhGsSSMEsftyF4"},"PayGatewayTransacNo":"7941BE66-B5CC-4B4B-A9A6-83B193892368","PaymentMethod":"RAZORPAY"}},"message":"Success"};
       // console.log(response);
       // cfhFlag = true;
       if (response && response['status'] == 200) {
