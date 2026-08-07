@@ -374,9 +374,9 @@ export class PayNowComponent implements OnInit {
         // console.log(rsp)
         if (rsp && rsp.response_code == 0) {
           // this.productCheckoutCompletedWebEngage(this.headerDetails, this.finalList, rsp['data']['Orders']);
-          // this.orderSuccess(rsp);
+          this.orderSuccess(rsp);
           // alert(rsp['message']);
-          this.spinner.hide();
+          // this.spinner.hide();
         } else {
           this.msgText = 'Unable to process your request, Please try after some time';
           this.open.nativeElement.click();
@@ -396,9 +396,38 @@ export class PayNowComponent implements OnInit {
     const razorpay = new Razorpay(options);
     razorpay.open();
   }
+
+orderSuccess(resp: any) {
+  let d: Date = new Date();
+  // this.cookieService.set('defaultGateway', '', d.getTime() + 86400 * 30, '/');
+  // this.cookieService.set('GateWayPayMode', '', d.getTime() + 86400 * 30, '/');
+
+  // this.dbService.clear('cartItems').subscribe((res: any) => {
+  //   // console.log(res);
+  //   if (res == true) {
+
+      var form = document.createElement('form');
+      form.setAttribute('action', this.CommonService.codsuccessUrl);
+      form.setAttribute('id', 'submitForm');
+      form.setAttribute('method', 'POST');
+      document.body.appendChild(form);
+      let frmObj = <HTMLFormElement>(document.getElementById('submitForm'));
+      // let sspl_csrf = this.cookieService.get('sspl_csrf');
+      let input = document.createElement('input');
+      input.setAttribute('type', 'hidden');
+      input.setAttribute('name', 'csrf_test_name');
+      // input.setAttribute('value', sspl_csrf);
+      frmObj.appendChild(input);
+      // csrf token
+      this.spinner.hide();
+      frmObj.submit();
+  //   } else {
+  //     this.spinner.hide();
+  //   }
+  // });
+}
   
-  
-  getBalance() {
+getBalance() {
     this.isloading = true;
     // this.trnsHistory = [];
     // this.loadMoreBtn = false;
