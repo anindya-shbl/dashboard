@@ -19,6 +19,7 @@ export class CommonService {
   // public catalogUrl = 'https://serv-catalog.sastasundar.com/';
   public searchBaseUrl = 'https://search.sastasundar.com/';
   // public webcartUrl = 'https://sastasundar.com/index.php/webapi/';
+  // public codsuccessUrl = 'https://sastasundar.com/index.php/customercart/order_success';
 
 
   // ================ stage ==============
@@ -31,6 +32,7 @@ export class CommonService {
   // public catalogUrl = 'https://stage-serv-catalog.sastasundar.com/';
   // public searchBaseUrl = 'https://stage-search.sastasundar.com/';
   // public webcartUrl = 'https://stage.sastasundar.com/index.php/webapi/';
+  // public codsuccessUrl = 'https://stage.sastasundar.com/index.php/customercart/order_success';
 
   // ================= Local =============
   public baseurl = 'http://192.168.5.236/sspl_com/';
@@ -42,6 +44,7 @@ export class CommonService {
   public catalogUrl = 'http://192.168.5.236:8003/';
   // public searchBaseUrl = 'http://192.168.5.192:4200/';
   public webcartUrl = 'http://192.168.5.236/sspl_com/index.php/webapi/';
+ public codsuccessUrl = 'http://192.168.5.236/sspl_com/index.php/customercart/order_success';
 
   private subject: any = new Subject<any>();
 
