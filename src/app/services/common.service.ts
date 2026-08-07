@@ -18,6 +18,7 @@ export class CommonService {
   // public ImageUrl = 'https://asset.sastasundar.com/';
   // public catalogUrl = 'https://serv-catalog.sastasundar.com/';
   public searchBaseUrl = 'https://search.sastasundar.com/';
+  // public webcartUrl = 'https://sastasundar.com/index.php/webapi/';
 
 
   // ================ stage ==============
@@ -29,6 +30,7 @@ export class CommonService {
   // public ImageUrl = 'https://res.sastasundar.com/';
   // public catalogUrl = 'https://stage-serv-catalog.sastasundar.com/';
   // public searchBaseUrl = 'https://stage-search.sastasundar.com/';
+  // public webcartUrl = 'https://stage.sastasundar.com/index.php/webapi/';
 
   // ================= Local =============
   public baseurl = 'http://192.168.5.236/sspl_com/';
@@ -39,6 +41,7 @@ export class CommonService {
   public ImageUrl = 'https://res.sastasundar.com/';
   public catalogUrl = 'http://192.168.5.236:8003/';
   // public searchBaseUrl = 'http://192.168.5.192:4200/';
+  public webcartUrl = 'http://192.168.5.236/sspl_com/index.php/webapi/';
 
   private subject: any = new Subject<any>();
 
@@ -284,6 +287,13 @@ export class CommonService {
    postCatalogData(url: any, fd: any) {
     let postUrl = this.catalogUrl + url;
     return this.http.post(postUrl, fd);
+  }
+
+  paymentSuccess(url: any, postDataVal: any) {
+    let postUrl = this.webcartUrl + url
+    let sspl_csrf = this.cookieService.get('sspl_csrf');
+    postDataVal.append('csrf_test_name', sspl_csrf);
+    return this.http.post(postUrl, postDataVal);
   }
 
 }

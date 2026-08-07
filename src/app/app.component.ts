@@ -53,6 +53,7 @@ export class AppComponent implements OnInit {
         this.authService.Mobile = res['data']['MobileNo'];
         this.authService.UserId = res['data']['UserId'];
         this.authService.Token = res['data']['EncodedUserId'];
+        this.authService.EmailId = res['data']['EmailId'];
         // this.authService.Warehouse = res['location']['HealthBuddyName'];
 
         if (res['location'] != undefined) {

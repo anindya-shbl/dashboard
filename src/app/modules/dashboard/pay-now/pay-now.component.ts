@@ -7,6 +7,7 @@ import { CommonService } from '../../../services/common.service';
 import { WebEngageService } from '../../../services/web-engage.service';
 import { AuthService } from '../../../services/auth.service';
 
+declare var Razorpay: any;
 @Component({
   selector: 'app-pay-now',
   templateUrl: './pay-now.component.html',
@@ -45,6 +46,7 @@ export class PayNowComponent implements OnInit {
   respMsg: any = '';
   @ViewChild('cnlsRspModal') cnlsRspModal: any;
   @ViewChild('cnlsOrd') cnlsOrd: any;
+  @ViewChild('open') open: any;
 
   constructor(private router: Router, private authService: AuthService,private activatedRoute: ActivatedRoute, private orderService: OrderService, private paynowService: PayNowService, private spinner: NgxSpinnerService, public CommonService: CommonService, private webengageService: WebEngageService) { }
 
@@ -418,9 +420,18 @@ export class PayNowComponent implements OnInit {
         }
         else {
           this.msgText = 'Redirecting to payment gateway. Please do not refresh or close the window.';
-          let EZdata = response['data']['data']['EasebuzzDetails'];
-          this.EASEBUZZPepayment(EZdata);
-          this.spinner.hide();
+          let PaymentMethod = response['data']['data']['PaymentMethod'];
+          if(PaymentMethod == 'RAZORPAY'){
+            let RazorData = response['data']['data']['RazorpayMerchantDetails'];
+            this.RazorPayment(RazorData);
+            this.spinner.hide();
+          }
+          else {
+            let EZdata = response['data']['data']['EasebuzzDetails'];
+            this.EASEBUZZPepayment(EZdata);
+            this.spinner.hide();
+          }
+          
         }
         
       }
@@ -444,9 +455,75 @@ export class PayNowComponent implements OnInit {
     let url = data.PayUrl;
     window.open(url, '_self');
   }
+  async RazorPayment(data: any) {
+    const options: any = {
+      key: data.razorpay_key,
+      amount: data.amount_due, // amount in paisa
+      currency: data.currency,
+      name: "SastaSundar",
+      description: '',
+      image: 'incom/retail_WH/images/small_logo.png',
+      order_id: data.id,
+      // handler: (response: any) => {
+      //   console.log('payment response', response)
+      // },
+      prefill: {
+        name: this.authService.UserName,
+        email: this.authService.EmailId,
+        contact: this.authService.Mobile
+      },
+      modal: {
+        // We should prevent closing of the form when esc key is pressed.
+        escape: false,
+      },
+      notes: {
+        amount: data.amount_due,
+        receipt: data.receipt
+      },
+      theme: {
+        color: '#3399cc'
+      },
+    };
 
+    options.handler = ((response: any, error: any) => {
+      options.response = response;
+      // debugger
+      // console.log(options);
+      this.spinner.show();
+      let fd = new FormData();
+      fd.append('receipt', data.receipt);
+      fd.append('amount', data.amount_due);
+      fd.append('razorpay_payment_id', response.razorpay_payment_id);
+      fd.append('razorpay_order_id', response.razorpay_order_id);
+      fd.append('razorpay_signature', response.razorpay_signature);
+      // fd.append('response', response);
+      this.CommonService.paymentSuccess('cartapp/razorpay_payment_success', fd).subscribe((rsp: any) => {
+        // console.log(rsp)
+        if (rsp && rsp.response_code == 0) {
+          // this.productCheckoutCompletedWebEngage(this.headerDetails, this.finalList, rsp['data']['Orders']);
+          // this.orderSuccess(rsp);
+          // alert(rsp['message']);
+          this.spinner.hide();
+        } else {
+          this.msgText = 'Unable to process your request, Please try after some time';
+          this.open.nativeElement.click();
+          this.spinner.hide();
+          // this.refundWallet();
+        }
+      })
+    });
+    options.modal.ondismiss = (() => {
+      // handle the case when user closes the form while transaction is in progress
+      // alert('Transaction cancelled.');
+      this.msgText = 'Transaction cancelled. Unable to process your request';
+      this.open.nativeElement.click();
+      // this.refundWallet();
+    });
+
+    const razorpay = new Razorpay(options);
+    razorpay.open();
+  }
   
-
   
   getBalance() {
     this.isloading = true;

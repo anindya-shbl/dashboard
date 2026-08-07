@@ -29,6 +29,7 @@ export class AuthService {
   public WHId: any = '';
   public IsPanIndia: any = '';
   public UserName: any = '';
+  public EmailId: any = '';
   public UserId: any = '';
   public Mobile: any = '';
   public Token: any = '';
