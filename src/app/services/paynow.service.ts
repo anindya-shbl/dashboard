@@ -18,7 +18,7 @@ export class PayNowService {
   // public genuPathApiUrl = 'https://stage-serv.genupathlabs.com/';
 
   // =============  Local  ==================
-  // private apiUrl = 'http://192.168.5.236:8081/sspl_com/index.php/';
+  // private apiUrl = 'http://192.168.5.236/sspl_com/index.php/';
   // public genuPathApiUrl = 'https://stage-serv.genupathlabs.com/';
 
   private authSecretKey = 'Bearer Token';
