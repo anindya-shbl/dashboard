@@ -45,6 +45,7 @@ export class CommonService {
   // public searchBaseUrl = 'http://192.168.5.192:4200/';
   public webcartUrl = 'http://192.168.5.236/sspl_com/index.php/webapi/';
  public codsuccessUrl = 'http://192.168.5.236/sspl_com/index.php/customercart/order_success';
+//  https://stage.sastasundar.com/customercart/paynow_order_success
 
   private subject: any = new Subject<any>();
 
