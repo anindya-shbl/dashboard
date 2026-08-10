@@ -43,6 +43,8 @@ export class PayNowComponent implements OnInit {
   useCardBalance: boolean = false;
   onlyViaCfh: boolean = false;
   showCFHBlock: boolean = false;  // Add this property
+  isPaymentProcessing: boolean = false;
+  razorpaySuccessSent: boolean = false;
   respMsg: any = '';
   @ViewChild('cnlsRspModal') cnlsRspModal: any;
   @ViewChild('cnlsOrd') cnlsOrd: any;
@@ -367,6 +369,11 @@ export class PayNowComponent implements OnInit {
   }
 
   placeOrder(data: any) {
+    if (this.isPaymentProcessing) {
+      return;
+    }
+    this.isPaymentProcessing = true;
+    this.razorpaySuccessSent = false;
     console.log(data);
     console.log(this.orderDetails);
     this.msgText = '';
@@ -434,7 +441,13 @@ export class PayNowComponent implements OnInit {
           
         }
         
+      } else {
+        this.spinner.hide();
+        this.isPaymentProcessing = false;
       }
+    }, () => {
+      this.spinner.hide();
+      this.isPaymentProcessing = false;
     });
   }
   CFHPayPayment(res: any) {
@@ -486,6 +499,10 @@ export class PayNowComponent implements OnInit {
     };
 
     options.handler = ((response: any, error: any) => {
+      if (this.razorpaySuccessSent) {
+        return;
+      }
+      this.razorpaySuccessSent = true;
       options.response = response;
       // debugger
       // console.log(options);
@@ -500,16 +517,20 @@ export class PayNowComponent implements OnInit {
       this.CommonService.paymentSuccess('cartapp/razorpay_payment_success', fd).subscribe((rsp: any) => {
         // console.log(rsp)
         if (rsp && rsp.response_code == 0) {
-          // this.productCheckoutCompletedWebEngage(this.headerDetails, this.finalList, rsp['data']['Orders']);
           this.orderSuccess(rsp);
-          // alert(rsp['message']);
-          // this.spinner.hide();
         } else {
           this.msgText = 'Unable to process your request, Please try after some time';
           this.open.nativeElement.click();
           this.spinner.hide();
-          // this.refundWallet();
+          this.isPaymentProcessing = false;
+          this.razorpaySuccessSent = false;
         }
+      }, () => {
+        this.msgText = 'Unable to process your request, Please try after some time';
+        this.open.nativeElement.click();
+        this.spinner.hide();
+        this.isPaymentProcessing = false;
+        this.razorpaySuccessSent = false;
       })
     });
     options.modal.ondismiss = (() => {
@@ -517,6 +538,8 @@ export class PayNowComponent implements OnInit {
       // alert('Transaction cancelled.');
       this.msgText = 'Transaction cancelled. Unable to process your request';
       this.open.nativeElement.click();
+      this.isPaymentProcessing = false;
+      this.razorpaySuccessSent = false;
       // this.refundWallet();
     });
 
