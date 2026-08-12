@@ -268,7 +268,7 @@ export class MapLocationPickerComponent implements OnInit, AfterViewInit, OnChan
       return;
     }
 
-    this.searchInput = prediction.description;
+    this.searchInput = prediction.main_text;
     this.predictions = [];
 
     // If we already have coordinates from the search response, use them
@@ -300,9 +300,13 @@ export class MapLocationPickerComponent implements OnInit, AfterViewInit, OnChan
 
       this.cdr.detectChanges();
     } else {
-      // Otherwise, get place details from API
-      this.getPlaceDetails(prediction.place_id);
-    }
+        // Otherwise, get place details from API
+        this.getPlaceDetails(prediction.place_id);
+        this.selectedLocation = {
+          formatted_address: prediction.secondary_text,
+          name: prediction.main_text,
+        };
+      }
   }
 
   // Get place details via API
@@ -339,14 +343,22 @@ export class MapLocationPickerComponent implements OnInit, AfterViewInit, OnChan
           const lat = response.data.location.latitude;
           const lng = response.data.location.longitude;
           
-          this.selectedLocation = {
+          // this.selectedLocation = {
+          //   pincode: pincode,
+          //   addresss: street_number + ' ' + displayName + ', ' + administrative_area_level_1 + ', ' + country,
+          //   formatted_address: response.data.formattedAddress || street_number + ' ' + displayName + ', ' + administrative_area_level_1 + ', ' + country,
+          //   latitude: response.data.location.latitude,
+          //   longitude: response.data.location.longitude,
+          //   name: displayName
+          // };
+          // Merge detailed place information into any existing selectedLocation
+          const mergedAddress = street_number + ' ' + (displayName || '') + ', ' + administrative_area_level_1 + ', ' + country;
+          this.selectedLocation = Object.assign({}, this.selectedLocation || {}, {
             pincode: pincode,
-            addresss: street_number + ' ' + displayName + ', ' + administrative_area_level_1 + ', ' + country,
-            formatted_address: response.data.formattedAddress || street_number + ' ' + displayName + ', ' + administrative_area_level_1 + ', ' + country,
-            latitude: response.data.location.latitude,
-            longitude: response.data.location.longitude,
-            name: displayName
-          };
+            addresss: mergedAddress,
+            latitude: lat,
+            longitude: lng
+          });
 
           if (this.map) {
             this.map.setCenter({ lat, lng });
