@@ -25,9 +25,9 @@ export class MapLocationPickerComponent implements OnInit, AfterViewInit, OnChan
   mapLoading: boolean = true;
   mapError: string = '';
 
-  defaultLatitude: number = 22.4719;
-  defaultLongitude: number = 88.3666;
-  currentLocation: CurrentLocation | null = null;
+  defaultLatitude: number = 0;
+  defaultLongitude: number = 0;
+  currentLocation: CurrentLocation | null = null; 
 
   constructor(
     private cdr: ChangeDetectorRef,
@@ -48,7 +48,8 @@ export class MapLocationPickerComponent implements OnInit, AfterViewInit, OnChan
           this.defaultLongitude = location.longitude;
           console.log('Using current location:', location);
         } else {
-          console.log('Using default India coordinates');
+          // console.log('Using default India coordinates');
+          console.log("Show form instead of map, as current location is not available");
         }
       }
     });
@@ -71,13 +72,18 @@ export class MapLocationPickerComponent implements OnInit, AfterViewInit, OnChan
     // console.log(changes['isOpen']);
     // if (changes['isOpen'] && this.isOpen && this.mapContainer && !this.map) {
     if(this.isOpen) {
-      this.getAddressFromCoordinates(this.defaultLatitude, this.defaultLongitude);
-      console.log('before initializing map, isOpen:', this.isOpen);
-      this.mapLoading = true;
-      setTimeout(() => {
-        this.initMap();
-        this.mapLoading = false;
-      }, 100);
+      if(this.defaultLatitude > 0 && this.defaultLongitude > 0) {
+          this.getAddressFromCoordinates(this.defaultLatitude, this.defaultLongitude);
+          console.log('before initializing map, isOpen:', this.isOpen);
+          this.mapLoading = true;
+          setTimeout(() => {
+            this.initMap();
+            this.mapLoading = false;
+          }, 100);
+      }
+      else {
+        console.log("Show form instead of map, as current location is not available");
+      }
     }
   }
 

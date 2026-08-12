@@ -7,8 +7,15 @@
             <strong>Manage Address</strong>
         </div>
         <!-- <button class="btnSubmitOutline" type="button"  (click)="addNewAddress()">Add New Address</button> -->
-        <button class="btnSubmitOutline" type="button"  (click)="openAddressMap()">Add New Address</button>
+        <button class="btnSubmitOutline" type="button"  (click)="openAddressEntry()">Add New Address</button>
     </div>
+    <!-- Status indicator -->
+  <div *ngIf="!isGeolocationAvailable" class="alert alert-info">
+    <small>
+      <i class="bi bi-info-circle"></i> 
+      Geolocation disabled - Using manual address entry
+    </small>
+  </div>
     <!-- Map Component -->
     <app-map-location-picker [isOpen]="isMapOpen" (locationSelected)="onLocationSelected($event)" (closed)="onMapClosed()"></app-map-location-picker>
     <!-- Map Component -->
