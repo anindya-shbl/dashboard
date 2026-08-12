@@ -20,7 +20,7 @@ export class GeolocationService {
   public isGeolocationAvailable$ = this.isGeolocationAvailableSubject.asObservable();
 
   constructor() {
-    this.loadCurrentLocation();
+    // this.loadCurrentLocation();
   }
 
   /**
