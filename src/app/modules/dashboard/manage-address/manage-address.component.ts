@@ -1,7 +1,8 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ProfileService } from '../../../services/profile.service';
 import { NgxSpinnerService } from 'ngx-spinner';
+import { GeolocationService } from '../../../services/geolocation.service';
 
 @Component({
   selector: 'app-manage-address',
@@ -18,41 +19,45 @@ export class ManageAddressComponent implements OnInit {
   selectedAddress: any = '';
   isloading: boolean = false;
   respMsg: any = '';
+
   isMapSelected: boolean = false;
-
   isMapOpen: boolean = false;
+  isGeolocationAvailable: boolean = false;
 
-  openAddressMap() {
-    console.log('Opening map for address selection...');
-    this.isMapOpen = true;
-    this.actionType = 'ADD';
-    console.log('type', this.actionType);
-  }
-
-  onLocationSelected(location: any) {
-    this.selectedAddress = location;
-    console.log('Selected Address:', location);
-    // Send to backend
-    this.addNewAddress2()
-  }
-
-  onMapClosed() {
-     console.log('Closing map for address selection...');
-    this.isMapOpen = false;
-  }
   actionType: any = 'ADD';
+
   @ViewChild('closebutton') closebutton: any;
   @ViewChild('addressModal') addressModal: any;
   @ViewChild('addrsRspModal') addrsRspModal: any;
   @ViewChild('AddressModal') AddressModal: any;
 
-  constructor(private formBuilder: FormBuilder, private profileService: ProfileService, private spinner: NgxSpinnerService) { }
+  constructor(
+    private formBuilder: FormBuilder, 
+    private profileService: ProfileService, 
+    private spinner: NgxSpinnerService,
+    private geolocationService: GeolocationService,
+    private cdr: ChangeDetectorRef
+  ) { }
 
   ngOnInit(): void {
     this.generateform();
     this.getAddressList();
+    this.checkGeolocationStatus();
   }
 
+   /**
+   * Check if geolocation is available
+   */
+  private checkGeolocationStatus(): void {
+    // Subscribe to geolocation availability
+    this.geolocationService.getGeolocationAvailability().subscribe(available => {
+      this.isGeolocationAvailable = available;
+      console.log('Geolocation available:', available);
+      this.cdr.markForCheck();
+    });
+  }
+
+ 
   generateform() {
     this.AddressForm = this.formBuilder.group({
       AddressType: ['H', Validators.required],
@@ -68,6 +73,51 @@ export class ManageAddressComponent implements OnInit {
 
   get f() { return this.AddressForm.controls; }
 
+  /**
+   * Smart routing - Open map if available, otherwise form
+   */
+  openAddressEntry(): void {
+    console.log('Opening address entry...');
+    console.log('Geolocation available:', this.isGeolocationAvailable);
+    
+    if (this.isGeolocationAvailable) {
+      console.log('✅ Opening map location picker');
+      this.openAddressMap();
+    } else {
+      console.log('📝 Opening address form (geolocation disabled)');
+      this.openAddressForm();
+    }
+  }
+
+  /**
+   * Open address form directly (when geolocation disabled or user prefers manual)
+   */
+  openAddressForm(): void {
+    console.log('Opening address form...');
+    this.actionType = 'ADD';
+    this.submitted = false;
+    this.state_city = '';
+    this.serviceAreaMsg = false;
+    this.isMapSelected = false;
+    
+    // Reset form with blank data
+    this.AddressForm.reset();
+    this.AddressForm.patchValue({
+      AddressType: 'H',
+    });
+    
+    // Re-enable all fields
+    this.AddressForm.get('Addressline')?.enable();
+    this.AddressForm.get('Pincode')?.enable();
+    
+    // Open modal
+    setTimeout(() => {
+      this.AddressModal.nativeElement.click();
+    }, 100);
+    
+    this.cdr.markForCheck();
+  }
+  
   getAddressList(){
     this.isloading = true;
     this.spinner.show();
@@ -86,6 +136,28 @@ export class ManageAddressComponent implements OnInit {
     })
   }
 
+   openAddressMap() {
+    console.log('Opening map for address selection...');
+    this.isMapOpen = true;
+    this.actionType = 'ADD';
+    console.log('type', this.actionType);
+  }
+
+  onLocationSelected(location: any) {
+    this.selectedAddress = location;
+    console.log('Selected Address:', location);
+    this.isMapSelected = true;
+    this.isMapOpen = false;
+
+    // Send to backend
+    this.addNewAddress2()
+  }
+
+  onMapClosed() {
+     console.log('Closing map for address selection...');
+    this.isMapOpen = false;
+  }
+  
   onSubmit() {
     this.submitted = true;
     this.respMsg = '';
