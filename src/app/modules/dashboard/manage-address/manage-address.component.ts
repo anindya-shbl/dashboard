@@ -79,19 +79,27 @@ export class ManageAddressComponent implements OnInit {
   get f() { return this.AddressForm.controls; }
 
   /**
-   * Smart routing - Open map if available, otherwise form
+   * Request location permission only when the user clicks Add New Address.
    */
   openAddressEntry(): void {
     console.log('Opening address entry...');
-    console.log('Geolocation available:', this.isGeolocationAvailable);
-    
-    if (this.isGeolocationAvailable) {
-      console.log('✅ Opening map location picker');
-      this.openAddressMap();
-    } else {
-      console.log('📝 Opening address form (geolocation disabled)');
-      this.openAddressForm();
-    }
+    this.respMsg = '';
+
+    this.geolocationService.requestGeolocationPermission().subscribe({
+      next: (response) => {
+        if (response.success) {
+          console.log('✅ Geolocation permission granted, opening map');
+          this.openAddressMap();
+        } else {
+          console.log('⛔ Geolocation permission denied or unavailable, opening manual form');
+          this.openAddressForm();
+        }
+      },
+      error: () => {
+        console.log('⛔ Geolocation request failed, opening manual form');
+        this.openAddressForm();
+      }
+    });
   }
 
   /**
