@@ -16,6 +16,8 @@ export class GeolocationService {
   public currentLocation$ = this.currentLocationSubject.asObservable();
 
   private isGeolocationSupported = 'geolocation' in navigator;
+  private isGeolocationAvailableSubject = new BehaviorSubject<boolean>(false);
+  public isGeolocationAvailable$ = this.isGeolocationAvailableSubject.asObservable();
 
   constructor() {
     this.loadCurrentLocation();
@@ -29,15 +31,18 @@ export class GeolocationService {
       this.getCurrentLocation().subscribe({
         next: (location) => {
           this.currentLocationSubject.next(location);
+          this.isGeolocationAvailableSubject.next(true);
           console.log('Current location loaded:', location);
         },
         error: (error) => {
           console.warn('Geolocation error:', error);
+          this.isGeolocationAvailableSubject.next(false);
           // Will use default coordinates
         }
       });
     } else {
       console.warn('Geolocation is not supported by this browser');
+      this.isGeolocationAvailableSubject.next(false);
     }
   }
 
@@ -97,7 +102,19 @@ export class GeolocationService {
   getCurrentLocationSync(): CurrentLocation | null {
     return this.currentLocationSubject.value;
   }
+  /**
+     * Check if geolocation is available (synchronous)
+     */
+    isGeolocationAvailable(): boolean {
+      return this.isGeolocationAvailableSubject.value;
+    }
 
+    /**
+     * Get geolocation availability as observable
+     */
+    getGeolocationAvailability(): Observable<boolean> {
+      return this.isGeolocationAvailable$;
+    }
   /**
    * Clear cached location
    */
@@ -113,10 +130,12 @@ export class GeolocationService {
       this.getCurrentLocation().subscribe({
         next: (location) => {
           this.currentLocationSubject.next(location);
+          this.isGeolocationAvailableSubject.next(true);
           observer.next(location);
           observer.complete();
         },
         error: (error) => {
+          this.isGeolocationAvailableSubject.next(false);
           observer.error(error);
         }
       });
