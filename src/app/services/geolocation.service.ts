@@ -119,76 +119,78 @@ export class GeolocationService {
     /**
    * ✅ NEW: Request geolocation permission explicitly
    */
-    requestGeolocationPermission(): Observable<{ success: boolean; message: string; location?: CurrentLocation }> {
-      return new Observable((observer) => {
-        // Check if geolocation is supported
-        if (!this.isGeolocationSupported) {
+    
+  requestGeolocationPermission(): Observable<{
+    success: boolean;
+    message: string;
+    location?: CurrentLocation;
+    errorCode?: number;
+  }> {
+    return new Observable((observer) => {
+      if (!this.isGeolocationSupported) {
+        observer.next({
+          success: false,
+          message: 'Geolocation is not supported by your browser'
+        });
+        observer.complete();
+        return;
+      }
+
+      const options = {
+        enableHighAccuracy: true,
+        timeout: 10000,
+        maximumAge: 0
+      };
+
+      // ✅ This triggers the browser's native permission dialog
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const location: CurrentLocation = {
+            latitude: position.coords.latitude,
+            longitude: position.coords.longitude,
+            accuracy: position.coords.accuracy,
+            timestamp: position.timestamp
+          };
+
+          this.currentLocationSubject.next(location);
+          this.isGeolocationAvailableSubject.next(true);
+
+          console.log('✅ Geolocation enabled:', location);
+
           observer.next({
-            success: false,
-            message: 'Geolocation is not supported by your browser'
+            success: true,
+            message: 'Geolocation enabled successfully!',
+            location: location
           });
           observer.complete();
-          return;
-        }
+        },
+        (error) => {
+          let errorMessage = 'Unable to enable geolocation';
+          let errorCode = error.code;
 
-        // Request geolocation
-        const options = {
-          enableHighAccuracy: true,
-          timeout: 10000,
-          maximumAge: 0
-        };
+          if (error.code === error.PERMISSION_DENIED) {
+            errorMessage = 'You denied geolocation permission. Please enable it in browser settings.';
+          } else if (error.code === error.POSITION_UNAVAILABLE) {
+            errorMessage = 'Location information is unavailable.';
+          } else if (error.code === error.TIMEOUT) {
+            errorMessage = 'Location request timed out. Please try again.';
+          }
 
-        navigator.geolocation.getCurrentPosition(
-          (position) => {
-            const location: CurrentLocation = {
-              latitude: position.coords.latitude,
-              longitude: position.coords.longitude,
-              accuracy: position.coords.accuracy,
-              timestamp: position.timestamp
-            };
+          this.isGeolocationAvailableSubject.next(false);
+          console.error('❌ Geolocation error:', errorMessage);
 
-            // Update the BehaviorSubject
-            this.currentLocationSubject.next(location);
-            this.isGeolocationAvailableSubject.next(true);
+          observer.next({
+            success: false,
+            message: errorMessage,
+            errorCode: errorCode
+          });
+          observer.complete();
+        },
+        options
+      );
+    });
+  }
 
-            console.log('✅ Geolocation enabled:', location);
-
-            observer.next({
-              success: true,
-              message: 'Geolocation enabled successfully!',
-              location: location
-            });
-            observer.complete();
-          },
-          (error) => {
-            let errorMessage = 'Unable to enable geolocation';
-            let errorCode = error.code;
-
-            switch (error.code) {
-              case error.PERMISSION_DENIED:
-                errorMessage = 'You denied geolocation permission. Please enable it in browser settings.';
-                break;
-              case error.POSITION_UNAVAILABLE:
-                errorMessage = 'Location information is unavailable.';
-                break;
-              case error.TIMEOUT:
-                errorMessage = 'Location request timed out. Please try again.';
-                break;
-            }
-
-            this.isGeolocationAvailableSubject.next(false);
-            console.error('❌ Geolocation error:', errorMessage);
-
-            observer.next({
-              success: false,
-              message: errorMessage
-            });
-            observer.complete();
-          },
-          options
-        );
-      });
-    }
 
   /**
    * Clear cached location

@@ -414,6 +414,7 @@ export class ManageAddressComponent implements OnInit {
           // Automatically open map for address selection
           setTimeout(() => {
             this.openAddressMap();
+            this.closebutton.nativeElement.click(); 
           }, 1500);
         } else {
           console.warn('❌ Geolocation request failed:', response.message);
