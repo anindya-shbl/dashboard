@@ -269,7 +269,8 @@ export class ManageAddressComponent implements OnInit {
       AddressType: 'H',
       // ContactPerson: adr.NickName,
       // MobileNo: adr.CustContactNo,
-      Addressline: this.selectedAddress.addresss,
+      // Addressline: this.selectedAddress.addresss,
+      Addressline: this.selectedAddress.formatted_address,
       // Landmark: adr.Landmark,
       Pincode: this.selectedAddress.pincode,
     });
