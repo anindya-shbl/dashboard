@@ -2,26 +2,54 @@
 
     <div class="p-3 pb-1 mb-1"><app-route-path></app-route-path></div>
 
-    <div class="commonHeadertitleSec border-bottom p-3 pt-0 mt-0 mb-0" style="display: flex; align-items: center; justify-content: space-between;">
+    <div class="commonHeadertitleSec border-bottom p-3 pt-0 mt-0 mb-0"
+        style="display: flex; align-items: center; justify-content: space-between;">
         <div class="custNameSec">
             <strong>Manage Address</strong>
         </div>
         <!-- <button class="btnSubmitOutline" type="button"  (click)="addNewAddress()">Add New Address</button> -->
-        <button class="btnSubmitOutline" type="button"  (click)="openAddressEntry()">Add New Address</button>
+        <button class="btnSubmitOutline" type="button" (click)="openAddressEntry()">Add New Address</button>
     </div>
     <!-- Status indicator -->
-  <div *ngIf="!isGeolocationAvailable" class="alert alert-info">
+    <!-- <div *ngIf="!isGeolocationAvailable" class="alert alert-info">
     <small>
       <i class="bi bi-info-circle"></i> 
       Geolocation disabled - Using manual address entry
     </small>
-  </div>
+  </div> -->
+    <!-- Geolocation Status & Button -->
+    <div class="geolocation-status-section">
+        <div *ngIf="!isGeolocationAvailable" class="alert alert-warning d-flex align-items-center gap-3">
+            <div class="flex-grow-1">
+                <strong>📍 Geolocation Disabled</strong>
+                <p class="mb-0 small">Enable location to use map-based address selection</p>
+            </div>
+            <button (click)="enableGeolocation()" [disabled]="isEnablingGeolocation"
+                class="btn btn-sm btn-primary whitespace-nowrap">
+                {{ isEnablingGeolocation ? 'Enabling...' : 'Enable Location' }}
+            </button>
+        </div>
+
+        <div *ngIf="isGeolocationAvailable" class="alert alert-success d-flex align-items-center gap-2">
+            <span>✅ Geolocation Enabled</span>
+            <span class="badge bg-success">Active</span>
+        </div>
+
+        <!-- Geolocation Message (Success/Error) -->
+        <div *ngIf="geolocationMessage"
+            [class]="'alert alert-' + (geolocationMessageType === 'success' ? 'success' : 'danger') + ' d-flex justify-content-between align-items-center'">
+            <span>{{ geolocationMessage }}</span>
+            <button type="button" class="btn-close" (click)="dismissGeolocationMessage()">
+            </button>
+        </div>
+    </div>
     <!-- Map Component -->
-    <app-map-location-picker [isOpen]="isMapOpen" (locationSelected)="onLocationSelected($event)" (closed)="onMapClosed()"></app-map-location-picker>
+    <app-map-location-picker [isOpen]="isMapOpen" (locationSelected)="onLocationSelected($event)"
+        (closed)="onMapClosed()"></app-map-location-picker>
     <!-- Map Component -->
     <div class="p-3 w-100  bg-white">
-        
-        
+
+
         <div>
             <div class="fs-6 fw-6 mb-3">Saved Address ({{addressList.length}})</div>
             <div *ngIf="!isloading && addressList.length > 0" class="grid-view">
@@ -31,19 +59,25 @@
                             [ngClass]="adr.IsPrimary == 1? 'bg-xxx': 'bg-yyy' ">{{adr.NickName}}</div> -->
                         <div class="p-3">
                             <div class="d-flex mb-2" style="align-items: center; justify-content: space-between;">
-                            <div class="d-flex" style="column-gap: 8px;">
-                                <span *ngIf="adr.AddressType == 'H'"  style="color: #344054; font-size: 16px; font-weight: 600; line-height: 24px; ">Home</span>
-                                <span *ngIf="adr.AddressType == 'O'"  style="color: #344054; font-size: 16px; font-weight: 600; line-height: 24px; ">Office</span>
-                                <span *ngIf="adr.AddressType == 'T'"  style="color: #344054; font-size: 16px; font-weight: 600; line-height: 24px; ">Others</span>
-                                <!-- <span *ngIf="adr.IsPrimary == 1" style="font-size: 12px; background-color: #ECFDF3; color: #027A48; padding: 4px 6px; border-radius: 6px; font-weight: 600; font-size: 12px;">Primary Address</span> -->
-                            </div>
+                                <div class="d-flex" style="column-gap: 8px;">
+                                    <span *ngIf="adr.AddressType == 'H'"
+                                        style="color: #344054; font-size: 16px; font-weight: 600; line-height: 24px; ">Home</span>
+                                    <span *ngIf="adr.AddressType == 'O'"
+                                        style="color: #344054; font-size: 16px; font-weight: 600; line-height: 24px; ">Office</span>
+                                    <span *ngIf="adr.AddressType == 'T'"
+                                        style="color: #344054; font-size: 16px; font-weight: 600; line-height: 24px; ">Others</span>
+                                    <!-- <span *ngIf="adr.IsPrimary == 1" style="font-size: 12px; background-color: #ECFDF3; color: #027A48; padding: 4px 6px; border-radius: 6px; font-weight: 600; font-size: 12px;">Primary Address</span> -->
+                                </div>
 
-                            <div style="display: flex; column-gap: 10px;">
-                                <!-- <button *ngIf="adr.IsPrimary != 1" type="button" class="btnSubmitLink" (click)="setPrimaryAddress(adr.AddressId)">Set as Primary</button> -->
-                                <button type="button" class="btnsubmit btnSubmitLink" (click)="setEditModal(adr)" title="Edit"><i class=" icon-edit"></i></button>
-                                <button type="button" class="btnsubmit btnRemovetLink delete" data-bs-toggle="modal" data-bs-target="#deleteModal" (click)="setDeleteModal(adr)" title="Remove"><i class="icon-delete"></i></button>
+                                <div style="display: flex; column-gap: 10px;">
+                                    <!-- <button *ngIf="adr.IsPrimary != 1" type="button" class="btnSubmitLink" (click)="setPrimaryAddress(adr.AddressId)">Set as Primary</button> -->
+                                    <button type="button" class="btnsubmit btnSubmitLink" (click)="setEditModal(adr)"
+                                        title="Edit"><i class=" icon-edit"></i></button>
+                                    <button type="button" class="btnsubmit btnRemovetLink delete" data-bs-toggle="modal"
+                                        data-bs-target="#deleteModal" (click)="setDeleteModal(adr)" title="Remove"><i
+                                            class="icon-delete"></i></button>
+                                </div>
                             </div>
-                        </div>
 
                             <!-- <div class="d-flex mb-2">
                                 <span style="min-width: 80px;">Address</span>
@@ -65,22 +99,26 @@
                                 <span style="min-width: 80px;">Mobile</span>
                                 <span class="fw-5">: &nbsp;{{adr.CustContactNo}}</span>
                             </div> -->
-                            <div style="display: flex; flex-direction: column; row-gap: 8px;  color: #667085;font-size: 14px; font-weight: 400; line-height: 24px;">
-                                <div style="word-break: break-all; display: flex; gap:5px;"><i class="icon-lab_location_1"></i> <span>{{adr.Addline}}, {{adr.City}} ({{adr.StateName}}), {{adr.PinCode}}</span></div>
-                                
-                                
-                                   <div style="flex-direction: column; display: flex;">
-                                    <span class="bg-default fw-5"><i class="icon-user-dnavita"></i> {{adr.NickName}}</span>
+                            <div
+                                style="display: flex; flex-direction: column; row-gap: 8px;  color: #667085;font-size: 14px; font-weight: 400; line-height: 24px;">
+                                <div style="word-break: break-all; display: flex; gap:5px;"><i
+                                        class="icon-lab_location_1"></i> <span>{{adr.Addline}}, {{adr.City}}
+                                        ({{adr.StateName}}), {{adr.PinCode}}</span></div>
+
+
+                                <div style="flex-direction: column; display: flex;">
+                                    <span class="bg-default fw-5"><i class="icon-user-dnavita"></i>
+                                        {{adr.NickName}}</span>
                                     <span><i class="icon-phone"></i> {{adr.CustContactNo}}</span>
                                 </div>
-                                    </div>
+                            </div>
 
                             <!-- <div>
                                 {{adr.City}}, {{adr.StateName}} - {{adr.PinCode}}</div>
                             
                             <div class="mb-3">{{adr.CustContactNo}}</div> -->
 
-                            
+
                         </div>
                     </div>
                 </ng-container>
@@ -113,7 +151,8 @@
                         <div class="mb-3">
                             <label for="ContactPerson" class="form-label">Contact Person<span class="text-danger">
                                     *</span></label>
-                            <input type="text" class="form-control" id="ContactPerson" formControlName="ContactPerson" (keypress)="alphaOnly($event)">
+                            <input type="text" class="form-control" id="ContactPerson" formControlName="ContactPerson"
+                                (keypress)="alphaOnly($event)">
                             <div *ngIf="submitted && f['ContactPerson'].errors" class="error-text">
                                 <div *ngIf="f['ContactPerson'].errors['required']">* Contact Person is required</div>
                             </div>
@@ -122,8 +161,8 @@
                         <div class="mb-3">
                             <label for="MobileNo" class="form-label">Mobile No<span class="text-danger">
                                     *</span></label>
-                            <input type="phone" class="form-control" id="MobileNo" maxlength="10" formControlName="MobileNo"
-                                pattern="[5-9]{1}[0-9]{9}" (keypress)="numCheck($event)">
+                            <input type="phone" class="form-control" id="MobileNo" maxlength="10"
+                                formControlName="MobileNo" pattern="[5-9]{1}[0-9]{9}" (keypress)="numCheck($event)">
                             <div *ngIf="submitted && f['MobileNo'].errors" class="error-text">
                                 <div *ngIf="f['MobileNo'].errors['required']">* Mobile No Required</div>
                             </div>
@@ -134,10 +173,11 @@
                     </div>
                     <div class="ac-grid mb-2">
                         <div class="mb-3">
-                            <label for="Addressline1" class="form-label">Flat/House/Building Name <span class="text-danger">
+                            <label for="Addressline1" class="form-label">Flat/House/Building Name <span
+                                    class="text-danger">
                                     *</span></label>
                             <input type="text" rows="3" class="form-control" id="Addressline1"
-                                formControlName="Addressline1"/>
+                                formControlName="Addressline1" />
                             <div *ngIf="submitted && f['Addressline1'].errors" class="error-text">
                                 <div *ngIf="f['Addressline1'].errors['required']">*Building name is required</div>
                             </div>
@@ -148,10 +188,13 @@
                             <label for="Addressline" class="form-label">Address <span class="text-danger">
                                     *</span></label>
                             <div style="position: relative;">
-                            <textarea type="text" rows="3" style="padding-right:180px !important;" class="form-control" id="Addressline"
-                                formControlName="Addressline" [readOnly]="isMapSelected">
+                                <textarea type="text" rows="3" style="padding-right:180px !important;"
+                                    class="form-control" id="Addressline" formControlName="Addressline"
+                                    [readOnly]="isMapSelected">
                             </textarea>
-                            <button class="btnSubmitOutline" style="position: absolute; top: 25px; right: 15px; z-index: 2; padding: 6px 15px; font-size: 13px;" type="button"  (click)="changeLocation()">Change</button>
+                                <button class="btnSubmitOutline"
+                                    style="position: absolute; top: 25px; right: 15px; z-index: 2; padding: 6px 15px; font-size: 13px;"
+                                    type="button" (click)="changeLocation()">Change</button>
                             </div>
                             <div *ngIf="submitted && f['Addressline'].errors" class="error-text">
                                 <div *ngIf="f['Addressline'].errors['required']">* Address is required</div>
@@ -169,8 +212,9 @@
 
                         <div class="mb-3">
                             <label for="Pincode" class="form-label">Pincode <span class="text-danger"> *</span></label>
-                            <input type="text" class="form-control" id="Pincode" maxlength="6" pattern="[1-9]{1}[0-9]{5}" formControlName="Pincode"
-                                (keyup)="checkServiceArea()" (keypress)="numCheck($event)">
+                            <input type="text" class="form-control" id="Pincode" maxlength="6"
+                                pattern="[1-9]{1}[0-9]{5}" formControlName="Pincode" (keyup)="checkServiceArea()"
+                                (keypress)="numCheck($event)">
                             <div *ngIf="submitted && f['Pincode'].errors" class="error-text">
                                 <div *ngIf="f['Pincode'].errors['required']">* Pincode is required</div>
                             </div>
@@ -221,8 +265,10 @@
 
                     <div class="row">
                         <div class="btnSec">
-                            <button class="btnCancel" #closebutton type="button" data-bs-dismiss="modal" aria-label="Close" (click)="onReset()"  style="min-width: 140px;">Cancel</button>
-                            <button type="submit" class="btnSubmit" style="min-width: 140px;" [disabled]="serviceAreaMsg">
+                            <button class="btnCancel" #closebutton type="button" data-bs-dismiss="modal"
+                                aria-label="Close" (click)="onReset()" style="min-width: 140px;">Cancel</button>
+                            <button type="submit" class="btnSubmit" style="min-width: 140px;"
+                                [disabled]="serviceAreaMsg">
                                 <span *ngIf="actionType == 'ADD'">Add Address</span>
                                 <span *ngIf="actionType == 'EDIT'">Update Address</span>
                             </button>
@@ -246,11 +292,10 @@
                 <div class="">Do you want to delete the address of <strong>{{selectedAddress.NickName}}?</strong></div>
                 <br>
                 <div class="btnSec">
-                    <button type="reset" class="btnCancel"
-                        data-bs-dismiss="modal">No</button>
+                    <button type="reset" class="btnCancel" data-bs-dismiss="modal">No</button>
                     <button type="submit" class="btnSubmit" data-bs-dismiss="modal"
                         (click)="removeAddress(selectedAddress.AddressId)">Yes</button>
-                    
+
                 </div>
             </div>
         </div>
@@ -265,8 +310,7 @@
             <div class="modal-body">
                 <div class="d-flex w-100 my-3 fw-5">{{respMsg}}</div>
                 <div class="btnSec">
-                    <button type="button" class="btnSubmit" data-bs-dismiss="modal"
-                        aria-label="Close">Ok</button>
+                    <button type="button" class="btnSubmit" data-bs-dismiss="modal" aria-label="Close">Ok</button>
                 </div>
             </div>
         </div>

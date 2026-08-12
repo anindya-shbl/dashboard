@@ -26,6 +26,11 @@ export class ManageAddressComponent implements OnInit {
 
   actionType: any = 'ADD';
 
+  isEnablingGeolocation: boolean = false;
+  geolocationMessage: string = '';
+  geolocationMessageType: 'success' | 'error' | 'info' = 'info';
+
+
   @ViewChild('closebutton') closebutton: any;
   @ViewChild('addressModal') addressModal: any;
   @ViewChild('addrsRspModal') addrsRspModal: any;
@@ -389,4 +394,43 @@ export class ManageAddressComponent implements OnInit {
   alphaOnly(event: any) {
     return ((event.charCode >= 65 && event.charCode <= 90) || (event.charCode >= 97 && event.charCode <= 122) || (event.charCode == 32))
   };
+
+  /**
+ * Request geolocation permission
+ */
+  enableGeolocation(): void {
+    console.log('Requesting geolocation permission...');
+    this.isEnablingGeolocation = true;
+    this.geolocationMessage = '';
+
+    this.geolocationService.requestGeolocationPermission().subscribe({
+      next: (response) => {
+        this.isEnablingGeolocation = false;
+
+        if (response.success) {
+          console.log('✅ Geolocation enabled:', response.location);
+          this.geolocationMessage = response.message;
+          this.geolocationMessageType = 'success';
+          
+          // Automatically open map for address selection
+          setTimeout(() => {
+            this.openAddressMap();
+          }, 1500);
+        } else {
+          console.warn('❌ Geolocation request failed:', response.message);
+          this.geolocationMessage = response.message;
+          this.geolocationMessageType = 'error';
+        }
+
+        this.cdr.markForCheck();
+      }
+    });
+  }
+
+/**
+ * Dismiss geolocation message
+ */
+  dismissGeolocationMessage(): void {
+    this.geolocationMessage = '';
+  }
 }
