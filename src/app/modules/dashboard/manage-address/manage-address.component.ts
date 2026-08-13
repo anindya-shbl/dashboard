@@ -194,7 +194,9 @@ export class ManageAddressComponent implements OnInit {
       fd.append('Landmark', this.AddressForm.value.Landmark);
       fd.append('PinCode', this.AddressForm.value.Pincode);
       fd.append('CustContactNo', this.AddressForm.value.MobileNo);
-      
+      fd.append('latitude', this.selectedAddress.latitude);
+      fd.append('longitude', this.selectedAddress.longitude);
+
       if(this.actionType == 'EDIT'){
         fd.append('AddressId', this.selectedAddress.AddressId);
         // 'customers/address/editAddress'
@@ -271,7 +273,8 @@ export class ManageAddressComponent implements OnInit {
       // MobileNo: adr.CustContactNo,
       // Addressline: this.selectedAddress.addresss,
       Addressline: this.selectedAddress.formatted_address,
-      // Landmark: adr.Landmark,
+      latitude: this.selectedAddress.latitude,
+      longitude: this.selectedAddress.longitude,
       Pincode: this.selectedAddress.pincode,
     });
     this.isMapSelected = true;
