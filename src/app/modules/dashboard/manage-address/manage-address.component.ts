@@ -424,6 +424,7 @@ export class ManageAddressComponent implements OnInit {
           setTimeout(() => {
             this.openAddressMap();
             this.closebutton.nativeElement.click(); 
+            this.geolocationMessage = '';
           }, 1500);
         } else {
           console.warn('❌ Geolocation request failed:', response.message);
