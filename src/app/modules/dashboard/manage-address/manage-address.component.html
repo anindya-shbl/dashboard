@@ -44,7 +44,7 @@
         </div> -->
     </div>
     <!-- Map Component -->
-    <app-map-location-picker [isOpen]="isMapOpen" (locationSelected)="onLocationSelected($event)"
+    <app-map-location-picker [isOpen]="isMapOpen" [initialLatitude]="editLatitude" [initialLongitude]="editLongitude" (locationSelected)="onLocationSelected($event)"
         (closed)="onMapClosed()"></app-map-location-picker>
     <!-- Map Component -->
     <div class="p-3 w-100  bg-white">
@@ -211,7 +211,7 @@
                                     class="form-control" id="Addressline" formControlName="Addressline"
                                     [readOnly]="isMapSelected">
                             </textarea>
-                                <button class="btnSubmitOutline"
+                                <button *ngIf="isGeolocationAvailable" class="btnSubmitOutline"
                                     style="position: absolute; top: 25px; right: 15px; z-index: 2; padding: 6px 15px; font-size: 13px;"
                                     type="button" (click)="changeLocation()">Change</button>
                             </div>

@@ -23,6 +23,11 @@ export class ManageAddressComponent implements OnInit {
   isMapSelected: boolean = false;
   isMapOpen: boolean = false;
   isGeolocationAvailable: boolean = false;
+  // coordinates to pass to map when opening for edit
+  editLatitude: number = 0;
+  editLongitude: number = 0;
+  // When true, skip resetting the form when modal is programmatically closed
+  skipResetOnClose: boolean = false;
 
   actionType: any = 'ADD';
 
@@ -137,7 +142,6 @@ export class ManageAddressComponent implements OnInit {
     // this.profileService.getAddressList('customers/address/manageAddress').subscribe((data: any) => {
     this.profileService.getAddressList('webapi/user/manageAddress').subscribe((data: any) => {
       // console.log(data['result']['rs']['allAddressData']);
-      data = {"result":{"rs":{"allAddressData":[{"AddressId":3582555,"UserId":588795,"NickName":"Anindya Bhattacharya","AddressType":"H","IsPrimary":1,"Addline":"378\/1, Baidyapara, Baidyabati, West Bengal 712222, India","Landmark":"B S Park","City":"Hooghly","AreaId":null,"ServiceArea":null,"FamilyId":null,"StateId":35,"StateName":"West Bengal","PinCode":712222,"CountryId":1,"CountryName":"India","IsDeleted":0,"WarehouseId":1,"MedDiscPercent":18,"IsLab":1,"CustContactNo":9804750934,"RecepientName":null,"AddressName":null,"Latitude":0,"Longitude":0,"AddLine1":null},{"AddressId":3582586,"UserId":588795,"NickName":"DA","AddressType":"O","IsPrimary":0,"Addline":"DH Block(Newtown), Action Area I, Newtown, Chakpachuria, New Town, West Bengal 700160","Landmark":"Candor","City":"Kolkata","AreaId":null,"ServiceArea":null,"FamilyId":null,"StateId":35,"StateName":"West Bengal","PinCode":700156,"CountryId":1,"CountryName":"India","IsDeleted":0,"WarehouseId":1,"MedDiscPercent":18,"IsLab":1,"CustContactNo":9836370209,"RecepientName":null,"AddressName":"DA Serice","Latitude":0,"Longitude":0,"AddLine1":null},{"AddressId":3582672,"UserId":588795,"NickName":"A Bhattacharya","AddressType":"H","IsPrimary":0,"Addline":"B S PARK B S PARK, Market, Hooghly, West Bengal, India","Landmark":"null","City":"Hooghly","AreaId":null,"ServiceArea":null,"FamilyId":null,"StateId":35,"StateName":"West Bengal","PinCode":712222,"CountryId":1,"CountryName":"India","IsDeleted":0,"WarehouseId":1,"MedDiscPercent":18,"IsLab":1,"CustContactNo":9804750934,"RecepientName":null,"AddressName":null,"Latitude":0,"Longitude":0,"AddLine1":null},{"AddressId":3582673,"UserId":588795,"NickName":"A Bhattacharya","AddressType":"H","IsPrimary":0,"Addline":"B S PARK B S PARK, Market, Hooghly, West Bengal, India","Landmark":"null","City":"Hooghly","AreaId":null,"ServiceArea":null,"FamilyId":null,"StateId":35,"StateName":"West Bengal","PinCode":712222,"CountryId":1,"CountryName":"India","IsDeleted":0,"WarehouseId":1,"MedDiscPercent":18,"IsLab":1,"CustContactNo":9804750934,"RecepientName":null,"AddressName":null,"Latitude":0,"Longitude":0,"AddLine1":91},{"AddressId":3581129,"UserId":588795,"NickName":"Test From SS","AddressType":"O","IsPrimary":0,"Addline":"DH Block(Newtown), Action Area I, Newtown, Chakpachuria, New Town, West Bengal 700160","Landmark":"Test","City":"Others","AreaId":null,"ServiceArea":null,"FamilyId":null,"StateId":37,"StateName":"Others","PinCode":712200,"CountryId":1,"CountryName":"India","IsDeleted":0,"WarehouseId":1,"MedDiscPercent":null,"IsLab":0,"CustContactNo":9836370209,"RecepientName":null,"AddressName":null,"Latitude":0,"Longitude":0,"AddLine1":null},{"AddressId":3582557,"UserId":588795,"NickName":"TEST b","AddressType":"O","IsPrimary":0,"Addline":"TEST TESTQ","Landmark":"TEST","City":"Others","AreaId":null,"ServiceArea":null,"FamilyId":null,"StateId":37,"StateName":"Others","PinCode":700160,"CountryId":1,"CountryName":"India","IsDeleted":0,"WarehouseId":1,"MedDiscPercent":null,"IsLab":1,"CustContactNo":9804750934,"RecepientName":null,"AddressName":null,"Latitude":0,"Longitude":0,"AddLine1":null}],"CustomerType":"N"}}};
       if(data && data['result']['rs']['allAddressData']?.length >0){
         this.addressList = data['result']['rs']['allAddressData'];
         this.isloading = false;
@@ -158,13 +162,21 @@ export class ManageAddressComponent implements OnInit {
   }
 
   onLocationSelected(location: any) {
-    this.selectedAddress = location;
-    console.log('Selected Address:', location);
+    // If editing an existing address, preserve its AddressId and other fields
+    if (this.actionType === 'EDIT' && this.selectedAddress && this.selectedAddress.AddressId) {
+      const addressId = this.selectedAddress.AddressId;
+      // merge new location into existing selectedAddress while keeping AddressId
+      this.selectedAddress = Object.assign({}, this.selectedAddress, location, { AddressId: addressId });
+    } else {
+      this.selectedAddress = location;
+    }
+
+    console.log('Selected Address:', this.selectedAddress);
     this.isMapSelected = true;
     this.isMapOpen = false;
 
-    // Send to backend
-    this.addNewAddress2()
+    // Send to backend (or open form)
+    this.addNewAddress2();
   }
 
   onMapClosed() {
@@ -226,6 +238,13 @@ export class ManageAddressComponent implements OnInit {
   }
 
   onReset() {
+    // If a programmatic close asked to skip reset (e.g. opening map), honor it
+    if (this.skipResetOnClose) {
+      this.skipResetOnClose = false;
+      this.submitted = false;
+      return;
+    }
+
     this.submitted = false;
     this.AddressForm.reset();
     this.state_city = '';
@@ -246,21 +265,73 @@ export class ManageAddressComponent implements OnInit {
   }
 
   changeLocation(){
-    console.log('type', this.actionType);
-    // this.onReset();
-    // this.closebutton.nativeElement.click();
-    // this.openAddressMap();
-    this.isMapOpen = true;
-    this.closebutton.nativeElement.click(); 
-    // this.AddressForm.patchValue({
-    //   AddressType: 'H',
-    //   Addressline: this.selectedAddress.addresss,
-    //   Pincode: this.selectedAddress.pincode,
-    // });
-    // this.AddressForm.get('Addressline')?.disable();
-    // this.AddressForm.get('Pincode')?.disable();
-    // this.isMapSelected = true;
-    // this.AddressModal.nativeElement.click();
+    console.log('changeLocation, type', this.actionType);
+
+    const adr = this.selectedAddress || {};
+    const latVal = adr.Latitude ?? adr.latitude ?? 0;
+    const lngVal = adr.Longitude ?? adr.longitude ?? 0;
+    const hasCoords = latVal && lngVal && latVal !== 0 && lngVal !== 0;
+
+    const openMapCentered = (lat: number, lng: number) => {
+      this.editLatitude = lat;
+      this.editLongitude = lng;
+      // avoid resetting the form when closing modal for map selection
+      this.skipResetOnClose = true;
+      try { this.closebutton.nativeElement.click(); } catch (e) {}
+      setTimeout(() => { this.isMapOpen = true; }, 150);
+    };
+
+    if (hasCoords) {
+      if (this.isGeolocationAvailable) {
+        openMapCentered(latVal, lngVal);
+        return;
+      }
+
+      this.isEnablingGeolocation = true;
+      this.geolocationService.requestGeolocationPermission().subscribe({
+        next: (response) => {
+          this.isEnablingGeolocation = false;
+          if (response.success) {
+            this.isGeolocationAvailable = true;
+            openMapCentered(latVal, lngVal);
+          } else {
+            this.AddressModal.nativeElement.click();
+          }
+        },
+        error: () => {
+          this.isEnablingGeolocation = false;
+          this.AddressModal.nativeElement.click();
+        }
+      });
+      return;
+    }
+
+    if (this.isGeolocationAvailable) {
+      const cur = this.geolocationService.getCurrentLocationSync();
+      if (cur && cur.latitude && cur.longitude) {
+        openMapCentered(cur.latitude, cur.longitude);
+        return;
+      }
+      try { this.closebutton.nativeElement.click(); } catch (e) {}
+      setTimeout(() => { this.isMapOpen = true; }, 150);
+      return;
+    }
+
+    this.isEnablingGeolocation = true;
+    this.geolocationService.requestGeolocationPermission().subscribe({
+      next: (response) => {
+        this.isEnablingGeolocation = false;
+        if (response.success && response.location) {
+          openMapCentered(response.location.latitude, response.location.longitude);
+        } else {
+          this.AddressModal.nativeElement.click();
+        }
+      },
+      error: () => {
+        this.isEnablingGeolocation = false;
+        this.AddressModal.nativeElement.click();
+      }
+    });
 
   }
   addNewAddress2(){
@@ -290,24 +361,66 @@ export class ManageAddressComponent implements OnInit {
   }
 
   setEditModal(adr: any){
-    console.log('edit');
+    console.log('edit adr', adr);
     this.actionType = 'EDIT';
     this.AddressForm.reset();
     this.selectedAddress = adr;
-    this.isMapSelected = true;
 
-    this.AddressForm.patchValue({
-      AddressType: adr.AddressType,
-      ContactPerson: adr.NickName,
-      MobileNo: adr.CustContactNo,
-      Addressline: adr.Addline,
-      Addressline1: adr.AddLine1,
-      Landmark: (adr.Landmark && adr.Landmark !== 'null') ? adr.Landmark : '',
-      Pincode: adr.PinCode,
-    });
-    // this.AddressForm.get('Addressline')?.disable();
-    // this.AddressForm.get('Pincode')?.disable();
-    this.AddressModal.nativeElement.click();
+    // Determine if this address has coordinates we can use for map editing
+    const hasCoords = adr && adr.Latitude && adr.Longitude && adr.Latitude !== 0 && adr.Longitude !== 0;
+
+    // Helper to prefill form values
+    const prefillForm = () => {
+      this.AddressForm.patchValue({
+        AddressType: adr.AddressType,
+        ContactPerson: adr.NickName,
+        MobileNo: adr.CustContactNo,
+        Addressline: adr.Addline,
+        Addressline1: adr.AddLine1,
+        Landmark: (adr.Landmark && adr.Landmark !== 'null') ? adr.Landmark : '',
+        Pincode: adr.PinCode,
+      });
+    };
+
+    if (hasCoords) {
+      // If geolocation is already available, open map centered on existing coords
+      if (this.isGeolocationAvailable) {
+        this.editLatitude = adr.Latitude;
+        this.editLongitude = adr.Longitude;
+        prefillForm();
+        this.isMapOpen = true;
+        return;
+      }
+
+      // Otherwise, request permission explicitly when user clicks Edit
+      this.isEnablingGeolocation = true;
+      this.geolocationService.requestGeolocationPermission().subscribe({
+        next: (response) => {
+          this.isEnablingGeolocation = false;
+          if (response.success) {
+            // Permission granted -> open map at address coords
+            this.isGeolocationAvailable = true;
+            this.editLatitude = adr.Latitude;
+            this.editLongitude = adr.Longitude;
+            prefillForm();
+            this.isMapOpen = true;
+          } else {
+            // Permission denied or unavailable -> open edit form modal
+            prefillForm();
+            this.AddressModal.nativeElement.click();
+          }
+        },
+        error: () => {
+          this.isEnablingGeolocation = false;
+          prefillForm();
+          this.AddressModal.nativeElement.click();
+        }
+      });
+    } else {
+      // No coords available for this address - open edit form modal
+      prefillForm();
+      this.AddressModal.nativeElement.click();
+    }
   }
 
   editAddress(){
