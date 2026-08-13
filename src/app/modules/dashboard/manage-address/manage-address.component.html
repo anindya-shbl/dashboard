@@ -151,6 +151,13 @@
                         {{ isEnablingGeolocation ? 'Enabling...' : 'Enable Location' }}
                     </button>
                 </div>
+                <!-- Geolocation Message (Success/Error) -->
+                <div *ngIf="geolocationMessage"
+                    [class]="'alert alert-' + (geolocationMessageType === 'success' ? 'success' : 'danger') + ' d-flex justify-content-between align-items-center'">
+                    <span>{{ geolocationMessage }}</span>
+                    <button type="button" class="btn-close" (click)="dismissGeolocationMessage()">
+                    </button>
+                </div>
             </div>
             <div class="modal-header">
                 <h6 *ngIf="actionType == 'ADD'" class="modal-title mb-0" id="AddressModalLabel">Add New Address</h6>
