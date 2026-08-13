@@ -12,6 +12,8 @@ import { GeolocationService, CurrentLocation } from '../../services/geolocation.
 export class MapLocationPickerComponent implements OnInit, AfterViewInit, OnChanges {
   @ViewChild('mapContainer') mapContainer: any;
   @Input() isOpen: boolean = false;
+  @Input() initialLatitude: number = 0;
+  @Input() initialLongitude: number = 0;
   @Output() locationSelected = new EventEmitter<any>();
   @Output() closed = new EventEmitter<void>();
   
@@ -71,18 +73,23 @@ export class MapLocationPickerComponent implements OnInit, AfterViewInit, OnChan
     console.log('ngOnChanges-MapLocationPickerComponent initialized. isOpen:', this.isOpen);
     // console.log(changes['isOpen']);
     // if (changes['isOpen'] && this.isOpen && this.mapContainer && !this.map) {
-    if(this.isOpen) {
-      if(this.defaultLatitude > 0 && this.defaultLongitude > 0) {
-          this.getAddressFromCoordinates(this.defaultLatitude, this.defaultLongitude);
-          console.log('before initializing map, isOpen:', this.isOpen);
-          this.mapLoading = true;
-          setTimeout(() => {
-            this.initMap();
-            this.mapLoading = false;
-          }, 100);
-      }
-      else {
-        console.log("Show form instead of map, as current location is not available");
+    if (this.isOpen) {
+      // prefer explicit initial coordinates when provided (edit flow)
+      const lat = (this.initialLatitude && this.initialLatitude > 0) ? this.initialLatitude : this.defaultLatitude;
+      const lng = (this.initialLongitude && this.initialLongitude > 0) ? this.initialLongitude : this.defaultLongitude;
+
+      if (lat > 0 && lng > 0) {
+        this.defaultLatitude = lat;
+        this.defaultLongitude = lng;
+        this.getAddressFromCoordinates(this.defaultLatitude, this.defaultLongitude);
+        console.log('before initializing map, isOpen:', this.isOpen, 'lat:', lat, 'lng:', lng);
+        this.mapLoading = true;
+        setTimeout(() => {
+          this.initMap();
+          this.mapLoading = false;
+        }, 100);
+      } else {
+        console.log('Show form instead of map, as current location is not available');
       }
     }
   }
