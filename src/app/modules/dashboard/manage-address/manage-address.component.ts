@@ -142,7 +142,9 @@ export class ManageAddressComponent implements OnInit {
     // this.profileService.getAddressList('customers/address/manageAddress').subscribe((data: any) => {
     this.profileService.getAddressList('webapi/user/manageAddress').subscribe((data: any) => {
       // console.log(data['result']['rs']['allAddressData']);
+      console.log('Fetched address list:', data);
       data = {"result":{"rs":{"allAddressData":[{"AddressId":3582863,"UserId":588795,"NickName":"A Bhattacharya","AddressType":"H","IsPrimary":0,"Addline":"B S PARK, Grand Trunk Road, Market, Baidyabati, West Bengal, India","Landmark":"B S PARK GROUND","City":"Hooghly","AreaId":null,"ServiceArea":null,"FamilyId":null,"StateId":35,"StateName":"West Bengal","PinCode":712222,"CountryId":1,"CountryName":"India","IsDeleted":0,"WarehouseId":1,"MedDiscPercent":18,"IsLab":1,"CustContactNo":9836370209,"RecepientName":null,"AddressName":null,"Latitude":22.783745099999997,"Longitude":88.322468,"AddLine1":"91-3 J N GUPTA LANE"},{"AddressId":3582871,"UserId":588795,"NickName":"A Bhattacharya","AddressType":"H","IsPrimary":0,"Addline":"Baidyabati Charushila Bose Balika Vidyalaya, Baidyapara, Baidyabati, West Bengal, India","Landmark":"Girl's School","City":"Hooghly","AreaId":null,"ServiceArea":null,"FamilyId":null,"StateId":35,"StateName":"West Bengal","PinCode":712222,"CountryId":1,"CountryName":"India","IsDeleted":0,"WarehouseId":1,"MedDiscPercent":18,"IsLab":1,"CustContactNo":9804750934,"RecepientName":null,"AddressName":null,"Latitude":22.781874500000004,"Longitude":88.3240828,"AddLine1":"91-3 J N GUPTA LANE"}],"CustomerType":"N"}}};
+      console.log('Processed address list:', data);
       if(data && data['result']['rs']['allAddressData']?.length >0){
         this.addressList = data['result']['rs']['allAddressData'];
         this.isloading = false;
@@ -424,7 +426,7 @@ export class ManageAddressComponent implements OnInit {
     }
   }
 
-  editAddress(){
+  // editAddress(){
     // this.qService.editQue([params["id"]]).subscribe(res => {
     //   this.question = res;
       // this.AddressForm.patchValue({
@@ -442,7 +444,7 @@ export class ManageAddressComponent implements OnInit {
     // this.getAddressList();
     // this.closebutton.nativeElement.click();
     // })
-  }
+  // }
 
   checkServiceArea() {
     this.state_city = '';
@@ -561,4 +563,20 @@ export class ManageAddressComponent implements OnInit {
   dismissGeolocationMessage(): void {
     this.geolocationMessage = '';
   }
+
+  formatAddress(adr: any): string {
+  const addressParts = [
+    adr?.AddLine1,
+    adr?.Landmark,
+    adr?.Addline,
+    adr?.City
+  ].filter(part => part !== null && part !== undefined && String(part).trim() !== '');
+
+  const locationParts = [
+    adr?.StateName ? `(${adr.StateName})` : '',
+    adr?.PinCode ? `${adr.PinCode}` : ''
+  ].filter(part => part !== null && part !== undefined && String(part).trim() !== '');
+
+  return [...addressParts, ...locationParts].join(', ');
+}
 }

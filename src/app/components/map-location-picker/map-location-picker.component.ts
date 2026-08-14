@@ -14,6 +14,7 @@ export class MapLocationPickerComponent implements OnInit, AfterViewInit, OnChan
   @Input() isOpen: boolean = false;
   @Input() initialLatitude: number = 0;
   @Input() initialLongitude: number = 0;
+  @Input() initialAddress: string = '';
   @Output() locationSelected = new EventEmitter<any>();
   @Output() closed = new EventEmitter<void>();
   
@@ -58,7 +59,7 @@ export class MapLocationPickerComponent implements OnInit, AfterViewInit, OnChan
   }
 
   ngAfterViewInit() {
-    // console.log('ngAfterViewInit-MapLocationPickerComponent initialized. isOpen:', this.isOpen);
+    console.log('ngAfterViewInit-MapLocationPickerComponent initialized. isOpen:', this.isOpen);
     if (this.isOpen && this.mapContainer) {
       this.mapLoading = true;
       this.mapError = '';
@@ -69,30 +70,57 @@ export class MapLocationPickerComponent implements OnInit, AfterViewInit, OnChan
     }
   }
 
-  ngOnChanges(changes: SimpleChanges) {
-    console.log('ngOnChanges-MapLocationPickerComponent initialized. isOpen:', this.isOpen);
-    // console.log(changes['isOpen']);
-    // if (changes['isOpen'] && this.isOpen && this.mapContainer && !this.map) {
-    if (this.isOpen) {
-      // prefer explicit initial coordinates when provided (edit flow)
-      const lat = (this.initialLatitude && this.initialLatitude > 0) ? this.initialLatitude : this.defaultLatitude;
-      const lng = (this.initialLongitude && this.initialLongitude > 0) ? this.initialLongitude : this.defaultLongitude;
+  // ngOnChanges(changes: SimpleChanges) {
+  //   console.log('ngOnChanges-MapLocationPickerComponent initialized. isOpen:', this.isOpen);
+  //   // console.log(changes['isOpen']);
+  //   // if (changes['isOpen'] && this.isOpen && this.mapContainer && !this.map) {
+  //   if (this.isOpen) {
+  //     // prefer explicit initial coordinates when provided (edit flow)
+  //     const lat = (this.initialLatitude && this.initialLatitude > 0) ? this.initialLatitude : this.defaultLatitude;
+  //     const lng = (this.initialLongitude && this.initialLongitude > 0) ? this.initialLongitude : this.defaultLongitude;
 
-      if (lat > 0 && lng > 0) {
-        this.defaultLatitude = lat;
-        this.defaultLongitude = lng;
-        this.getAddressFromCoordinates(this.defaultLatitude, this.defaultLongitude);
-        console.log('before initializing map, isOpen:', this.isOpen, 'lat:', lat, 'lng:', lng);
-        this.mapLoading = true;
-        setTimeout(() => {
-          this.initMap();
-          this.mapLoading = false;
-        }, 100);
-      } else {
-        console.log('Show form instead of map, as current location is not available');
+  //     if (lat > 0 && lng > 0) {
+  //       this.defaultLatitude = lat;
+  //       this.defaultLongitude = lng;
+  //       this.getAddressFromCoordinates(this.defaultLatitude, this.defaultLongitude);
+  //       console.log('before initializing map, isOpen:', this.isOpen, 'lat:', lat, 'lng:', lng);
+  //       this.mapLoading = true;
+  //       setTimeout(() => {
+  //         this.initMap();
+  //         this.mapLoading = false;
+  //       }, 100);
+  //     } else {
+  //       console.log('Show form instead of map, as current location is not available');
+  //     }
+  //   }
+  // }
+
+  ngOnChanges(): void {
+  if (!this.isOpen) return;
+
+  if (this.initialLatitude && this.initialLongitude) {
+    this.selectedLocation = {
+      name: 'Saved Address',
+      formatted_address: this.initialAddress || 'Current saved address',
+      latitude: this.initialLatitude,
+      longitude: this.initialLongitude
+    };
+
+    if (this.map) {
+      this.map.setCenter({
+        lat: this.initialLatitude,
+        lng: this.initialLongitude
+      });
+
+      if (this.marker) {
+        this.marker.setPosition({
+          lat: this.initialLatitude,
+          lng: this.initialLongitude
+        });
       }
     }
   }
+}
 
   initMap(): void {
     if (!this.mapContainer) {
