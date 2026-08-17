@@ -75,7 +75,7 @@ export class ManageAddressComponent implements OnInit {
       ContactPerson: ['', Validators.required],
       MobileNo: ['', Validators.required],      
       Addressline: ['', Validators.required],
-      Addressline1: ['', Validators.required],
+      Addressline1: [''], // No validator - optional by default
       Landmark: [''],
       Pincode: ['', Validators.required],
       // AddressName: [''],      
@@ -95,9 +95,11 @@ export class ManageAddressComponent implements OnInit {
     this.geolocationService.verifyGeolocationStatus().subscribe(available => {
       if (available) {
         console.log('✅ Geolocation permission granted, opening map');
+        this.isGeolocationAvailable = true;
         this.openAddressMap();
       } else {
         console.log('⛔ Geolocation permission denied or unavailable, opening manual form');
+        this.isGeolocationAvailable = false;
         this.openAddressForm();
       }
     });
@@ -182,10 +184,20 @@ export class ManageAddressComponent implements OnInit {
   }
   
   onSubmit() {
+    console.log('Submitting address form:', this.AddressForm.value);
     this.submitted = true;
     this.respMsg = '';
+    if(this.isGeolocationAvailable){
+      this.AddressForm.get('Addressline')?.setValidators([Validators.required])
+    }
+    else {
+      this.AddressForm.get('Addressline1')?.clearValidators();
+    }
+    this.AddressForm.get('Addressline1')?.updateValueAndValidity();
     // stop here if form is invalid
     if (this.AddressForm.invalid) {
+      console.log('Validation errors found:', this.AddressForm.invalid);
+      this.respMsg = 'Validation errors found';
       return;
     }else if(this.serviceAreaMsg == true){      
       // alert('Service not available yet.');
