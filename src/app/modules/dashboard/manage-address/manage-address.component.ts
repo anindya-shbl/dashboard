@@ -423,7 +423,7 @@ export class ManageAddressComponent implements OnInit {
     }
   }
 
-  editAddress(){
+  // editAddress(){
     // this.qService.editQue([params["id"]]).subscribe(res => {
     //   this.question = res;
       // this.AddressForm.patchValue({
@@ -441,7 +441,7 @@ export class ManageAddressComponent implements OnInit {
     // this.getAddressList();
     // this.closebutton.nativeElement.click();
     // })
-  }
+  // }
 
   checkServiceArea() {
     this.state_city = '';
