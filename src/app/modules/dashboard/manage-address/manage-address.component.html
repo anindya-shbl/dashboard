@@ -202,7 +202,7 @@
                     <div class="ac-grid mb-2" *ngIf="isGeolocationAvailable">
                         <div class="mb-3">
                             <label for="Addressline1" class="form-label">Flat/House/Building Name <span
-                                    class="text-danger">
+                                    class="text-danger" *ngIf="isGeolocationAvailable">
                                     *</span></label>
                             <input type="text" rows="3" class="form-control" id="Addressline1"
                                 formControlName="Addressline1" />
