@@ -577,7 +577,7 @@ export class ManageAddressComponent implements OnInit {
 
   formatAddress(adr: any): string {
     const addressParts = [
-      adr?.AddLine1,
+      adr?.AddLine1 && adr.AddLine1 !== 'null' ? adr.AddLine1 : null,
       adr?.Landmark && adr.Landmark !== 'null' ? adr.Landmark : null,
       adr?.Addline,
       adr?.City
