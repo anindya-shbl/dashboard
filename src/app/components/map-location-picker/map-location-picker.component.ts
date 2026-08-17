@@ -14,6 +14,7 @@ export class MapLocationPickerComponent implements OnInit, AfterViewInit, OnChan
   @Input() isOpen: boolean = false;
   @Input() initialLatitude: number = 0;
   @Input() initialLongitude: number = 0;
+  @Input() existingAddress: any = null; // Accept existing address as input
   @Output() locationSelected = new EventEmitter<any>();
   @Output() closed = new EventEmitter<void>();
   
@@ -38,23 +39,25 @@ export class MapLocationPickerComponent implements OnInit, AfterViewInit, OnChan
   ) {}
 
   ngOnInit() {
-    // Initialize with default location from API
-    // this.getAddressFromCoordinates(this.defaultLatitude, this.defaultLongitude);
-    // Get current location from geolocation service
-    this.geolocationService.currentLocation$.subscribe({
-      next: (location) => {
-        if (location) {
-          console.log('current location'+ JSON.stringify(location));
-          this.currentLocation = location;
-          this.defaultLatitude = location.latitude;
-          this.defaultLongitude = location.longitude;
-          console.log('Using current location:', location);
-        } else {
-          // console.log('Using default India coordinates');
-          console.log("Show form instead of map, as current location is not available");
+    if(!this.existingAddress){
+      // Initialize with default location from API
+      // this.getAddressFromCoordinates(this.defaultLatitude, this.defaultLongitude);
+      // Get current location from geolocation service
+      this.geolocationService.currentLocation$.subscribe({
+        next: (location) => {
+          if (location) {
+            console.log('current location'+ JSON.stringify(location));
+            this.currentLocation = location;
+            this.defaultLatitude = location.latitude;
+            this.defaultLongitude = location.longitude;
+            console.log('Using current location:', location);
+          } else {
+            // console.log('Using default India coordinates');
+            console.log("Show form instead of map, as current location is not available");
+          }
         }
-      }
-    });
+      });
+    }
   }
 
   ngAfterViewInit() {
@@ -382,45 +385,37 @@ export class MapLocationPickerComponent implements OnInit, AfterViewInit, OnChan
 
   // Get address from coordinates via API
   getAddressFromCoordinates(latitude: number, longitude: number): void {
-    this.addressService.getAddressFromCoordinates(latitude, longitude).subscribe({
-      next: (response: any) => {
-        if (response.responseCode == 200 && response.data) {
-          // let addressComponents:any[] = response.data.results[0].address_components;
-          // let pincode = addressComponents.find(comp => comp.types.includes('postal_code'))?.long_name || '';
-          // let street_number = addressComponents.find(comp => comp.types.includes('street_number'))?.long_name || '';
-          // let route = addressComponents.find(comp => comp.types.includes('route'))?.long_name || '';
-          // let sublocality_level_2 = addressComponents.find(comp => comp.types.includes('sublocality_level_2'))?.long_name || '';
-          // let sublocality_level_1 = addressComponents.find(comp => comp.types.includes('sublocality_level_1'))?.long_name || '';
-          // let locality = addressComponents.find(comp => comp.types.includes('locality'))?.long_name || '';
-          // let administrative_area_level_2 = addressComponents.find(comp => comp.types.includes('administrative_area_level_2'))?.long_name || '';
-          // let administrative_area_level_1 = addressComponents.find(comp => comp.types.includes('administrative_area_level_1'))?.long_name || '';
-          // let country = addressComponents.find(comp => comp.types.includes('country'))?.long_name || '';
-          // this.selectedLocation = {
-          //   pincode: pincode,
-          //   addresss: street_number + ' ' + route + ', ' + sublocality_level_2 + ', ' + sublocality_level_1 + ', ' + locality + ', ' + administrative_area_level_2 + ', ' + administrative_area_level_1 + ', ' + country,
-          //   formatted_address: response.data.results[0].formatted_address,
-          //   latitude: response.data.results[0].geometry.location.lat,
-          //   longitude: response.data.results[0].geometry.location.lng,
-          //   name: sublocality_level_2
-          // };
-
-          this.selectedLocation = {
-            pincode: response.data.pinCode,
-            addresss: response.data.address,
-            formatted_address: response.data.address,
-            latitude: response.data.lat,
-            longitude: response.data.lng,
-            name: response.data.addressName
-          };
-
-
-          this.cdr.detectChanges();
+    if(!this.existingAddress){
+      this.addressService.getAddressFromCoordinates(latitude, longitude).subscribe({
+        next: (response: any) => {
+          if (response.responseCode == 200 && response.data) {
+            this.selectedLocation = {
+              pincode: response.data.pinCode,
+              addresss: response.data.address,
+              formatted_address: response.data.address,
+              latitude: response.data.lat,
+              longitude: response.data.lng,
+              name: response.data.addressName
+            };
+            this.cdr.detectChanges();
+          }
+        },
+        error: (error) => {
+          console.error('Reverse geocode error:', error);
         }
-      },
-      error: (error) => {
-        console.error('Reverse geocode error:', error);
-      }
-    });
+      });
+    }
+    else{
+      console.log('Getting address for coordinates:existingAddress', this.existingAddress);
+       this.selectedLocation = {
+              pincode: this.existingAddress.PinCode,
+              addresss: this.existingAddress.Addline,
+              formatted_address: this.existingAddress.Addline,
+              latitude: this.existingAddress.Latitude,
+              longitude: this.existingAddress.Longitude,
+              name: this.existingAddress.AddLine1
+            };
+    }
   }
 
   placeMarkerByCoordinates(lat: number, lng: number): void {

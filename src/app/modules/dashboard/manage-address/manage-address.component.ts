@@ -26,6 +26,7 @@ export class ManageAddressComponent implements OnInit {
   // coordinates to pass to map when opening for edit
   editLatitude: number = 0;
   editLongitude: number = 0;
+  existingAddress: any = null; // To pass existing address to map component for editing
   // When true, skip resetting the form when modal is programmatically closed
   skipResetOnClose: boolean = false;
 
@@ -172,7 +173,7 @@ export class ManageAddressComponent implements OnInit {
       this.selectedAddress = location;
     }
 
-    console.log('Selected Address:', this.selectedAddress);
+    console.log('From onLocationSelected method:', this.selectedAddress);
     this.isMapSelected = true;
     this.isMapOpen = false;
 
@@ -362,11 +363,13 @@ export class ManageAddressComponent implements OnInit {
   }
 
   setEditModal(adr: any){
-    console.log('edit adr', adr);
+    console.log('From setEditModal method', adr);
+    this.existingAddress = adr; // Pass existing address to map component
     this.actionType = 'EDIT';
-    this.AddressForm.reset();
+    console.log('From setEditModal method AddressForm', this.AddressForm);
+    // this.AddressForm.reset();
     this.selectedAddress = adr;
-
+    console.log('From setEditModal method selectedAddress', this.selectedAddress);
     // Determine if this address has coordinates we can use for map editing
     const hasCoords = adr && adr.Latitude && adr.Longitude && adr.Latitude !== 0 && adr.Longitude !== 0;
 
