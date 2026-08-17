@@ -53,7 +53,7 @@ export class ManageAddressComponent implements OnInit {
   ngOnInit(): void {
     this.generateform();
     this.getAddressList();
-    this.checkGeolocationStatus();
+    // this.checkGeolocationStatus();
   }
 
    /**
@@ -63,7 +63,7 @@ export class ManageAddressComponent implements OnInit {
     // Subscribe to geolocation availability
     this.geolocationService.getGeolocationAvailability().subscribe(available => {
       this.isGeolocationAvailable = available;
-      console.log('Geolocation available:', available);
+      console.log('Geolocation status updated:', available);
       this.cdr.markForCheck();
     });
   }
@@ -91,18 +91,12 @@ export class ManageAddressComponent implements OnInit {
     console.log('Opening address entry...');
     this.respMsg = '';
 
-    this.geolocationService.requestGeolocationPermission().subscribe({
-      next: (response) => {
-        if (response.success) {
-          console.log('✅ Geolocation permission granted, opening map');
-          this.openAddressMap();
-        } else {
-          console.log('⛔ Geolocation permission denied or unavailable, opening manual form');
-          this.openAddressForm();
-        }
-      },
-      error: () => {
-        console.log('⛔ Geolocation request failed, opening manual form');
+    this.geolocationService.verifyGeolocationStatus().subscribe(available => {
+      if (available) {
+        console.log('✅ Geolocation permission granted, opening map');
+        this.openAddressMap();
+      } else {
+        console.log('⛔ Geolocation permission denied or unavailable, opening manual form');
         this.openAddressForm();
       }
     });
@@ -363,13 +357,14 @@ export class ManageAddressComponent implements OnInit {
   }
 
   setEditModal(adr: any){
-    console.log('From setEditModal method', adr);
+    this.checkGeolocationStatus();
+    // console.log('From setEditModal method', adr);
     this.existingAddress = adr; // Pass existing address to map component
     this.actionType = 'EDIT';
-    console.log('From setEditModal method AddressForm', this.AddressForm);
+    // console.log('From setEditModal method AddressForm', this.AddressForm);
     // this.AddressForm.reset();
     this.selectedAddress = adr;
-    console.log('From setEditModal method selectedAddress', this.selectedAddress);
+    // console.log('From setEditModal method selectedAddress', this.selectedAddress);
     // Determine if this address has coordinates we can use for map editing
     const hasCoords = adr && adr.Latitude && adr.Longitude && adr.Latitude !== 0 && adr.Longitude !== 0;
 
@@ -386,66 +381,62 @@ export class ManageAddressComponent implements OnInit {
       });
     };
 
-    if (hasCoords) {
-      // If geolocation is already available, open map centered on existing coords
-      if (this.isGeolocationAvailable) {
-        this.editLatitude = adr.Latitude;
-        this.editLongitude = adr.Longitude;
-        prefillForm();
-        this.isMapOpen = true;
-        return;
-      }
-
-      // Otherwise, request permission explicitly when user clicks Edit
-      this.isEnablingGeolocation = true;
-      this.geolocationService.requestGeolocationPermission().subscribe({
-        next: (response) => {
-          this.isEnablingGeolocation = false;
-          if (response.success) {
-            // Permission granted -> open map at address coords
-            this.isGeolocationAvailable = true;
+    this.geolocationService.verifyGeolocationStatus().subscribe({
+      next: (isAvailable) => {
+      // this.isCheckingGeoLocation = false;
+      this.isGeolocationAvailable = isAvailable;
+      if (hasCoords && isAvailable) {
+          // If geolocation is already available, open map centered on existing coords
+          if (this.isGeolocationAvailable) {
             this.editLatitude = adr.Latitude;
             this.editLongitude = adr.Longitude;
             prefillForm();
             this.isMapOpen = true;
-          } else {
-            // Permission denied or unavailable -> open edit form modal
-            prefillForm();
-            this.AddressModal.nativeElement.click();
+            return;
           }
-        },
-        error: () => {
-          this.isEnablingGeolocation = false;
+        } else if (hasCoords && !isAvailable) {
+           // Otherwise, request permission explicitly when user clicks Edit
+          this.isEnablingGeolocation = true;
+          this.geolocationService.requestGeolocationPermission().subscribe({
+            next: (response) => {
+              this.isEnablingGeolocation = false;
+              if (response.success) {
+                // Permission granted -> open map at address coords
+                this.isGeolocationAvailable = true;
+                this.editLatitude = adr.Latitude;
+                this.editLongitude = adr.Longitude;
+                prefillForm();
+                this.isMapOpen = true;
+              } else {
+                // Permission denied or unavailable -> open edit form modal
+                prefillForm();
+                this.AddressModal.nativeElement.click();
+              }
+            },
+            error: () => {
+              this.isEnablingGeolocation = false;
+              prefillForm();
+              this.AddressModal.nativeElement.click();
+            }
+          });
+        }
+        else {
+          // No coords available for this address - open edit form modal
           prefillForm();
           this.AddressModal.nativeElement.click();
         }
-      });
-    } else {
-      // No coords available for this address - open edit form modal
-      prefillForm();
-      this.AddressModal.nativeElement.click();
-    }
+      },
+      error: (error) => {
+        // this.isCheckingGeoLocation = false;
+        console.error('Error verifying geolocation:', error);
+        // On error, just open form
+        prefillForm();
+        this.AddressModal.nativeElement.click();
+        this.isGeolocationAvailable = false;
+        this.cdr.markForCheck();
+      }
+    });
   }
-
-  // editAddress(){
-    // this.qService.editQue([params["id"]]).subscribe(res => {
-    //   this.question = res;
-      // this.AddressForm.patchValue({
-      //   AddressType: ['2'],
-      //   ContactPerson: ['Avik Sarkar'],
-      //   MobileNo: ['7003477290'],      
-      //   Addressline: ['R N Road Dumdum, kolkata, West Bengal'],
-      //   Landmark: ['Milan Sangha Club'],
-      //   Pincode: ['700156'],
-      // });
-    // });
-
-    // this.profileService.editAddress('customers/address/editAddress', fd).subscribe((res: any) => {
-    //   console.log(res);
-    // this.getAddressList();
-    // this.closebutton.nativeElement.click();
-    // })
-  // }
 
   checkServiceArea() {
     this.state_city = '';
