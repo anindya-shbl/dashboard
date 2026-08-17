@@ -561,4 +561,20 @@ export class ManageAddressComponent implements OnInit {
   dismissGeolocationMessage(): void {
     this.geolocationMessage = '';
   }
+
+  formatAddress(adr: any): string {
+    const addressParts = [
+      adr?.AddLine1,
+      adr?.Landmark,
+      adr?.Addline,
+      adr?.City
+    ].filter(part => part !== null && part !== undefined && String(part).trim() !== '');
+
+    const locationParts = [
+      adr?.StateName ? `(${adr.StateName})` : '',
+      adr?.PinCode ? `${adr.PinCode}` : ''
+    ].filter(part => part !== null && part !== undefined && String(part).trim() !== '');
+
+    return [...addressParts, ...locationParts].join(', ');
+  }
 }
