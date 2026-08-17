@@ -88,6 +88,7 @@ export class ManageAddressComponent implements OnInit {
    * Request location permission only when the user clicks Add New Address.
    */
   openAddressEntry(): void {
+    this.actionType = 'ADD';
     console.log('Opening address entry...');
     this.respMsg = '';
 
@@ -152,8 +153,8 @@ export class ManageAddressComponent implements OnInit {
    openAddressMap() {
     console.log('Opening map for address selection...');
     this.isMapOpen = true;
-    this.actionType = 'ADD';
-    console.log('type', this.actionType);
+    // this.actionType = 'ADD';
+    // console.log('type', this.actionType);
   }
 
   onLocationSelected(location: any) {
@@ -533,7 +534,12 @@ export class ManageAddressComponent implements OnInit {
           
           // Automatically open map for address selection
           setTimeout(() => {
-            this.openAddressMap();
+            if(this.actionType == 'EDIT'){
+              this.setEditModal(this.selectedAddress);
+            }
+            else {
+              this.openAddressMap();
+            }
             this.closebutton.nativeElement.click(); 
             this.geolocationMessage = '';
           }, 1500);
