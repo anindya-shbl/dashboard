@@ -199,7 +199,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="ac-grid mb-2">
+                    <div class="ac-grid mb-2" *ngIf="isGeolocationAvailable">
                         <div class="mb-3">
                             <label for="Addressline1" class="form-label">Flat/House/Building Name <span
                                     class="text-danger">
@@ -213,7 +213,9 @@
                     </div>
                     <div class="ac-grid mb-2">
                         <div class="mb-3">
-                            <label for="Addressline" class="form-label">Address <span class="text-danger">
+                            <label for="Addressline" class="form-label">
+                                {{ isGeolocationAvailable ? 'Address' : 'Complete Address' }} 
+                                <span class="text-danger">
                                     *</span></label>
                             <div style="position: relative;">
                                 <textarea type="text" rows="3" style="padding-right:180px !important;"
