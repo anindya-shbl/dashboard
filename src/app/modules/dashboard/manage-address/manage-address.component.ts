@@ -228,7 +228,7 @@ export class ManageAddressComponent implements OnInit {
       this.profileService.addEditAddress(endpoint, fd).subscribe((res: any) => {
         // console.log(res);
         this.spinner.hide();
-        if(res && res['status']==200){
+        if(res && (res['status']==200 || res['ResponseCode']==1)){
           this.getAddressList();
           // this.closebutton.nativeElement.click();
           this.respMsg = res['Message'];
@@ -387,7 +387,7 @@ export class ManageAddressComponent implements OnInit {
         ContactPerson: adr.NickName,
         MobileNo: adr.CustContactNo,
         Addressline: adr.Addline,
-        Addressline1: adr.AddLine1,
+        Addressline1: (adr.AddLine1 && adr.AddLine1 !=='null') ? adr.AddLine1: '',
         Landmark: (adr.Landmark && adr.Landmark !== 'null') ? adr.Landmark : '',
         Pincode: adr.PinCode,
       });
