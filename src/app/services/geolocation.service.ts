@@ -20,30 +20,65 @@ export class GeolocationService {
   public isGeolocationAvailable$ = this.isGeolocationAvailableSubject.asObservable();
 
   constructor() {
-    // this.loadCurrentLocation();
+    // Don't auto-load on init - verify on demand
   }
 
   /**
-   * Load current location on service initialization
+   * Verify current geolocation permission status
+   * This checks the ACTUAL current status, not cached
    */
-  private loadCurrentLocation(): void {
-    if (this.isGeolocationSupported) {
-      this.getCurrentLocation().subscribe({
-        next: (location) => {
+  verifyGeolocationStatus(): Observable<boolean> {
+    return new Observable((observer) => {
+      if (!this.isGeolocationSupported) {
+        this.isGeolocationAvailableSubject.next(false);
+        observer.next(false);
+        observer.complete();
+        return;
+      }
+
+      // Try to get location with timeout to check if permission granted
+      const timeoutId = setTimeout(() => {
+        // If timeout, assume permission was denied (user didn't grant)
+        this.isGeolocationAvailableSubject.next(false);
+        observer.next(false);
+        observer.complete();
+      }, 2000); // Quick 2-second check
+
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          clearTimeout(timeoutId);
+          
+          const location: CurrentLocation = {
+            latitude: position.coords.latitude,
+            longitude: position.coords.longitude,
+            accuracy: position.coords.accuracy,
+            timestamp: position.timestamp
+          };
+
           this.currentLocationSubject.next(location);
           this.isGeolocationAvailableSubject.next(true);
-          console.log('Current location loaded:', location);
+          console.log('✅ Geolocation verified as available:', location);
+          
+          observer.next(true);
+          observer.complete();
         },
-        error: (error) => {
-          console.warn('Geolocation error:', error);
+        (error) => {
+          clearTimeout(timeoutId);
+          
+          // User denied permission or error occurred
           this.isGeolocationAvailableSubject.next(false);
-          // Will use default coordinates
+          console.warn('⚠️ Geolocation not available:', error);
+          
+          observer.next(false);
+          observer.complete();
+        },
+        {
+          enableHighAccuracy: true,
+          timeout: 2000,
+          maximumAge: 0
         }
-      });
-    } else {
-      console.warn('Geolocation is not supported by this browser');
-      this.isGeolocationAvailableSubject.next(false);
-    }
+      );
+    });
   }
 
   /**
@@ -57,9 +92,9 @@ export class GeolocationService {
       }
 
       const options = {
-        enableHighAccuracy: true,  // Get more precise location
-        timeout: 10000,            // Wait max 10 seconds
-        maximumAge: 0              // Don't use cached position
+        enableHighAccuracy: true,
+        timeout: 10000,
+        maximumAge: 0
       };
 
       navigator.geolocation.getCurrentPosition(
@@ -102,24 +137,25 @@ export class GeolocationService {
   getCurrentLocationSync(): CurrentLocation | null {
     return this.currentLocationSubject.value;
   }
+
   /**
-     * Check if geolocation is available (synchronous)
-     */
-    isGeolocationAvailable(): boolean {
-      return this.isGeolocationAvailableSubject.value;
-    }
-
-    /**
-     * Get geolocation availability as observable
-     */
-    getGeolocationAvailability(): Observable<boolean> {
-      return this.isGeolocationAvailable$;
-    }
-
-    /**
-   * ✅ NEW: Request geolocation permission explicitly
+   * Check if geolocation is available (synchronous from cache)
    */
-    
+  isGeolocationAvailable(): boolean {
+    return this.isGeolocationAvailableSubject.value;
+  }
+
+  /**
+   * Get geolocation availability as observable
+   */
+  getGeolocationAvailability(): Observable<boolean> {
+    return this.isGeolocationAvailable$;
+  }
+
+  /**
+   * Request geolocation permission explicitly
+   * Shows browser permission dialog
+   */
   requestGeolocationPermission(): Observable<{
     success: boolean;
     message: string;
@@ -142,7 +178,7 @@ export class GeolocationService {
         maximumAge: 0
       };
 
-      // ✅ This triggers the browser's native permission dialog
+      // This triggers the browser's native permission dialog
       navigator.geolocation.getCurrentPosition(
         (position) => {
           const location: CurrentLocation = {
@@ -190,7 +226,6 @@ export class GeolocationService {
       );
     });
   }
-
 
   /**
    * Clear cached location
