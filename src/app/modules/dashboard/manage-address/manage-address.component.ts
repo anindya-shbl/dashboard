@@ -174,7 +174,7 @@ export class ManageAddressComponent implements OnInit {
     console.log('From onLocationSelected method:', this.selectedAddress);
     this.isMapSelected = true;
     this.isMapOpen = false;
-
+    console.log('isGeolocationAvailable',this.isGeolocationAvailable)
     // Send to backend (or open form)
     this.addNewAddress2();
   }
@@ -364,11 +364,11 @@ export class ManageAddressComponent implements OnInit {
     this.AddressModal.nativeElement.click();
   }
 
-  addNewAddress(){
-    this.actionType = 'ADD';
-    this.onReset();
-    this.AddressModal.nativeElement.click();
-  }
+  // addNewAddress(){
+  //   this.actionType = 'ADD';
+  //   this.onReset();
+  //   this.AddressModal.nativeElement.click();
+  // }
 
   setEditModal(adr: any){
     this.checkGeolocationStatus();
@@ -435,6 +435,7 @@ export class ManageAddressComponent implements OnInit {
           });
         }
         else {
+          console.log('No coords available for this address - open edit form modal');
           // No coords available for this address - open edit form modal
           prefillForm();
           this.AddressModal.nativeElement.click();
@@ -545,7 +546,7 @@ export class ManageAddressComponent implements OnInit {
           console.log('✅ Geolocation enabled:', response.location);
           this.geolocationMessage = response.message;
           this.geolocationMessageType = 'success';
-          
+          this.isGeolocationAvailable = true;
           // Automatically open map for address selection
           setTimeout(() => {
             if(this.actionType == 'EDIT'){
@@ -561,6 +562,7 @@ export class ManageAddressComponent implements OnInit {
           console.warn('❌ Geolocation request failed:', response.message);
           this.geolocationMessage = response.message;
           this.geolocationMessageType = 'error';
+          this.isGeolocationAvailable = false;
         }
 
         this.cdr.markForCheck();
