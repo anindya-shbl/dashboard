@@ -88,6 +88,9 @@ export class ManageAddressComponent implements OnInit {
    * Request location permission only when the user clicks Add New Address.
    */
   openAddressEntry(): void {
+    this.existingAddress = null; // IMPORTANT: clear for new address flow
+    this.editLatitude = 0;
+    this.editLongitude = 0;
     this.actionType = 'ADD';
     console.log('Opening address entry...');
     this.respMsg = '';
@@ -178,8 +181,9 @@ export class ManageAddressComponent implements OnInit {
   }
 
   onMapClosed() {
-     console.log('Closing map for address selection...');
+    console.log('Closing map for address selection...');
     this.isMapOpen = false;
+    this.existingAddress = null; // Clear after map closes
   }
   
   onSubmit() {

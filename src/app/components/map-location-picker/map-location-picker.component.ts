@@ -20,6 +20,7 @@ export class MapLocationPickerComponent implements OnInit, AfterViewInit, OnChan
   
   map: any = null;
   marker: any = null;
+  isInitializing:boolean = false; // Init phase
 
   searchInput: string = '';
   predictions: any[] = [];
@@ -39,6 +40,7 @@ export class MapLocationPickerComponent implements OnInit, AfterViewInit, OnChan
   ) {}
 
   ngOnInit() {
+    console.log('From ngOnInit->',this.existingAddress);
     if(!this.existingAddress){
       // Initialize with default location from API
       // this.getAddressFromCoordinates(this.defaultLatitude, this.defaultLongitude);
@@ -84,16 +86,31 @@ export class MapLocationPickerComponent implements OnInit, AfterViewInit, OnChan
       if (lat > 0 && lng > 0) {
         this.defaultLatitude = lat;
         this.defaultLongitude = lng;
-        this.getAddressFromCoordinates(this.defaultLatitude, this.defaultLongitude);
-        console.log('before initializing map, isOpen:', this.isOpen, 'lat:', lat, 'lng:', lng);
+
+        this.isInitializing = true // set flag before initialization
+
+        // For edit flow: show existing address without API call
+        if (this.existingAddress) {
+          this.selectedLocation = {
+            pincode: this.existingAddress.PinCode,
+            addresss: this.existingAddress.Addline,
+            formatted_address: this.existingAddress.Addline,
+            latitude: this.existingAddress.Latitude,
+            longitude: this.existingAddress.Longitude,
+            name: this.existingAddress.AddLine1
+          };
+        } else {
+          // For add flow: fetch address from API
+          this.getAddressFromCoordinates(this.defaultLatitude, this.defaultLongitude);
+          console.log('before initializing map, isOpen:', this.isOpen, 'lat:', lat, 'lng:', lng);
+        }
         this.mapLoading = true;
         setTimeout(() => {
           this.initMap();
           this.mapLoading = false;
+          this.isInitializing = false; // clear flag after map init
         }, 100);
-      } else {
-        console.log('Show form instead of map, as current location is not available');
-      }
+      } 
     }
   }
 
@@ -113,7 +130,7 @@ export class MapLocationPickerComponent implements OnInit, AfterViewInit, OnChan
         zoomControl: true
       };
 
-      console.log('Map container:', this.mapContainer.nativeElement);
+
       this.map = new google.maps.Map(this.mapContainer.nativeElement, mapOptions);
 
       this.marker = new google.maps.Marker({
@@ -385,7 +402,7 @@ export class MapLocationPickerComponent implements OnInit, AfterViewInit, OnChan
 
   // Get address from coordinates via API
   getAddressFromCoordinates(latitude: number, longitude: number): void {
-    if(!this.existingAddress){
+    // if(!this.existingAddress){
       this.addressService.getAddressFromCoordinates(latitude, longitude).subscribe({
         next: (response: any) => {
           if (response.responseCode == 200 && response.data) {
@@ -404,18 +421,17 @@ export class MapLocationPickerComponent implements OnInit, AfterViewInit, OnChan
           console.error('Reverse geocode error:', error);
         }
       });
-    }
-    else{
-      console.log('Getting address for coordinates:existingAddress', this.existingAddress);
-       this.selectedLocation = {
-              pincode: this.existingAddress.PinCode,
-              addresss: this.existingAddress.Addline,
-              formatted_address: this.existingAddress.Addline,
-              latitude: this.existingAddress.Latitude,
-              longitude: this.existingAddress.Longitude,
-              name: this.existingAddress.AddLine1
-            };
-    }
+    // } else{
+    //   console.log('Getting address for coordinates:existingAddress', this.existingAddress);
+    //    this.selectedLocation = {
+    //           pincode: this.existingAddress.PinCode,
+    //           addresss: this.existingAddress.Addline,
+    //           formatted_address: this.existingAddress.Addline,
+    //           latitude: this.existingAddress.Latitude,
+    //           longitude: this.existingAddress.Longitude,
+    //           name: this.existingAddress.AddLine1
+    //         };
+    // }
   }
 
   placeMarkerByCoordinates(lat: number, lng: number): void {
@@ -441,6 +457,7 @@ export class MapLocationPickerComponent implements OnInit, AfterViewInit, OnChan
   confirmLocation(): void {
     if (this.selectedLocation) {
       this.locationSelected.emit(this.selectedLocation);
+      this.existingAddress = null; // Clear after map closes
       this.closeDialog();
     } else {
       alert('Please select a location');
