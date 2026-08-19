@@ -20,6 +20,8 @@ export class MapLocationPickerComponent implements OnInit, AfterViewInit, OnChan
   
   map: any = null;
   // marker: any = null;
+  centerMarker: any = null;  //  Center marker
+  polyline: any = null;      //  Dotted line
   isInitializing:boolean = false; // Init phase
 
   searchInput: string = '';
@@ -122,7 +124,7 @@ export class MapLocationPickerComponent implements OnInit, AfterViewInit, OnChan
 
     try {
       const mapOptions = {
-        zoom: 15,
+        zoom: 18,
         center: { lat: this.defaultLatitude, lng: this.defaultLongitude },
         mapTypeControl: true,
         fullscreenControl: false,
@@ -133,6 +135,11 @@ export class MapLocationPickerComponent implements OnInit, AfterViewInit, OnChan
 
       this.map = new google.maps.Map(this.mapContainer.nativeElement, mapOptions);
       console.log('Map initialized with location:', this.defaultLatitude, this.defaultLongitude);
+      // Add center marker
+      this.addCenterMarker();
+
+      // Add current location button
+      this.addCurrentLocationButton();
       //  NEW: Listen for map drag end
       this.map.addListener('dragend', () => {
         this.onMapDragEnd();
@@ -169,6 +176,82 @@ export class MapLocationPickerComponent implements OnInit, AfterViewInit, OnChan
       console.error(this.mapError, error);
     }
   }
+
+  /**
+   *  NEW: Add center marker that stays in middle
+   */
+  addCenterMarker(): void {
+    if (!this.map) return;
+
+    const centerLatLng = this.map.getCenter();
+
+    // Create SVG for custom marker
+    const markerSVG = `
+      <svg width="40" height="40" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="20" cy="20" r="16" fill="#2196F3" opacity="0.3" />
+        <circle cx="20" cy="20" r="10" fill="#2196F3" />
+        <circle cx="20" cy="20" r="6" fill="white" />
+      </svg>
+    `;
+
+    // Create marker image
+    const image = {
+      url: 'data:image/svg+xml;base64,' + btoa(markerSVG),
+      size: new google.maps.Size(40, 40),
+      origin: new google.maps.Point(0, 0),
+      anchor: new google.maps.Point(20, 20)
+    };
+
+    // Add center marker
+    this.centerMarker = new google.maps.Marker({
+      position: centerLatLng,
+      map: this.map,
+      icon: image,
+      title: 'Delivery Location',
+      zIndex: 100,
+      draggable: false
+    });
+
+    console.log('✅ Center marker added');
+  }
+
+  /**
+   *  NEW: Add dotted line from marker to location
+   */
+  addDottedLine(): void {
+    if (!this.map || !this.selectedLocation || !this.centerMarker) return;
+
+    // Remove existing polyline
+    if (this.polyline) {
+      this.polyline.setMap(null);
+    }
+
+    const center = this.centerMarker.getPosition();
+    const destination = new google.maps.LatLng(
+      this.selectedLocation.latitude,
+      this.selectedLocation.longitude
+    );
+
+    // Create dotted polyline
+    this.polyline = new google.maps.Polyline({
+      path: [center, destination],
+      geodesic: true,
+      strokeColor: '#2196F3',
+      strokeOpacity: 0.7,
+      strokeWeight: 2,
+      icons: [
+        {
+          icon: { path: google.maps.SymbolPath.CIRCLE, scale: 3, strokeColor: '#2196F3' },
+          offset: '0',
+          repeat: '10px'
+        }
+      ],
+      map: this.map,
+      zIndex: 99
+    });
+
+    console.log(' Dotted line added');
+  }
   /**
    * NEW: Called when user finishes dragging the map
    */
@@ -203,7 +286,44 @@ export class MapLocationPickerComponent implements OnInit, AfterViewInit, OnChan
     }
   }
 
-/**
+  // Get address from coordinates via API
+  getAddressFromCoordinates(latitude: number, longitude: number): void {
+    // if(!this.existingAddress){
+      this.addressService.getAddressFromCoordinates(latitude, longitude).subscribe({
+        next: (response: any) => {
+          if (response.responseCode == 200 && response.data) {
+            this.selectedLocation = {
+              pincode: response.data.pinCode,
+              addresss: response.data.address,
+              formatted_address: response.data.address,
+              latitude: response.data.lat,
+              longitude: response.data.lng,
+              name: response.data.addressName
+            };
+            console.log('Address updated:', this.selectedLocation);
+
+            // Add dotted line when address updates
+            this.addDottedLine();
+            this.cdr.detectChanges();
+          }
+        },
+        error: (error) => {
+          console.error('Reverse geocode error:', error);
+        }
+      });
+    // } else{
+    //   console.log('Getting address for coordinates:existingAddress', this.existingAddress);
+    //    this.selectedLocation = {
+    //           pincode: this.existingAddress.PinCode,
+    //           addresss: this.existingAddress.Addline,
+    //           formatted_address: this.existingAddress.Addline,
+    //           latitude: this.existingAddress.Latitude,
+    //           longitude: this.existingAddress.Longitude,
+    //           name: this.existingAddress.AddLine1
+    //         };
+    // }
+  }
+  /**
    * Add "Current Location" button
    */
   addCurrentLocationButton(): void {
@@ -259,6 +379,8 @@ export class MapLocationPickerComponent implements OnInit, AfterViewInit, OnChan
     }
   }
 
+  
+
   /**
    * Center map on current location
    */
@@ -309,9 +431,9 @@ export class MapLocationPickerComponent implements OnInit, AfterViewInit, OnChan
                 isError:false
             }
           });
-          // console.log(this.predictions);
-          // const lat = location.latitude || location.lat; 
-          // const lng = location.longitude || location.lng;
+          console.log(this.predictions);
+          const lat = location.latitude || location.lat; 
+          const lng = location.longitude || location.lng;
 
           // this.placeMarkerByCoordinates(lat, lng);
 
@@ -323,11 +445,15 @@ export class MapLocationPickerComponent implements OnInit, AfterViewInit, OnChan
           //   pincode: pincode
           // };
 
-          // if (this.map) {
-          //   this.map.setCenter({ lat, lng });
-          //   this.map.setZoom(15);
-          // }
-
+          if (this.map) {
+            this.map.setCenter({ lat, lng });
+            this.map.setZoom(15);
+          }
+          // Update marker
+          if (this.centerMarker) {
+            this.centerMarker.setPosition({ lat, lng });
+          }
+          this.getAddressFromCoordinates(lat, lng);
           this.cdr.detectChanges();
         } else {
           this.predictions = [{
@@ -432,8 +558,16 @@ export class MapLocationPickerComponent implements OnInit, AfterViewInit, OnChan
           lat: prediction.latitude,
           lng: prediction.longitude
         });
-      }
 
+        // Update marker
+        if (this.centerMarker) {
+          this.centerMarker.setPosition({
+            lat: prediction.latitude,
+            lng: prediction.longitude
+          });
+        }
+      }
+      this.getAddressFromCoordinates(prediction.latitude, prediction.longitude);
       this.cdr.detectChanges();
     } else {
         // Otherwise, get place details from API
@@ -498,8 +632,12 @@ export class MapLocationPickerComponent implements OnInit, AfterViewInit, OnChan
 
           if (this.map) {
             this.map.setCenter({ lat, lng });
+            // Update marker
+            if (this.centerMarker) {
+              this.centerMarker.setPosition({ lat, lng });
+            }
           }
-
+          // this.getAddressFromCoordinates(lat, lng);
           this.cdr.detectChanges();
         }
       },
@@ -509,39 +647,7 @@ export class MapLocationPickerComponent implements OnInit, AfterViewInit, OnChan
     });
   }
 
-  // Get address from coordinates via API
-  getAddressFromCoordinates(latitude: number, longitude: number): void {
-    // if(!this.existingAddress){
-      this.addressService.getAddressFromCoordinates(latitude, longitude).subscribe({
-        next: (response: any) => {
-          if (response.responseCode == 200 && response.data) {
-            this.selectedLocation = {
-              pincode: response.data.pinCode,
-              addresss: response.data.address,
-              formatted_address: response.data.address,
-              latitude: response.data.lat,
-              longitude: response.data.lng,
-              name: response.data.addressName
-            };
-            this.cdr.detectChanges();
-          }
-        },
-        error: (error) => {
-          console.error('Reverse geocode error:', error);
-        }
-      });
-    // } else{
-    //   console.log('Getting address for coordinates:existingAddress', this.existingAddress);
-    //    this.selectedLocation = {
-    //           pincode: this.existingAddress.PinCode,
-    //           addresss: this.existingAddress.Addline,
-    //           formatted_address: this.existingAddress.Addline,
-    //           latitude: this.existingAddress.Latitude,
-    //           longitude: this.existingAddress.Longitude,
-    //           name: this.existingAddress.AddLine1
-    //         };
-    // }
-  }
+ 
 
   // placeMarkerByCoordinates(lat: number, lng: number): void {
   //   const location = new google.maps.LatLng(lat, lng);
@@ -577,6 +683,10 @@ export class MapLocationPickerComponent implements OnInit, AfterViewInit, OnChan
     this.isOpen = false;
     this.predictions = [];
     this.searchInput = '';
+    // Clean up
+    if (this.polyline) {
+      this.polyline.setMap(null);
+    }
     this.closed.emit();
   }
 }
