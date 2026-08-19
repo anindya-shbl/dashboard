@@ -132,6 +132,16 @@ export class MapLocationPickerComponent implements OnInit, AfterViewInit, OnChan
 
 
       this.map = new google.maps.Map(this.mapContainer.nativeElement, mapOptions);
+      console.log('Map initialized with location:', this.defaultLatitude, this.defaultLongitude);
+      //  NEW: Listen for map drag end
+      this.map.addListener('dragend', () => {
+        this.onMapDragEnd();
+      });
+
+      //  NEW: Also listen for map idle (when zoom changes or pan completes)
+      this.map.addListener('idle', () => {
+        this.onMapIdle();
+      });
 
       // this.marker = new google.maps.Marker({
       //   map: this.map,
@@ -158,6 +168,105 @@ export class MapLocationPickerComponent implements OnInit, AfterViewInit, OnChan
       this.mapError = 'Failed to initialize map: ' + (error as any).message;
       console.error(this.mapError, error);
     }
+  }
+  /**
+   * NEW: Called when user finishes dragging the map
+   */
+  onMapDragEnd(): void {
+    console.log('🗺️ Map drag end - getting new address');
+    
+    if (this.map) {
+      const center = this.map.getCenter();
+      const lat = center.lat();
+      const lng = center.lng();
+
+      console.log('New center:', lat, lng);
+
+      // Get address for the new center point
+      this.getAddressFromCoordinates(lat, lng);
+    }
+  }
+
+  /**
+   * NEW: Called when map becomes idle (stops moving)
+   */
+  onMapIdle(): void {
+    console.log('🗺️ Map idle - getting current address');
+    
+    if (this.map) {
+      const center = this.map.getCenter();
+      const lat = center.lat();
+      const lng = center.lng();
+
+      // Optional: You can also get address here for every position change
+      // this.getAddressFromCoordinates(lat, lng);
+    }
+  }
+
+/**
+   * Add "Current Location" button
+   */
+  addCurrentLocationButton(): void {
+    const button = document.createElement('button');
+    button.textContent = '📍 Current Location';
+    button.style.cssText = `
+      background-color: white;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      padding: 10px 12px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      margin-right: 10px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      transition: background 0.2s;
+    `;
+
+    button.onmouseover = () => {
+      button.style.backgroundColor = '#f0f0f0';
+    };
+
+    button.onmouseout = () => {
+      button.style.backgroundColor = 'white';
+    };
+
+    button.onclick = () => {
+      this.useCurrentLocation();
+    };
+
+    this.map.controls[google.maps.ControlPosition.TOP_RIGHT].push(button);
+  }
+
+  /**
+   * Use current location
+   */
+  useCurrentLocation(): void {
+    if (!this.currentLocation) {
+      this.geolocationService.reloadLocation().subscribe({
+        next: (location) => {
+          this.defaultLatitude = location.latitude;
+          this.defaultLongitude = location.longitude;
+          this.centerMapOnLocation();
+        },
+        error: (error) => {
+          alert('Unable to get current location: ' + error);
+        }
+      });
+    } else {
+      this.defaultLatitude = this.currentLocation.latitude;
+      this.defaultLongitude = this.currentLocation.longitude;
+      this.centerMapOnLocation();
+    }
+  }
+
+  /**
+   * Center map on current location
+   */
+  private centerMapOnLocation(): void {
+    const location = { lat: this.defaultLatitude, lng: this.defaultLongitude };
+    this.map.setCenter(location);
+    this.map.setZoom(16);
+    this.getAddressFromCoordinates(this.defaultLatitude, this.defaultLongitude);
   }
 
   // Unified search - handles pincode, area, city
