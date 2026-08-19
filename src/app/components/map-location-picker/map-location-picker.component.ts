@@ -323,6 +323,50 @@ export class MapLocationPickerComponent implements OnInit, AfterViewInit, OnChan
     //         };
     // }
   }
+
+  // Get address from coordinates via API
+  getAddressFromCoordinates1(latitude: number, longitude: number): void {
+    // if(!this.existingAddress){
+      this.addressService.getAddressFromCoordinates(latitude, longitude).subscribe({
+        next: (response: any) => {
+          if (response.responseCode == 200 && response.data) {
+            this.selectedLocation = Object.assign({}, this.selectedLocation || {}, {
+            pincode:  response.data.pinCode,
+            // addresss: response.data.address,
+            // latitude: lat,
+            // longitude: lng
+          });
+            // this.selectedLocation = {
+            //   pincode: response.data.pinCode,
+            //   // addresss: response.data.address,
+            //   // formatted_address: response.data.address,
+            //   // latitude: response.data.lat,
+            //   // longitude: response.data.lng,
+            //   // name: response.data.addressName
+            // };
+            console.log('Address updated1:', this.selectedLocation);
+
+            // Add dotted line when address updates
+            this.addDottedLine();
+            this.cdr.detectChanges();
+          }
+        },
+        error: (error) => {
+          console.error('Reverse geocode error:', error);
+        }
+      });
+    // } else{
+    //   console.log('Getting address for coordinates:existingAddress', this.existingAddress);
+    //    this.selectedLocation = {
+    //           pincode: this.existingAddress.PinCode,
+    //           addresss: this.existingAddress.Addline,
+    //           formatted_address: this.existingAddress.Addline,
+    //           latitude: this.existingAddress.Latitude,
+    //           longitude: this.existingAddress.Longitude,
+    //           name: this.existingAddress.AddLine1
+    //         };
+    // }
+  }
   /**
    * Add "Current Location" button
    */
@@ -587,8 +631,11 @@ export class MapLocationPickerComponent implements OnInit, AfterViewInit, OnChan
         if (response.responseCode == 200 && response.data) {
           const place = response.data;
           // const address = place.formattedAddress;
-          // const lat = place.location.latitude;
-          // const lng = place.location.longitude;
+          const lat = place.location.latitude;
+          const lng = place.location.longitude;
+
+          this.defaultLatitude = lat;
+          this.defaultLongitude = lng;
 
           // this.placeMarkerByCoordinates(lat, lng);
 
@@ -598,20 +645,20 @@ export class MapLocationPickerComponent implements OnInit, AfterViewInit, OnChan
           //   longitude: lng,
           //   name: place.displayName.text || 'Selected Location'
           // };
-          let addressComponents:any[] = place.addressComponents;
+          // let addressComponents:any[] = place.addressComponents;
           // console.log("addressComponents",addressComponents);
-          let pincode = addressComponents.find(comp => comp.types.includes('postal_code'))?.longText || '';
-          let street_number = addressComponents.find(comp => comp.types.includes('premise'))?.longText || '';
+          // let pincode = addressComponents.find(comp => comp.types.includes('postal_code'))?.longText || '';
+          // let street_number = addressComponents.find(comp => comp.types.includes('premise'))?.longText || '';
           // let administrative_area_level_3 = addressComponents.find(comp => comp.types.includes('administrative_area_level_3'))?.longText || '';
           // let sublocality_level_2 = addressComponents.find(comp => comp.types.includes('sublocality_level_2'))?.longText || '';
           // let sublocality_level_1 = addressComponents.find(comp => comp.types.includes('sublocality_level_1'))?.longText || '';
           // let locality = addressComponents.find(comp => comp.types.includes('locality'))?.longText || '';
           // let administrative_area_level_2 = addressComponents.find(comp => comp.types.includes('administrative_area_level_2'))?.longText || '';
-          let administrative_area_level_1 = addressComponents.find(comp => comp.types.includes('administrative_area_level_1'))?.longText || '';
-          let country = addressComponents.find(comp => comp.types.includes('country'))?.longText || '';
-          let displayName = response.data.displayName?.text;
-          const lat = response.data.location.latitude;
-          const lng = response.data.location.longitude;
+          // let administrative_area_level_1 = addressComponents.find(comp => comp.types.includes('administrative_area_level_1'))?.longText || '';
+          // let country = addressComponents.find(comp => comp.types.includes('country'))?.longText || '';
+          // let displayName = response.data.displayName?.text;
+          // const lat = response.data.location.latitude;
+          // const lng = response.data.location.longitude;
           
           // this.selectedLocation = {
           //   pincode: pincode,
@@ -622,13 +669,13 @@ export class MapLocationPickerComponent implements OnInit, AfterViewInit, OnChan
           //   name: displayName
           // };
           // Merge detailed place information into any existing selectedLocation
-          const mergedAddress = street_number + ' ' + (displayName || '') + ', ' + administrative_area_level_1 + ', ' + country;
-          this.selectedLocation = Object.assign({}, this.selectedLocation || {}, {
-            pincode: pincode,
-            addresss: mergedAddress,
-            latitude: lat,
-            longitude: lng
-          });
+          // const mergedAddress = street_number + ' ' + (displayName || '') + ', ' + administrative_area_level_1 + ', ' + country;
+          // this.selectedLocation = Object.assign({}, this.selectedLocation || {}, {
+          //   pincode: pincode,
+          //   addresss: mergedAddress,
+          //   latitude: lat,
+          //   longitude: lng
+          // });
 
           if (this.map) {
             this.map.setCenter({ lat, lng });
@@ -637,7 +684,7 @@ export class MapLocationPickerComponent implements OnInit, AfterViewInit, OnChan
               this.centerMarker.setPosition({ lat, lng });
             }
           }
-          // this.getAddressFromCoordinates(lat, lng);
+          this.getAddressFromCoordinates1(lat, lng);
           this.cdr.detectChanges();
         }
       },
