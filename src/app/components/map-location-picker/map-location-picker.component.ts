@@ -19,7 +19,7 @@ export class MapLocationPickerComponent implements OnInit, AfterViewInit, OnChan
   @Output() closed = new EventEmitter<void>();
   
   map: any = null;
-  marker: any = null;
+  // marker: any = null;
   isInitializing:boolean = false; // Init phase
 
   searchInput: string = '';
@@ -133,27 +133,27 @@ export class MapLocationPickerComponent implements OnInit, AfterViewInit, OnChan
 
       this.map = new google.maps.Map(this.mapContainer.nativeElement, mapOptions);
 
-      this.marker = new google.maps.Marker({
-        map: this.map,
-        position: { lat: this.defaultLatitude, lng: this.defaultLongitude },
-        draggable: true,
-        title: 'Drag to select location'
-      });
+      // this.marker = new google.maps.Marker({
+      //   map: this.map,
+      //   position: { lat: this.defaultLatitude, lng: this.defaultLongitude },
+      //   draggable: true,
+      //   title: 'Drag to select location'
+      // });
 
-      this.map.addListener('click', (event: any) => {
-        if (event.latLng) {
-          this.placeMarker(event.latLng);
-        }
-      });
+      // this.map.addListener('click', (event: any) => {
+      //   if (event.latLng) {
+      //     this.placeMarker(event.latLng);
+      //   }
+      // });
 
-      if (this.marker) {
-        this.marker.addListener('dragend', () => {
-          const pos = this.marker.getPosition();
-          if (pos) {
-            this.getAddressFromCoordinates(pos.lat(), pos.lng());
-          }
-        });
-      }
+      // if (this.marker) {
+      //   this.marker.addListener('dragend', () => {
+      //     const pos = this.marker.getPosition();
+      //     if (pos) {
+      //       this.getAddressFromCoordinates(pos.lat(), pos.lng());
+      //     }
+      //   });
+      // }
     } catch (error) {
       this.mapError = 'Failed to initialize map: ' + (error as any).message;
       console.error(this.mapError, error);
@@ -300,7 +300,7 @@ export class MapLocationPickerComponent implements OnInit, AfterViewInit, OnChan
 
     // If we already have coordinates from the search response, use them
     if (prediction.latitude && prediction.longitude) {
-      this.placeMarkerByCoordinates(prediction.latitude, prediction.longitude);
+      // this.placeMarkerByCoordinates(prediction.latitude, prediction.longitude);
       let custom_formatted_address = prediction.addressComponents.filter(
         (component: any) => {
           const hasLocalityType = component.types.includes('locality');
@@ -434,25 +434,25 @@ export class MapLocationPickerComponent implements OnInit, AfterViewInit, OnChan
     // }
   }
 
-  placeMarkerByCoordinates(lat: number, lng: number): void {
-    const location = new google.maps.LatLng(lat, lng);
-    this.placeMarker(location);
-  }
+  // placeMarkerByCoordinates(lat: number, lng: number): void {
+  //   const location = new google.maps.LatLng(lat, lng);
+  //   this.placeMarker(location);
+  // }
 
-  placeMarker(location: any): void {
-    if (this.marker) {
-      this.marker.setPosition(location);
-    }
+  // placeMarker(location: any): void {
+  //   if (this.marker) {
+  //     this.marker.setPosition(location);
+  //   }
     
-    // const lat = location.lat instanceof Function ? location.lat() : location.lat;
-    // const lng = location.lng instanceof Function ? location.lng() : location.lng;
+  //   // const lat = location.lat instanceof Function ? location.lat() : location.lat;
+  //   // const lng = location.lng instanceof Function ? location.lng() : location.lng;
     
-    // this.getAddressFromCoordinates(lat, lng);
+  //   // this.getAddressFromCoordinates(lat, lng);
     
-    if (this.map) {
-      this.map.setCenter(location);
-    }
-  }
+  //   if (this.map) {
+  //     this.map.setCenter(location);
+  //   }
+  // }
 
   confirmLocation(): void {
     if (this.selectedLocation) {
