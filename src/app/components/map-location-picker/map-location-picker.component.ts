@@ -138,7 +138,7 @@ export class MapLocationPickerComponent implements OnInit, AfterViewInit, OnChan
       console.log('Map initialized with location:', this.defaultLatitude, this.defaultLongitude);
       // Add center marker
       this.addCenterMarker();
-      this.addDestinationMarker();
+      // this.addDestinationMarker();
       // Add current location button
       this.addCurrentLocationButton();
       //  NEW: Listen for map drag end
@@ -219,46 +219,46 @@ export class MapLocationPickerComponent implements OnInit, AfterViewInit, OnChan
 /**
  * ✅ Add destination marker (location pin icon)
  */
-  addDestinationMarker(): void {
-    if (!this.map || !this.selectedLocation) return;
+  // addDestinationMarker(): void {
+  //   if (!this.map || !this.selectedLocation) return;
 
-    // Remove existing destination marker
-    if (this.destinationMarker) {
-      this.destinationMarker.setMap(null);
-    }
+  //   // Remove existing destination marker
+  //   if (this.destinationMarker) {
+  //     this.destinationMarker.setMap(null);
+  //   }
 
-    const destinationLatLng = new google.maps.LatLng(
-      this.selectedLocation.latitude,
-      this.selectedLocation.longitude
-    );
+  //   const destinationLatLng = new google.maps.LatLng(
+  //     this.selectedLocation.latitude,
+  //     this.selectedLocation.longitude
+  //   );
 
-    // ✅ Location pin SVG (tower icon)
-    const locationPinSVG = `
-      <svg width="50" height="68" viewBox="0 0 108 121" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path opacity="0.72" fill-rule="evenodd" clip-rule="evenodd" d="M53.6367 119.886C82.908 106.636 106.637 82.9072 106.637 53.636C106.637 24.3649 82.908 0.635986 53.6367 0.635986C24.3656 0.635986 0.636719 24.3649 0.636719 53.636C0.636719 82.9072 24.3656 106.636 53.6367 119.886ZM53.6367 73.511C64.6137 73.511 73.5117 64.6129 73.5117 53.636C73.5117 42.6594 64.6137 33.761 53.6367 33.761C42.6598 33.761 33.7617 42.6594 33.7617 53.636C33.7617 64.6129 42.6598 73.511 53.6367 73.511Z" fill="#42A5F5"/>
-    <path d="M53.6367 73.511C64.6137 73.511 73.5117 64.6129 73.5117 53.636C73.5117 42.6594 64.6137 33.761 53.6367 33.761C42.6598 33.761 33.7617 42.6594 33.7617 53.636C33.7617 64.6129 42.6598 73.511 53.6367 73.511Z" stroke="#42A5F5" stroke-width="1.272" stroke-linecap="round" stroke-linejoin="round"/>
-    <path d="M53.6367 119.886C82.908 106.636 106.637 82.9072 106.637 53.636C106.637 24.3649 82.908 0.635986 53.6367 0.635986C24.3656 0.635986 0.636719 24.3649 0.636719 53.636C0.636719 82.9072 24.3656 106.636 53.6367 119.886Z" stroke="#42A5F5" stroke-width="1.272" stroke-linecap="round" stroke-linejoin="round"/>
-    </svg>
-    `;
+  //   // ✅ Location pin SVG (tower icon)
+  //   const locationPinSVG = `
+  //     <svg width="50" height="68" viewBox="0 0 108 121" fill="none" xmlns="http://www.w3.org/2000/svg">
+  //   <path opacity="0.72" fill-rule="evenodd" clip-rule="evenodd" d="M53.6367 119.886C82.908 106.636 106.637 82.9072 106.637 53.636C106.637 24.3649 82.908 0.635986 53.6367 0.635986C24.3656 0.635986 0.636719 24.3649 0.636719 53.636C0.636719 82.9072 24.3656 106.636 53.6367 119.886ZM53.6367 73.511C64.6137 73.511 73.5117 64.6129 73.5117 53.636C73.5117 42.6594 64.6137 33.761 53.6367 33.761C42.6598 33.761 33.7617 42.6594 33.7617 53.636C33.7617 64.6129 42.6598 73.511 53.6367 73.511Z" fill="#42A5F5"/>
+  //   <path d="M53.6367 73.511C64.6137 73.511 73.5117 64.6129 73.5117 53.636C73.5117 42.6594 64.6137 33.761 53.6367 33.761C42.6598 33.761 33.7617 42.6594 33.7617 53.636C33.7617 64.6129 42.6598 73.511 53.6367 73.511Z" stroke="#42A5F5" stroke-width="1.272" stroke-linecap="round" stroke-linejoin="round"/>
+  //   <path d="M53.6367 119.886C82.908 106.636 106.637 82.9072 106.637 53.636C106.637 24.3649 82.908 0.635986 53.6367 0.635986C24.3656 0.635986 0.636719 24.3649 0.636719 53.636C0.636719 82.9072 24.3656 106.636 53.6367 119.886Z" stroke="#42A5F5" stroke-width="1.272" stroke-linecap="round" stroke-linejoin="round"/>
+  //   </svg>
+  //   `;
 
-    const image = {
-      url: 'data:image/svg+xml;base64,' + btoa(locationPinSVG),
-      size: new google.maps.Size(50, 68),
-      origin: new google.maps.Point(0, 0),
-      anchor: new google.maps.Point(25, 68)
-    };
+  //   const image = {
+  //     url: 'data:image/svg+xml;base64,' + btoa(locationPinSVG),
+  //     size: new google.maps.Size(50, 68),
+  //     origin: new google.maps.Point(0, 0),
+  //     anchor: new google.maps.Point(25, 68)
+  //   };
 
-    this.destinationMarker = new google.maps.Marker({
-      position: destinationLatLng,
-      map: this.map,
-      icon: image,
-      title: this.selectedLocation.name || 'Selected Location',
-      zIndex: 99,
-      draggable: false
-    });
+  //   this.destinationMarker = new google.maps.Marker({
+  //     position: destinationLatLng,
+  //     map: this.map,
+  //     icon: image,
+  //     title: this.selectedLocation.name || 'Selected Location',
+  //     zIndex: 99,
+  //     draggable: false
+  //   });
 
-    console.log('✅ Destination marker (location pin) added');
-  }
+  //   console.log('✅ Destination marker (location pin) added');
+  // }
 
 /**
  * ✅ Add dashed line between center and destination
@@ -353,7 +353,7 @@ export class MapLocationPickerComponent implements OnInit, AfterViewInit, OnChan
             };
             console.log('Address updated:', this.selectedLocation);
 
-            this.addDestinationMarker();
+            // this.addDestinationMarker();
             // Add dotted line when address updates
             this.addDottedLine();
             this.cdr.detectChanges();
@@ -398,7 +398,7 @@ export class MapLocationPickerComponent implements OnInit, AfterViewInit, OnChan
             // };
             console.log('Address updated1:', this.selectedLocation);
 
-            this.addDestinationMarker();
+            // this.addDestinationMarker();
             // Add dotted line when address updates
             this.addDottedLine();
             this.cdr.detectChanges();
