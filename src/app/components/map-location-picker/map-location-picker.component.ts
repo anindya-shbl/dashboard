@@ -180,29 +180,143 @@ export class MapLocationPickerComponent implements OnInit, AfterViewInit, OnChan
   /**
    *  NEW: Add center marker that stays in middle
    */
+  // addCenterMarker(): void {
+  //   if (!this.map) return;
+
+  //   const centerLatLng = this.map.getCenter();
+
+  //   // Create SVG for custom marker
+  //   const markerSVG = `
+  //     <svg width="40" height="40" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">
+  //       <circle cx="20" cy="20" r="16" fill="#2196F3" opacity="0.3" />
+  //       <circle cx="20" cy="20" r="10" fill="#2196F3" />
+  //       <circle cx="20" cy="20" r="6" fill="white" />
+  //     </svg>
+  //   `;
+
+  //   // Create marker image
+  //   const image = {
+  //     url: 'data:image/svg+xml;base64,' + btoa(markerSVG),
+  //     size: new google.maps.Size(40, 40),
+  //     origin: new google.maps.Point(0, 0),
+  //     anchor: new google.maps.Point(20, 20)
+  //   };
+
+  //   // Add center marker
+  //   this.centerMarker = new google.maps.Marker({
+  //     position: centerLatLng,
+  //     map: this.map,
+  //     icon: image,
+  //     title: 'Delivery Location',
+  //     zIndex: 100,
+  //     draggable: false
+  //   });
+
+  //   console.log('✅ Center marker added');
+  // }
+
+// map-location-picker.component.ts
+
+/**
+ * ✅ Add location pin marker (matching the image)
+ */
+  // addCenterMarker(): void {
+  //   if (!this.map) return;
+
+  //   const centerLatLng = this.map.getCenter();
+
+  //   // ✅ Location pin SVG (matching your image)
+  //   const locationPinSVG = `
+  //     <svg width="50" height="70" viewBox="0 0 50 70" xmlns="http://www.w3.org/2000/svg">
+  //       <defs>
+  //         <filter id="shadow" x="-50%" y="-50%" width="200%" height="200%">
+  //           <feDropShadow dx="0" dy="3" stdDeviation="4" flood-opacity="0.25"/>
+  //         </filter>
+  //         <linearGradient id="pinGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+  //           <stop offset="0%" style="stop-color:#42A5F5;stop-opacity:1" />
+  //           <stop offset="100%" style="stop-color:#1E88E5;stop-opacity:1" />
+  //         </linearGradient>
+  //       </defs>
+        
+  //       <!-- Pin teardrop shape -->
+  //       <path d="M 25 5 C 15 5 8 12 8 22 C 8 35 25 55 25 55 C 25 55 42 35 42 22 C 42 12 35 5 25 5 Z" 
+  //             fill="url(#pinGradient)" filter="url(#shadow)" stroke="#1565C0" stroke-width="0.5" />
+        
+  //       <!-- Inner circle in pin -->
+  //       <circle cx="25" cy="22" r="6" fill="white" opacity="0.9" />
+        
+  //       <!-- Connecting line -->
+  //       <line x1="25" y1="55" x2="25" y2="62" stroke="#42A5F5" stroke-width="2" />
+        
+  //       <!-- Bottom circle -->
+  //       <circle cx="25" cy="65" r="6" fill="#42A5F5" filter="url(#shadow)" stroke="#1565C0" stroke-width="0.5" />
+        
+  //       <!-- Inner white dot in bottom circle -->
+  //       <circle cx="25" cy="65" r="3" fill="white" opacity="0.9" />
+  //     </svg>
+  //   `;
+
+  //   const image = {
+  //     url: 'data:image/svg+xml;base64,' + btoa(locationPinSVG),
+  //     size: new google.maps.Size(50, 70),
+  //     origin: new google.maps.Point(0, 0),
+  //     anchor: new google.maps.Point(25, 70)
+  //   };
+
+  //   this.centerMarker = new google.maps.Marker({
+  //     position: centerLatLng,
+  //     map: this.map,
+  //     icon: image,
+  //     title: 'Delivery Location',
+  //     zIndex: 100,
+  //     draggable: false
+  //   });
+
+  //   console.log('✅ Location pin marker added');
+  // }
+
+
+  /**
+ * ✅ Simplified location pin (exact match)
+ */
   addCenterMarker(): void {
     if (!this.map) return;
 
     const centerLatLng = this.map.getCenter();
 
-    // Create SVG for custom marker
-    const markerSVG = `
-      <svg width="40" height="40" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">
-        <circle cx="20" cy="20" r="16" fill="#2196F3" opacity="0.3" />
-        <circle cx="20" cy="20" r="10" fill="#2196F3" />
-        <circle cx="20" cy="20" r="6" fill="white" />
+    const locationPinSVG = `
+      <svg width="50" height="68" viewBox="0 0 50 68" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <filter id="drop-shadow">
+            <feDropShadow dx="0" dy="2" stdDeviation="3" flood-opacity="0.3"/>
+          </filter>
+        </defs>
+        
+        <!-- Upper pin (teardrop) -->
+        <path d="M 25 4 C 14.5 4 6 12.5 6 23 C 6 36 25 54 25 54 C 25 54 44 36 44 23 C 44 12.5 35.5 4 25 4 Z" 
+              fill="#42A5F5" filter="url(#drop-shadow)" />
+        
+        <!-- White circle inside pin -->
+        <circle cx="25" cy="23" r="6" fill="white" />
+        
+        <!-- Connecting line -->
+        <line x1="25" y1="54" x2="25" y2="60" stroke="#42A5F5" stroke-width="2.5" />
+        
+        <!-- Bottom circle -->
+        <circle cx="25" cy="64" r="5.5" fill="#42A5F5" filter="url(#drop-shadow)" />
+        
+        <!-- White dot in circle -->
+        <circle cx="25" cy="64" r="2.5" fill="white" />
       </svg>
     `;
 
-    // Create marker image
     const image = {
-      url: 'data:image/svg+xml;base64,' + btoa(markerSVG),
-      size: new google.maps.Size(40, 40),
+      url: 'data:image/svg+xml;base64,' + btoa(locationPinSVG),
+      size: new google.maps.Size(50, 68),
       origin: new google.maps.Point(0, 0),
-      anchor: new google.maps.Point(20, 20)
+      anchor: new google.maps.Point(25, 68)
     };
 
-    // Add center marker
     this.centerMarker = new google.maps.Marker({
       position: centerLatLng,
       map: this.map,
@@ -212,12 +326,53 @@ export class MapLocationPickerComponent implements OnInit, AfterViewInit, OnChan
       draggable: false
     });
 
-    console.log('✅ Center marker added');
+    console.log('✅ Location pin marker added');
   }
 
   /**
    *  NEW: Add dotted line from marker to location
    */
+  // addDottedLine(): void {
+  //   if (!this.map || !this.selectedLocation || !this.centerMarker) return;
+
+  //   // Remove existing polyline
+  //   if (this.polyline) {
+  //     this.polyline.setMap(null);
+  //   }
+
+  //   const center = this.centerMarker.getPosition();
+  //   const destination = new google.maps.LatLng(
+  //     this.selectedLocation.latitude,
+  //     this.selectedLocation.longitude
+  //   );
+
+  //   // Create dotted polyline
+  //   this.polyline = new google.maps.Polyline({
+  //     path: [center, destination],
+  //     geodesic: true,
+  //     strokeColor: '#2196F3',
+  //     strokeOpacity: 0.7,
+  //     strokeWeight: 2,
+  //     icons: [
+  //       {
+  //         icon: { path: google.maps.SymbolPath.CIRCLE, scale: 3, strokeColor: '#2196F3' },
+  //         offset: '0',
+  //         repeat: '10px'
+  //       }
+  //     ],
+  //     map: this.map,
+  //     zIndex: 99
+  //   });
+
+  //   console.log(' Dotted line added');
+  // }
+
+
+  // map-location-picker.component.ts
+
+/**
+ * ✅ Add dashed line (not dotted)
+ */
   addDottedLine(): void {
     if (!this.map || !this.selectedLocation || !this.centerMarker) return;
 
@@ -232,25 +387,30 @@ export class MapLocationPickerComponent implements OnInit, AfterViewInit, OnChan
       this.selectedLocation.longitude
     );
 
-    // Create dotted polyline
+    // ✅ Create dashed line (not dotted)
     this.polyline = new google.maps.Polyline({
       path: [center, destination],
       geodesic: true,
       strokeColor: '#2196F3',
-      strokeOpacity: 0.7,
+      strokeOpacity: 0.8,
       strokeWeight: 2,
       icons: [
         {
-          icon: { path: google.maps.SymbolPath.CIRCLE, scale: 3, strokeColor: '#2196F3' },
+          // ✅ Dashed pattern - not circular dots
+          icon: {
+            path: 'M 0,-1 0,1',  // Vertical dash
+            strokeColor: '#2196F3',
+            scale: 3
+          },
           offset: '0',
-          repeat: '10px'
+          repeat: '8px'  // Spacing between dashes
         }
       ],
       map: this.map,
       zIndex: 99
     });
 
-    console.log(' Dotted line added');
+    console.log('✅ Dashed line added');
   }
   /**
    * NEW: Called when user finishes dragging the map
