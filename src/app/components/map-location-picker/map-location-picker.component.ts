@@ -264,19 +264,25 @@ export class MapLocationPickerComponent implements OnInit, AfterViewInit, OnChan
  * ✅ Add dashed line between center and destination
  */
   addDottedLine(): void {
-    if (!this.map || !this.selectedLocation ) return;
-    // if (!this.map || !this.selectedLocation || !this.centerMarker) return;
+    if (!this.map || !this.selectedLocation || !this.centerMarker) return;
 
     // Remove existing polyline
     if (this.polyline) {
       this.polyline.setMap(null);
     }
-    // IMPORTANT: Use actual visual center of the map
-    const center = this.map.getCenter();
-    // const center = this.centerMarker.getPosition();
+
+    const center = this.centerMarker.getPosition();
     const destination = new google.maps.LatLng(
       this.selectedLocation.latitude,
       this.selectedLocation.longitude
+    );
+
+    // Extend the line slightly backwards,
+    // so it goes underneath the pin
+    const start = google.maps.geometry.spherical.interpolate(
+      center,
+      destination,
+      -0.02
     );
 
     // ✅ Dashed line
@@ -287,7 +293,7 @@ export class MapLocationPickerComponent implements OnInit, AfterViewInit, OnChan
     };
 
     this.polyline = new google.maps.Polyline({
-      path: [center, destination],
+      path: [start, destination],
       geodesic: false,
       strokeColor: '#BBDEFB',
       strokeOpacity: 0.5,
