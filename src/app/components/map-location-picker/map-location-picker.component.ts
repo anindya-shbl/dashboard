@@ -384,9 +384,9 @@ export class MapLocationPickerComponent implements OnInit, AfterViewInit, OnChan
           if (response.responseCode == 200 && response.data) {
             this.selectedLocation = Object.assign({}, this.selectedLocation || {}, {
             pincode:  response.data.pinCode,
-            // addresss: response.data.address,
-            // latitude: lat,
-            // longitude: lng
+            addresss: response.data.address,
+            latitude: response.data.lat,
+            longitude: response.data.lng,
           });
             // this.selectedLocation = {
             //   pincode: response.data.pinCode,
