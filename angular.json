@@ -30,7 +30,7 @@
             "polyfills": ["zone.js"],
             "tsConfig": "tsconfig.app.json",
             "inlineStyleLanguage": "scss",
-            "deployUrl": "https://stage.sastasundar.com/ngdashboard/v_26.8.21_1/",
+            "deployUrl": "https://stage.sastasundar.com/ngdashboard/v_26.8.21_2/",
             "assets": ["src/favicon.ico", "src/assets"],
             "styles": [
               "node_modules/ngx-owl-carousel-o/lib/styles/prebuilt-themes/owl.carousel.min.css",
