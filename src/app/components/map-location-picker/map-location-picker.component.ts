@@ -21,7 +21,7 @@ export class MapLocationPickerComponent implements OnInit, AfterViewInit, OnChan
   map: any = null;
   // marker: any = null;
   centerMarker: any = null;  //  Center marker
-  destinationMarker: any = null // Destination marker
+  // destinationMarker: any = null // Destination marker
   polyline: any = null;      //  Dotted line
   isInitializing:boolean = false; // Init phase
 
@@ -264,14 +264,16 @@ export class MapLocationPickerComponent implements OnInit, AfterViewInit, OnChan
  * ✅ Add dashed line between center and destination
  */
   addDottedLine(): void {
-    if (!this.map || !this.selectedLocation || !this.centerMarker) return;
+    if (!this.map || !this.selectedLocation ) return;
+    // if (!this.map || !this.selectedLocation || !this.centerMarker) return;
 
     // Remove existing polyline
     if (this.polyline) {
       this.polyline.setMap(null);
     }
-
-    const center = this.centerMarker.getPosition();
+    // IMPORTANT: Use actual visual center of the map
+    const center = this.map.getCenter();
+    // const center = this.centerMarker.getPosition();
     const destination = new google.maps.LatLng(
       this.selectedLocation.latitude,
       this.selectedLocation.longitude
