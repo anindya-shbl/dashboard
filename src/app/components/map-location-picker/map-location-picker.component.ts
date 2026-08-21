@@ -277,14 +277,6 @@ export class MapLocationPickerComponent implements OnInit, AfterViewInit, OnChan
       this.selectedLocation.longitude
     );
 
-    // Extend the line slightly backwards,
-    // so it goes underneath the pin
-    const start = google.maps.geometry.spherical.interpolate(
-      center,
-      destination,
-      -0.02
-    );
-
     // ✅ Dashed line
     const dashSymbol = {
       path: 'M 0,-1 0,1',
@@ -293,7 +285,7 @@ export class MapLocationPickerComponent implements OnInit, AfterViewInit, OnChan
     };
 
     this.polyline = new google.maps.Polyline({
-      path: [start, destination],
+      path: [center, destination],
       geodesic: false,
       strokeColor: '#BBDEFB',
       strokeOpacity: 0.5,
