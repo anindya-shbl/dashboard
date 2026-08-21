@@ -53,8 +53,8 @@ export class MapLocationPickerComponent implements OnInit, AfterViewInit, OnChan
           if (location) {
             console.log('current location'+ JSON.stringify(location));
             this.currentLocation = location;
-            this.defaultLatitude = location.latitude;
-            this.defaultLongitude = location.longitude;
+            this.defaultLatitude = Number(location.latitude);
+            this.defaultLongitude = Number(location.longitude);
             console.log('Using current location:', location);
           } else {
             // console.log('Using default India coordinates');
@@ -83,8 +83,8 @@ export class MapLocationPickerComponent implements OnInit, AfterViewInit, OnChan
     // if (changes['isOpen'] && this.isOpen && this.mapContainer && !this.map) {
     if (this.isOpen) {
       // prefer explicit initial coordinates when provided (edit flow)
-      const lat = (this.initialLatitude && this.initialLatitude > 0) ? this.initialLatitude : this.defaultLatitude;
-      const lng = (this.initialLongitude && this.initialLongitude > 0) ? this.initialLongitude : this.defaultLongitude;
+      const lat = (this.initialLatitude && this.initialLatitude > 0) ? Number(this.initialLatitude) : this.defaultLatitude;
+      const lng = (this.initialLongitude && this.initialLongitude > 0) ? Number(this.initialLongitude) : this.defaultLongitude;
 
       if (lat > 0 && lng > 0) {
         this.defaultLatitude = lat;
@@ -148,7 +148,7 @@ export class MapLocationPickerComponent implements OnInit, AfterViewInit, OnChan
 
       //  NEW: Also listen for map idle (when zoom changes or pan completes)
       this.map.addListener('idle', () => {
-        this.onMapIdle();
+        // this.onMapIdle();
       });
 
       // this.marker = new google.maps.Marker({
@@ -324,18 +324,18 @@ export class MapLocationPickerComponent implements OnInit, AfterViewInit, OnChan
   /**
    * NEW: Called when map becomes idle (stops moving)
    */
-  onMapIdle(): void {
-    console.log('🗺️ Map idle - getting current address');
+  // onMapIdle(): void {
+  //   console.log('🗺️ Map idle - getting current address');
     
-    if (this.map) {
-      const center = this.map.getCenter();
-      const lat = center.lat();
-      const lng = center.lng();
+  //   if (this.map) {
+  //     const center = this.map.getCenter();
+  //     const lat = center.lat();
+  //     const lng = center.lng();
 
-      // Optional: You can also get address here for every position change
-      // this.getAddressFromCoordinates(lat, lng);
-    }
-  }
+  //     // Optional: You can also get address here for every position change
+  //     // this.getAddressFromCoordinates(lat, lng);
+  //   }
+  // }
 
   // Get address from coordinates via API
   getAddressFromCoordinates(latitude: number, longitude: number): void {
@@ -378,47 +378,28 @@ export class MapLocationPickerComponent implements OnInit, AfterViewInit, OnChan
 
   // Get address from coordinates via API
   getAddressFromCoordinates1(latitude: number, longitude: number): void {
-    // if(!this.existingAddress){
-      this.addressService.getAddressFromCoordinates(latitude, longitude).subscribe({
-        next: (response: any) => {
-          if (response.responseCode == 200 && response.data) {
-            this.selectedLocation = Object.assign({}, this.selectedLocation || {}, {
+    console.log('getAddressFromCoordinates1 calling with existing details', this.selectedLocation);
+    this.addressService.getAddressFromCoordinates(latitude, longitude).subscribe({
+      next: (response: any) => {
+        console.log('addressService.getAddressFromCoordinates',response);
+        if (response.responseCode == 200 && response.data) {
+          this.selectedLocation = Object.assign({}, this.selectedLocation || {}, {
             pincode:  response.data.pinCode,
-            addresss: response.data.address,
+            address: response.data.address,
             latitude: response.data.lat,
-            longitude: response.data.lng,
+            longitude: response.data.lng
           });
-            // this.selectedLocation = {
-            //   pincode: response.data.pinCode,
-            //   // addresss: response.data.address,
-            //   // formatted_address: response.data.address,
-            //   // latitude: response.data.lat,
-            //   // longitude: response.data.lng,
-            //   // name: response.data.addressName
-            // };
-            console.log('Address updated1:', this.selectedLocation);
-
-            // this.addDestinationMarker();
-            // Add dotted line when address updates
-            this.addDottedLine();
-            this.cdr.detectChanges();
-          }
-        },
-        error: (error) => {
-          console.error('Reverse geocode error:', error);
+          console.log('Address updated1:', this.selectedLocation);
+          // this.addDestinationMarker();
+          // Add dotted line when address updates
+          this.addDottedLine();
+          this.cdr.detectChanges();
         }
-      });
-    // } else{
-    //   console.log('Getting address for coordinates:existingAddress', this.existingAddress);
-    //    this.selectedLocation = {
-    //           pincode: this.existingAddress.PinCode,
-    //           addresss: this.existingAddress.Addline,
-    //           formatted_address: this.existingAddress.Addline,
-    //           latitude: this.existingAddress.Latitude,
-    //           longitude: this.existingAddress.Longitude,
-    //           name: this.existingAddress.AddLine1
-    //         };
-    // }
+      },
+      error: (error) => {
+        console.error('Reverse geocode error:', error);
+      }
+    });
   }
   /**
    * Add "Current Location" button
@@ -667,12 +648,12 @@ export class MapLocationPickerComponent implements OnInit, AfterViewInit, OnChan
       this.getAddressFromCoordinates(prediction.latitude, prediction.longitude);
       this.cdr.detectChanges();
     } else {
-        // Otherwise, get place details from API
-        this.getPlaceDetails(prediction.place_id);
         this.selectedLocation = {
           formatted_address: prediction.secondary_text,
-          name: prediction.main_text,
+          name: prediction.main_text
         };
+        // Otherwise, get place details from API
+        this.getPlaceDetails(prediction.place_id);
       }
   }
 
@@ -684,51 +665,12 @@ export class MapLocationPickerComponent implements OnInit, AfterViewInit, OnChan
         if (response.responseCode == 200 && response.data) {
           const place = response.data;
           // const address = place.formattedAddress;
-          const lat = place.location.latitude;
-          const lng = place.location.longitude;
+          const lat = Number(place.location.latitude);
+          const lng = Number(place.location.longitude);
 
           this.defaultLatitude = lat;
           this.defaultLongitude = lng;
 
-          // this.placeMarkerByCoordinates(lat, lng);
-
-          // this.selectedLocation = {
-          //   address: address,
-          //   latitude: lat,
-          //   longitude: lng,
-          //   name: place.displayName.text || 'Selected Location'
-          // };
-          // let addressComponents:any[] = place.addressComponents;
-          // console.log("addressComponents",addressComponents);
-          // let pincode = addressComponents.find(comp => comp.types.includes('postal_code'))?.longText || '';
-          // let street_number = addressComponents.find(comp => comp.types.includes('premise'))?.longText || '';
-          // let administrative_area_level_3 = addressComponents.find(comp => comp.types.includes('administrative_area_level_3'))?.longText || '';
-          // let sublocality_level_2 = addressComponents.find(comp => comp.types.includes('sublocality_level_2'))?.longText || '';
-          // let sublocality_level_1 = addressComponents.find(comp => comp.types.includes('sublocality_level_1'))?.longText || '';
-          // let locality = addressComponents.find(comp => comp.types.includes('locality'))?.longText || '';
-          // let administrative_area_level_2 = addressComponents.find(comp => comp.types.includes('administrative_area_level_2'))?.longText || '';
-          // let administrative_area_level_1 = addressComponents.find(comp => comp.types.includes('administrative_area_level_1'))?.longText || '';
-          // let country = addressComponents.find(comp => comp.types.includes('country'))?.longText || '';
-          // let displayName = response.data.displayName?.text;
-          // const lat = response.data.location.latitude;
-          // const lng = response.data.location.longitude;
-          
-          // this.selectedLocation = {
-          //   pincode: pincode,
-          //   addresss: street_number + ' ' + displayName + ', ' + administrative_area_level_1 + ', ' + country,
-          //   formatted_address: response.data.formattedAddress || street_number + ' ' + displayName + ', ' + administrative_area_level_1 + ', ' + country,
-          //   latitude: response.data.location.latitude,
-          //   longitude: response.data.location.longitude,
-          //   name: displayName
-          // };
-          // Merge detailed place information into any existing selectedLocation
-          // const mergedAddress = street_number + ' ' + (displayName || '') + ', ' + administrative_area_level_1 + ', ' + country;
-          // this.selectedLocation = Object.assign({}, this.selectedLocation || {}, {
-          //   pincode: pincode,
-          //   addresss: mergedAddress,
-          //   latitude: lat,
-          //   longitude: lng
-          // });
 
           if (this.map) {
             this.map.setCenter({ lat, lng });
