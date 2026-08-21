@@ -374,7 +374,7 @@ export class ManageAddressComponent implements OnInit {
 
   setEditModal(adr: any){
     this.checkGeolocationStatus();
-    // console.log('From setEditModal method', adr);
+    console.log('From setEditModal method', adr);
     this.existingAddress = adr; // Pass existing address to map component
     this.actionType = 'EDIT';
     // console.log('From setEditModal method AddressForm', this.AddressForm);

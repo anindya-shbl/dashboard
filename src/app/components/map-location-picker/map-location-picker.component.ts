@@ -85,15 +85,16 @@ export class MapLocationPickerComponent implements OnInit, AfterViewInit, OnChan
       // prefer explicit initial coordinates when provided (edit flow)
       const lat = (this.initialLatitude && this.initialLatitude > 0) ? Number(this.initialLatitude) : this.defaultLatitude;
       const lng = (this.initialLongitude && this.initialLongitude > 0) ? Number(this.initialLongitude) : this.defaultLongitude;
-
+      console.log("lat&lng", lat, lng)
+      console.log("typeof lat", typeof lat);
       if (lat > 0 && lng > 0) {
         this.defaultLatitude = lat;
         this.defaultLongitude = lng;
 
         this.isInitializing = true // set flag before initialization
-
+        console.log('ngOnChanges existingAddr',this.existingAddress);
         // For edit flow: show existing address without API call
-        if (this.existingAddress) {
+        if (this.existingAddress) { 
           this.selectedLocation = {
             pincode: this.existingAddress.PinCode,
             addresss: this.existingAddress.Addline,
@@ -339,7 +340,6 @@ export class MapLocationPickerComponent implements OnInit, AfterViewInit, OnChan
 
   // Get address from coordinates via API
   getAddressFromCoordinates(latitude: number, longitude: number): void {
-    // if(!this.existingAddress){
       this.addressService.getAddressFromCoordinates(latitude, longitude).subscribe({
         next: (response: any) => {
           if (response.responseCode == 200 && response.data) {
@@ -363,17 +363,6 @@ export class MapLocationPickerComponent implements OnInit, AfterViewInit, OnChan
           console.error('Reverse geocode error:', error);
         }
       });
-    // } else{
-    //   console.log('Getting address for coordinates:existingAddress', this.existingAddress);
-    //    this.selectedLocation = {
-    //           pincode: this.existingAddress.PinCode,
-    //           addresss: this.existingAddress.Addline,
-    //           formatted_address: this.existingAddress.Addline,
-    //           latitude: this.existingAddress.Latitude,
-    //           longitude: this.existingAddress.Longitude,
-    //           name: this.existingAddress.AddLine1
-    //         };
-    // }
   }
 
   // Get address from coordinates via API
@@ -463,7 +452,8 @@ export class MapLocationPickerComponent implements OnInit, AfterViewInit, OnChan
    * Center map on current location
    */
   private centerMapOnLocation(): void {
-    const location = { lat: this.defaultLatitude, lng: this.defaultLongitude };
+    console.log('centerMapOnLocation');
+    const location = { lat: Number(this.defaultLatitude), lng: Number(this.defaultLongitude) };
     this.map.setCenter(location);
     this.map.setZoom(16);
     this.getAddressFromCoordinates(this.defaultLatitude, this.defaultLongitude);
