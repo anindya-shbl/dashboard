@@ -387,7 +387,7 @@ export class ManageAddressComponent implements OnInit {
     // Helper to prefill form values
     const prefillForm = () => {
       this.AddressForm.patchValue({
-        AddressType: adr.AddressType,
+        AddressType: String(adr?.AddressType || 'H').trim().toUpperCase(),
         ContactPerson: adr.NickName,
         MobileNo: adr.CustContactNo,
         Addressline: adr.Addline,
