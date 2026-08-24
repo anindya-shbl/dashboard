@@ -215,7 +215,7 @@ export class ManageAddressComponent implements OnInit {
       fd.append('Addline', this.AddressForm.value.Addressline);
       fd.append('Addline1', this.AddressForm.value.Addressline1);
       fd.append('AddressType', this.AddressForm.value.AddressType);
-      fd.append('Landmark', this.AddressForm.value.Landmark);
+      fd.append('Landmark', this.cleanValue(this.AddressForm.value.Landmark));
       fd.append('PinCode', this.AddressForm.value.Pincode);
       fd.append('CustContactNo', this.AddressForm.value.MobileNo);
       fd.append('latitude', this.selectedAddress.latitude);
@@ -594,4 +594,13 @@ export class ManageAddressComponent implements OnInit {
 
     return [...addressParts, ...locationParts].join(', ');
   }
+
+  private cleanValue(value: unknown): string {
+  const text = String(value ?? '').trim();
+
+  return text.toLowerCase() === 'null' ||
+         text.toLowerCase() === 'undefined'
+    ? ''
+    : text;
+}
 }
