@@ -191,7 +191,7 @@ export class ManageAddressComponent implements OnInit {
     this.submitted = true;
     this.respMsg = '';
     if(this.isGeolocationAvailable){
-      this.AddressForm.get('Addressline')?.setValidators([Validators.required])
+      this.AddressForm.get('Addressline1')?.setValidators([Validators.required])
     }
     else {
       this.AddressForm.get('Addressline1')?.clearValidators();
