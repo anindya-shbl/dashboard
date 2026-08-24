@@ -101,7 +101,7 @@ export class MapLocationPickerComponent implements OnInit, AfterViewInit, OnChan
             formatted_address: this.existingAddress.Addline,
             latitude: this.existingAddress.Latitude,
             longitude: this.existingAddress.Longitude,
-            name: this.existingAddress.AddLine1
+            name: (this.existingAddress.AddLine1?.trim() && this.existingAddress.AddLine1 !== 'null') ? this.existingAddress.AddLine1 : this.existingAddress.Addline
           };
         } else {
           // For add flow: fetch address from API
