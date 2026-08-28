@@ -536,8 +536,9 @@ export class PayNowComponent implements OnInit {
     options.modal.ondismiss = (() => {
       // handle the case when user closes the form while transaction is in progress
       // alert('Transaction cancelled.');
-      this.msgText = 'Transaction cancelled. Unable to process your request';
-      this.open.nativeElement.click();
+      this.respMsg = 'Transaction cancelled. Unable to process your request';
+      this.cnlsRspModal.nativeElement.click();
+      
       this.isPaymentProcessing = false;
       this.razorpaySuccessSent = false;
       // this.refundWallet();
