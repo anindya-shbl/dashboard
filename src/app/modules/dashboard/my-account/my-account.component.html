@@ -16,7 +16,7 @@
         </div>
 
         <div class="listGridSec">
-            <div class="secgrid">
+            <div *ngIf="authService.totalSavings>0" class="secgrid">
                 <div class="left">
                     <div class="iconSec green"><i class="fa-solid fa-hand-holding-heart"></i></div>
                     <div class="conSec">
@@ -27,7 +27,7 @@
                 <!-- <div><i class="icon-info"></i></div> -->
             </div>
 
-            <div class="secgrid hvr" (click)="viewAllorders()">
+            <div *ngIf="authService.totalOrders>0" class="secgrid hvr" (click)="viewAllorders()">
                 <div class="left">
                     <div class="iconSec red"><i class="icon-medicines_ss"></i></div>
                     <div class="conSec">
