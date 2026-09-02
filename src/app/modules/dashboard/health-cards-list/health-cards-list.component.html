@@ -20,17 +20,18 @@
                             <div class="text-secondary">Added: <span class="fw-5">{{card.CreatedDate | date: 'dd MMM, yyyy'}}</span></div>
                             <div class="fs-3 px-2 text-secondary">|</div>
                             <div *ngIf="card.CardStatus == 1" class="text-secondary">Expires: <span class="fw-5">{{card.ExpiryDate | date: 'dd MMM, yyyy'}}</span></div>
-                            <div *ngIf="card.CardStatus == 0" class="text-danger">Expired: <span class="fw-5">{{card.ExpiryDate | date: 'dd MMM, yyyy'}}</span></div>
+                            <div *ngIf="card.CardStatus != 1" class="text-danger">Expired: <span class="fw-5">{{card.ExpiryDate | date: 'dd MMM, yyyy'}}</span></div>
                         </div>
                     </div>
                 </div>
                 <div class="d-flex justify-content-between w-100">
                     <div>
                         <div class="mb-1 text-secondary" >Current Balance: </div>
-                        <div class="fs-20 fw-7" >{{card.RemainingBalance | currency: 'INR'}}</div>
+                        <div *ngIf="card.CardStatus == 1" class="fs-20 fw-7" >{{card.RemainingBalance | currency: 'INR'}}</div>
+                        <div *ngIf="card.CardStatus != 1" class="fs-20 fw-7" >{{0.00 | currency: 'INR'}}</div>
                     </div>
                     <div *ngIf="card.CardStatus == 1" class="icon-pill text-success bg-success-subtle">{{card.Status.StatusMas}}</div>
-                    <div *ngIf="card.CardStatus == 0" class="icon-pill text-danger bg-danger-subtle">{{card.Status.StatusMas}}</div>
+                    <div *ngIf="card.CardStatus != 1" class="icon-pill text-danger bg-danger-subtle">{{card.Status.StatusMas}}</div>
                 </div>
             </div>
         </ng-container>
