@@ -22,7 +22,7 @@
                                     <span class="p-3">Writer : <a [href]="'profession/' + langContent.WriterSlug">{{langContent.WriterName }}</a>, {{langContent.WriterEducation}}</span><br/>
                                 </div>
                                 <div *ngIf="langContent?.HideReviewer === 0">
-                                     <span class="p-3" >Reviewer : <a [href]="'profession/' + langContent.WriterSlug">{{langContent.ReviewerName }}</a></span><br/>
+                                     <span class="p-3" >Reviewer : <a [href]="'professional/' + langContent.WriterSlug">{{langContent.ReviewerName }}</a></span><br/>
                                 </div>
                                
                                 <span class="p-3">Posted On : {{langContent.UpdatedDate | date : "MMM yy"}}</span>
@@ -48,7 +48,7 @@
                             </div>
                         </div>
                         <div class="p-3 artica-details-block text-break" [innerHTML]="cont.Content"></div>
-                        <div *ngIf="langContent?.Disclaimer && langContent.Disclaimer.trim().length > 0">Disclaimer : {{langContent.Disclaimer }}</div>
+                        <div *ngIf="langContent?.Disclaimer && langContent.Disclaimer.trim().length > 0" class="disclaimer"><strong>Disclaimer</strong> : {{langContent.Disclaimer }}</div>
                     </div>
                 </ng-container>
             </div>
