@@ -22,7 +22,7 @@
                                     <span class="p-3" style="padding-top: 5px !important;">Written By : <a class="writer" [href]="'professional/' + langContent.WriterSlug">{{langContent.WriterName }}</a>, {{langContent.WriterEducation}}</span><br/>
                                 </div>
                                 <div *ngIf="langContent?.HideReviewer === 0">
-                                     <span class="p-3" style="padding-top: 5px !important;">Reviewed By : <a class="writer" [href]="'professional/' + langContent.WriterSlug">{{langContent.ReviewerName }}</a></span><br/>
+                                     <span class="p-3" style="padding-top: 5px !important;">Reviewed By : <a class="writer" [href]="'professional/' + langContent.ReviewerSlug">{{langContent.ReviewerName }}</a>, {{langContent.ReviewerEducation}}</span><br/>
                                 </div>
                                
                                 <span class="p-3">Posted On : {{langContent.UpdatedDate | date : "MMM yy"}}</span>
