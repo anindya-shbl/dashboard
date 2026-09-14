@@ -13,7 +13,7 @@
                             <img [src]="cont.Image" width="100%" class="rounded-top" alt="...">
                         </div>
                         <div class="article-heading text-capitalize px-3">{{langContent.Content.Title}}</div>
-                        <div class="d-flex align-items-center justify-content-between text-secondary fs-5 border-bottom mb-3">
+                        <div class="d-flex align-items-center justify-content-between text-secondary fs-5 border-bottom mb-3 pb-3">
                             <!-- <div>                                
                                 <span class="p-3"><i class="fa-regular fa-eye pe-1"></i>{{langContent.Viewcount}}</span>
                             </div> -->
@@ -48,11 +48,14 @@
                             </div>
                         </div>
                         <div class="p-3 artica-details-block text-break" [innerHTML]="cont.Content"></div>
-                        <div *ngIf="langContent?.Disclaimer && langContent.Disclaimer.trim().length > 0" class="disclaimer">
-                            <strong>Disclaimer</strong> : {{langContent.Disclaimer }}
+                        
+                    </div>
+                    <div class="disclaimer">
+                        <div *ngIf="langContent?.Disclaimer && langContent.Disclaimer.trim().length > 0" >
+                            <strong class="text-danger">Disclaimer</strong> : {{langContent.Disclaimer }}
                         </div>
-                        <div *ngIf="!langContent?.Disclaimer && langContent.Disclaimer.trim().length <= 0" class="disclaimer">
-                        <strong>Disclaimer</strong> : The information provided in this article is intended for general informational and educational purposes only and should not be considered a substitute for professional medical advice, diagnosis, or treatment. Health needs may vary from person to person. Please consult your physician, dietitian, or other qualified healthcare professional before making any changes to your diet, lifestyle, medication, or treatment plan, especially if you have an existing health condition. Always follow advice based on your individual health situation.
+                        <div *ngIf="langContent.Disclaimer == undefined || !langContent?.Disclaimer" >
+                        <strong class="text-danger">Disclaimer</strong> : The information provided in this article is intended for general informational and educational purposes only and should not be considered a substitute for professional medical advice, diagnosis, or treatment. Health needs may vary from person to person. Please consult your physician, dietitian, or other qualified healthcare professional before making any changes to your diet, lifestyle, medication, or treatment plan, especially if you have an existing health condition. Always follow advice based on your individual health situation.
                         </div>
                     </div>
                 </ng-container>
