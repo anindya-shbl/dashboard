@@ -48,7 +48,12 @@
                             </div>
                         </div>
                         <div class="p-3 artica-details-block text-break" [innerHTML]="cont.Content"></div>
-                        <div *ngIf="langContent?.Disclaimer && langContent.Disclaimer.trim().length > 0" class="disclaimer"><strong>Disclaimer</strong> : {{langContent.Disclaimer }}</div>
+                        <div *ngIf="langContent?.Disclaimer && langContent.Disclaimer.trim().length > 0" class="disclaimer">
+                            <strong>Disclaimer</strong> : {{langContent.Disclaimer }}
+                        </div>
+                        <div *ngIf="!langContent?.Disclaimer && langContent.Disclaimer.trim().length <= 0" class="disclaimer">
+                        <strong>Disclaimer</strong> : The information provided in this article is intended for general informational and educational purposes only and should not be considered a substitute for professional medical advice, diagnosis, or treatment. Health needs may vary from person to person. Please consult your physician, dietitian, or other qualified healthcare professional before making any changes to your diet, lifestyle, medication, or treatment plan, especially if you have an existing health condition. Always follow advice based on your individual health situation.
+                        </div>
                     </div>
                 </ng-container>
             </div>
