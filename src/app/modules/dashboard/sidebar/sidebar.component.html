@@ -28,6 +28,9 @@
     <div class="tabSec">
       <h4>Profile</h4>
         <ul>
+          <li *ngIf="authService.ConfigData.LoyaltyPointsEnable == 'Y'" routerLink="loyalty_coins" routerLinkActive="active">
+            <i class="fa-regular fa-user"></i> SS Coins - {{ loyaltyBalance}}
+          </li>
           <li routerLink="profile" routerLinkActive="active"><i class="fa-regular fa-user"></i> My Profile</li>
           <li routerLink="health_records" routerLinkActive="active"><i class="icon-health-service-1"></i>My Health Records</li>
           <li routerLink="address" routerLinkActive="active"><i class="icon-location-3-nsm"></i>Manage Address</li>

@@ -10,9 +10,9 @@ import { BehaviorSubject, Observable } from 'rxjs';
 export class AuthService {
 
   // ============ live ===============
-  public baseurl = 'https://sastasundar.com/';
-  public apiUrl = 'https://sastasundar.com/index.php/';
-  public catalogUrl = 'https://serv-catalog.sastasundar.com/';
+  // public baseurl = 'https://sastasundar.com/';
+  // public apiUrl = 'https://sastasundar.com/index.php/';
+  // public catalogUrl = 'https://serv-catalog.sastasundar.com/';
 
   // ================  stage ==========
 
@@ -21,9 +21,10 @@ export class AuthService {
   // public catalogUrl = 'https://stage-serv-catalog.sastasundar.com/';
 
   // ===========  Local  ===========
-  // public baseurl = 'http://192.168.5.236:8081/sspl_com/';
-  // public apiUrl = 'http://192.168.5.236:8081/sspl_com/index.php/';
-  // public catalogUrl = 'http://192.168.5.236:8003/';
+  public baseurl = 'http://192.168.5.236/sspl_com/';
+  public apiUrl = 'http://192.168.5.236/sspl_com/index.php/';
+  public catalogUrl = 'http://192.168.5.236:8003/';
+  public webcartUrl = this.apiUrl+'webapi/';
 
   public PinCode: any = '';
   public WHId: any = '';
@@ -155,6 +156,11 @@ export class AuthService {
     let sspl_csrf = this.cookieService.get('sspl_csrf');
     postDataVal.append('csrf_test_name', sspl_csrf);
     return this.http.post(postUrl, postDataVal);
+  }
+
+  getLoyaltyBalance(url: any) {
+    let gettUrl = this.webcartUrl + url;
+    return this.http.get(gettUrl);
   }
 
 }
