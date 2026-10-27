@@ -71,6 +71,7 @@ export class LoginComponent implements OnInit {
 
   chkloggingStatus() {
     this.authService.getLogindata('users/dochkLogging').subscribe((res: any) => {
+      console.log('in log');
       // console.log(res);
       this.isLoading = false;
       if (res && res['response_code'] == 0) {

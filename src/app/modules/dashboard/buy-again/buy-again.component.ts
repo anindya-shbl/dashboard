@@ -28,6 +28,7 @@ export class BuyAgainComponent implements OnInit {
   selectedTab: any = 'patient';
   respMsg: any = '';
   isResp: boolean = false; 
+  loyaltyConfig:any [] = this.authService.LoyaltyConfigData.LoyaltyConfig;
 
   @ViewChild('buyagainModal') buyagainModal: any;
   // @Output() newItemEvent = new EventEmitter<any>();
@@ -42,8 +43,32 @@ export class BuyAgainComponent implements OnInit {
     this.buyAgainList = []; 
     this.orderService.getBuyAgainList('webapi/order/reOrderList').subscribe((res: any) => {
     //   console.log('reorder list', res);
+      res = {"data":{"PatientmedorderList":[{"MyFamilyId":744983,"PatientName":"","LastOrderId":101002687578,"LastOrderLatestDate":"2026-04-01 00:00:00","ItemList":[{"OrderId":101002687578,"OrderType":"P","OrderDate":"2026-04-01 00:00:00","CustUserId":738341,"ItemQuantity":1,"MyFamilyId":744983,"ProductId":12936,"SltProdCategory":null,"SourceProductId":10012904,"IsPrescriptionUploaded":0,"PatientName":"","PrescriptionOTC":"P","MRP":52.5,"DisplayName":"Cal 360 Tab (10 Tab)","ProductName":"Cal 360","ProductImage":"","DosageAlert":0,"DosageRestriction":0,"RefOrderId":101002687578,"ProductStatus":"C","IsGiftableProduct":0,"IsCourierable":0,"IsOutOfStock":"N","DiscountPercent":15,"OfferPrice":44.63,"EncodeProdId":"sx6r74","CustomProductName":"","Brand":"Cipla Ltd","LastMRP":null,"AvgRating":0,"NumRating":0,"ExpiryDate":"2030-01-01","Salts":{"NameSearch":"calcium carbonate + minerals","SaltStrengthRaw":"","SaltSchedule":"","SaltStrength":"CALCIUMCARBONATEMINERALSTAB","Id":2046,"Code":"SN02117","Name":"CALCIUM CARBONATE + MINERALS","SaltCategory":""},"MfgGroup":"CIPLA LTD"}],"ItemListOFS":[]}],"otcHouseHoldList":[],"orderIDList":[{"OrderId":101002687578,"ItemList":[{"OrderId":101002687578,"OrderType":"P","OrderDate":"2026-04-01 00:00:00","CustUserId":738341,"ItemQuantity":1,"MyFamilyId":744983,"ProductId":12936,"SltProdCategory":null,"SourceProductId":10012904,"IsPrescriptionUploaded":0,"PatientName":"","PrescriptionOTC":"P","MRP":52.5,"DisplayName":"Cal 360 Tab (10 Tab)","ProductName":"Cal 360","ProductImage":"","DosageAlert":0,"DosageRestriction":0,"RefOrderId":101002687578,"ProductStatus":"C","IsGiftableProduct":0,"IsCourierable":0,"IsOutOfStock":"N","DiscountPercent":15,"OfferPrice":44.63,"EncodeProdId":"sx6r74","CustomProductName":"","Brand":"Cipla Ltd","LastMRP":null,"AvgRating":0,"NumRating":0,"ExpiryDate":"2030-01-01","Salts":{"NameSearch":"calcium carbonate + minerals","SaltStrengthRaw":"","SaltSchedule":"","SaltStrength":"CALCIUMCARBONATEMINERALSTAB","Id":2046,"Code":"SN02117","Name":"CALCIUM CARBONATE + MINERALS","SaltCategory":""},"MfgGroup":"CIPLA LTD"}]}],"ProductList":[{"OrderId":101002687578,"OrderType":"P","OrderDate":"2026-04-01 00:00:00","CustUserId":738341,"ItemQuantity":1,"MyFamilyId":744983,"ProductId":12936,"SltProdCategory":null,"SourceProductId":10012904,"IsPrescriptionUploaded":0,"PatientName":"","PrescriptionOTC":"P","MRP":52.5,"DisplayName":"Cal 360 Tab (10 Tab)","ProductName":"Cal 360","ProductImage":"","DosageAlert":0,"DosageRestriction":0,"RefOrderId":101002687578,"ProductStatus":"C","IsGiftableProduct":0,"IsCourierable":0,"IsOutOfStock":"N","DiscountPercent":15,"OfferPrice":44.63,"EncodeProdId":"sx6r74","CustomProductName":"","Brand":"Cipla Ltd","LastMRP":null,"AvgRating":0,"NumRating":0,"ExpiryDate":"2030-01-01","Salts":{"NameSearch":"calcium carbonate + minerals","SaltStrengthRaw":"","SaltSchedule":"","SaltStrength":"CALCIUMCARBONATEMINERALSTAB","Id":2046,"Code":"SN02117","Name":"CALCIUM CARBONATE + MINERALS","SaltCategory":""},"MfgGroup":"CIPLA LTD"}]},"message":null,"response_code":0}
+      console.log("buyAgainList",res);
       if(res && res['response_code']==0){
-        this.buyAgainList.push(res);
+        // needs to query each product to find their type for loyalty balance purpose
+        let productList:any = res.data.ProductList;
+        console.log("productList",productList);
+        let productIds:any = productList.map((item:any)=>{
+          return item.ProductId
+        }).join("|");
+        console.log("productIds",productIds);
+        let url = `product_find?product_id=${productIds}&wh=${this.authService.WHId}&token=${this.authService.Token}&panindia=${this.authService.IsPanIndia}&pincode=${this.authService.PinCode}`
+        this.authService.getProductDetails(url).subscribe((response: any) => {
+          console.log("getProductDetails",response);
+          if(response.items.length > 0){
+            const enriched = this.addProductFlagsToOrder(res,response.items,this.loyaltyConfig);
+            console.log("buyAgainList enriched",enriched);
+            // console.log('loyalty',this.authService.LoyaltyConfigData);
+            this.buyAgainList.push(enriched);
+          }
+          else{
+            this.buyAgainList.push(res);
+          }
+        })
+        
+        //end
+        
         this.isResp = true;
         this.spinner.hide();
       }else{
@@ -57,6 +82,124 @@ export class BuyAgainComponent implements OnInit {
     this.selectedTab = tab;
   }
 
+  addProductFlagsToOrder_bkp(order: any, masterProducts: any[]): any {
+  const masterById = new Map<string, any>(
+    masterProducts.map(p => [String(p.ProductId), p])
+  );
+
+  const enrichItem = (item: any) => {
+    const master = masterById.get(String(item.ProductId));
+    if (!master) return item;
+
+    return {
+      ...item,
+      IsOwnProduct: master.IsOwnProduct,
+      IsGenericNew: master.IsGenericNew
+    };
+  };
+
+  const data = order.data;
+
+  return {
+    ...order,
+    data: {
+      ...data,
+      PatientmedorderList: data.PatientmedorderList.map((pat: any) => ({
+        ...pat,
+        ItemList: pat.ItemList.map(enrichItem)
+      })),
+      orderIDList: data.orderIDList.map((o: any) => ({
+        ...o,
+        ItemList: o.ItemList.map(enrichItem)
+      })),
+      ProductList: data.ProductList.map(enrichItem)
+    }
+  };
+  }
+
+  addProductFlagsToOrder(order: any, masterProducts: any, loyaltyConfig: any): any {
+    const masterArray: any[] = Array.isArray(masterProducts)
+      ? masterProducts
+      : Array.isArray(masterProducts?.data)
+        ? masterProducts.data
+        : [];
+
+    if (masterArray.length === 0) {
+      console.warn('addProductFlagsToOrder: master product list is empty or invalid', masterProducts);
+      return order;
+    }
+
+    const masterById = new Map<string, any>(
+      masterArray.map((p): [string, any] => [String(p.ProductId), p])
+    );
+
+    // API values may be booleans, 0/1, or strings
+    const isTrue = (v: any): boolean => v === true || v === 1 || v === '1' || v === 'true';
+
+    // Numeric values may come as strings
+    const toNum = (v: any): number => {
+      const n = parseFloat(v);
+      return isNaN(n) ? 0 : n;
+    };
+
+    // Priority: own product -> generic -> branded (P) -> OTC
+    const getPercentage = (master: any, item: any): number => {
+      if (isTrue(master.IsOwnProduct)) {
+        return toNum(loyaltyConfig.jito_percentage);
+      }
+      if (isTrue(master.IsGenericNew)) {
+        return toNum(loyaltyConfig.gereric_percentage); // key spelled as in the API
+      }
+      if (item.PrescriptionOTC === 'P') {
+        return toNum(loyaltyConfig.branded_percentage);
+      }
+      return toNum(loyaltyConfig.otc_percentage);
+    };
+
+    // Use OfferPrice; fall back to MRP if OfferPrice is null, undefined, or empty
+    const getBasePrice = (item: any): number => {
+      const hasOffer = item.OfferPrice !== null && item.OfferPrice !== undefined && item.OfferPrice !== '';
+      return toNum(hasOffer ? item.OfferPrice : item.MRP);
+    };
+
+    const enrichItem = (item: any) => {
+      const master = masterById.get(String(item.ProductId));
+      if (!master) return item;
+
+      const percentage = getPercentage(master, item);
+      const basePrice = getBasePrice(item);
+      // const pointValue = toNum(loyaltyConfig.point_value);
+
+      // points = price × percentage / 100 × point value, rounded to 2 decimals
+      // const loyaltyPoints = Math.round((basePrice * percentage / 100) * pointValue * 100) / 100;
+      const loyaltyPoints = Math.round((basePrice * percentage)/100)
+
+      return {
+        ...item,
+        IsOwnProduct: master.IsOwnProduct,
+        IsGenericNew: master.IsGenericNew,
+        LoyaltyPointValue: loyaltyPoints
+      };
+    };
+
+    const data = order.data;
+
+    return {
+      ...order,
+      data: {
+        ...data,
+        PatientmedorderList: data.PatientmedorderList.map((pat: any) => ({
+          ...pat,
+          ItemList: pat.ItemList.map(enrichItem)
+        })),
+        orderIDList: data.orderIDList.map((o: any) => ({
+          ...o,
+          ItemList: o.ItemList.map(enrichItem)
+        })),
+        ProductList: data.ProductList.map(enrichItem)
+      }
+    };
+  }
 
   // proceed_buyAgain_bkp_040626(evnt: any){
   //   let reorderItems : any = evnt;
@@ -118,6 +261,7 @@ export class BuyAgainComponent implements OnInit {
   // }
 
   proceed_buyAgain(evnt: any) {
+    // debugger;
     let reorderItems: any = evnt;
     console.log('reorderItems', reorderItems);
     console.log('indexDB', this.dbService);

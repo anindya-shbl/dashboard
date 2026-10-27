@@ -37,6 +37,8 @@ export class AppComponent implements OnInit {
 
   chkloggingStatus() {
     this.authService.getLogindata('webapi/users/dochkLogging').subscribe((res: any) => {
+      console.log('in app');
+      res = {"data":{"UserId":588795,"UserCode":"SSPLWBC00588795","EmailId":null,"MobileNo":9836370209,"OTP":null,"NeedToResetPass":"N","ActiveStatus":1,"Status":"Y","FName":"Anindya","MName":null,"LName":"Acharya","CustFullName":"Anindya Acharya","DOB":"2006-11-02","Age":20,"Gender":"M","MaritalStatus":null,"AnivDate":null,"WalletVal":null,"RewardPoint":null,"SSCurrencyValue":180.4,"Subscribed":null,"HealthBuddyId":11010,"HealthBuddyCode":"WB031","HealthBuddyName":"test HB","HealthBuddyImage":"1455664917Tulips.jpg","IsDeleted":0,"CreatedDate":"2025-03-25 10:07:01.417","ModificationReason":null,"UpdatedDate":"2026-10-13 11:17:46.753","RegisteredCity":"Hooghly","RegisteredStateCode":"WB","CreatedBy":588795,"RegisteredStateName":"West Bengal","RM":null,"ReferredBy":null,"GroupId":null,"GroupName":null,"RegistrationSourceId":null,"EnquirySourceId":null,"EnquirySourceOther":null,"ProfileId":null,"CustomerCategory":"Silver","CustGSTIN":null,"CustGSTINDate":null,"WellnessBuddyId":null,"WarehouseId":1,"WarehouseLocation":"Kolkata","AlternativeContactNo":null,"CustAffiliateMasId":0,"AlternativeEmailId":null,"TotalSavings":0,"XplorPoint":0,"EmailAWSStatus":null,"EmailAWSStatusUpdateDate":null,"PreviousTransactionCount":47,"EmailAWSStatusUpdateCNT":null,"IsRealCustomer":0,"IsEmailVerified":null,"IsPrimaryUncontactable":null,"IsAltUncontactable":null,"CardId":null,"CardType":null,"HBContactNo":"0332356025844,03325905856\/58,","RazorPayUserId":null,"LabCartPin":null,"EncodedUserId":"7557856t856t4559756li5575t4","downtimeFlg":0,"downtimemsg":"We\u2019re updating GST% and MRP for your benefit. Checkout will be unavailable from 5 AM \u2013 7 AM on 21st Sept. Please shop again after 7 AM to enjoy updated rates."},"message":"success","response_code":"0","location":{"UserLocationPincode":"712222","CityName":"Hooghly","PanIndia":"N","WarehouseId":"","HBId":"","LocationSkipped":0,"StateCode":"WB","StateId":"35","StateName":"West Bengal","CityId":"597","IsLab":null}};
       this.loading = false;
       this.spinner.hide();
       // console.log(res)
@@ -89,6 +91,10 @@ export class AppComponent implements OnInit {
     this.authService.getConfigDetails('home/getconfig').subscribe((res: any) => {
       if (res && res['msgcode'] == 1) {
         this.authService.ConfigData = res['results']
+        if (this.authService.ConfigData.LoyaltyPointsEnable == 'Y') {
+          this.getLoyaltyRate()
+        }
+        
       }
     })
   }
@@ -106,5 +112,24 @@ export class AppComponent implements OnInit {
       }
     });
   }
+
+  // getLoyaltyConfig(){
+  //   this.authService.getConfigDetails('home/getconfig').subscribe((res: any) => {
+  //     // http://192.168.5.139:5032/api/v1/loyalty/get-loyalty-config
+  //     if (res && res['msgcode'] == 1) {
+  //       this.authService.ConfigData = res['results']
+  //     }
+  //   })
+  // }
+  getLoyaltyRate(){
+    this.authService.getConfigDetails('home/getLoyaltyConfig').subscribe((res: any) => {
+      // http://192.168.5.139:5032/api/v1/loyalty/get-loyalty-rate
+      if(res && res['msgcode'] == 1){
+        this.authService.LoyaltyConfigData = res['results']
+      }
+    })
+  }
+
+  
 
 }

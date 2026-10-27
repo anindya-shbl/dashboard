@@ -25,6 +25,7 @@ export class AuthService {
   public apiUrl = 'http://192.168.5.236/sspl_com/index.php/';
   public catalogUrl = 'http://192.168.5.236:8003/';
   public webcartUrl = this.apiUrl+'webapi/';
+  public searchUrl = 'https://stage-search.sastasundar.com/';
 
   public PinCode: any = '';
   public WHId: any = '';
@@ -62,6 +63,7 @@ export class AuthService {
   public PersonInCharge: any = '';
   public DrugLicenseNo: any = '';
   public ConfigData: any = '';
+  public LoyaltyConfigData: any = '';
   public currentModule: any = '';
   public CurrentLanguage: any = '';
   public OrganNames: any = [];
@@ -160,6 +162,11 @@ export class AuthService {
 
   getLoyaltyBalance(url: any) {
     let gettUrl = this.webcartUrl + url;
+    return this.http.get(gettUrl);
+  }
+
+  getProductDetails(url: any) {
+    let gettUrl = this.searchUrl + url;
     return this.http.get(gettUrl);
   }
 
