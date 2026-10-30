@@ -170,4 +170,9 @@ export class AuthService {
     return this.http.get(gettUrl);
   }
 
+  getLoyaltyInterface(url: any) {
+    let gettUrl = this.webcartUrl + url;
+    return this.http.get(gettUrl);
+  }
+
 }

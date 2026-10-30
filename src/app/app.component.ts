@@ -113,23 +113,21 @@ export class AppComponent implements OnInit {
     });
   }
 
-  // getLoyaltyConfig(){
-  //   this.authService.getConfigDetails('home/getconfig').subscribe((res: any) => {
-  //     // http://192.168.5.139:5032/api/v1/loyalty/get-loyalty-config
-  //     if (res && res['msgcode'] == 1) {
-  //       this.authService.ConfigData = res['results']
-  //     }
-  //   })
-  // }
-  getLoyaltyRate(){
-    this.authService.getConfigDetails('home/getLoyaltyConfig').subscribe((res: any) => {
-      // http://192.168.5.139:5032/api/v1/loyalty/get-loyalty-rate
-      if(res && res['msgcode'] == 1){
-        this.authService.LoyaltyConfigData = res['results']
+  getLoyaltyConfig(){
+    this.authService.getLoyaltyInterface('loyalty/get_loyalty_config').subscribe((res: any) => {
+      if(res && res['response_code'] == 1){
+        this.authService.LoyaltyConfigData = res['data']
       }
     })
   }
 
+  getLoyaltyRate(){
+    this.authService.getLoyaltyInterface('loyalty/get_loyalty_rate').subscribe((res: any) => {
+      if(res && res['response_code'] == 1){
+        this.authService.LoyaltyConfigData = res['data']
+      }
+    })
+  }
   
 
 }

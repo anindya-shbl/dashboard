@@ -8,14 +8,14 @@ import { Observable } from 'rxjs';
 export class ArticleService {
 
   // ============== Live ================
-  public articleurl = 'https://article.sastasundar.com/';
+  // public articleurl = 'https://article.sastasundar.com/';
 
   // ============== stage ================
   // public articleurl = 'https://stage-article.sastasundar.com/';
 
   // ============== local ================
   // public articleurl = 'http://192.168.5.139:7004/';
-  // public articleurl = 'http://192.168.5.236:7003/';
+  public articleurl = 'http://192.168.5.236:7003/';
 
   constructor(private http: HttpClient) { }
 
