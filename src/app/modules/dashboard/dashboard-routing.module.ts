@@ -27,6 +27,7 @@ import { DoctorConsultationComponent } from './doctor-consultation/doctor-consul
 import { AllDoctorConsultationsComponent } from './all-doctor-consultations/all-doctor-consultations.component';
 import { HealthCardDetailsComponent } from './health-card-details/health-card-details.component';
 import { HealthCardsListComponent } from './health-cards-list/health-cards-list.component';
+import { MyLoyaltyCoinsHistory } from './my-loyalty-coins-history/my-loyalty-coins-history.component';
 
 const routes: Routes = [
    {
@@ -45,6 +46,7 @@ const routes: Routes = [
       { path: 'requestproduct', component: RequestedProductsComponent },
       { path: 'profile', component: MyProfileComponent },
       { path: 'health_records', component: MyHealthRecordsComponent },
+      { path: 'loyalty_coins_history', component: MyLoyaltyCoinsHistory },
       { path: 'address', component: ManageAddressComponent },
       { path: 'family', component: FamilyMembersComponent },
       { path: 'change_password', component: ChangePasswordComponent },

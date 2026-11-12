@@ -41,6 +41,7 @@ import { RateConsultationComponent } from './rate-consultation/rate-consultation
 import { HealthCardDetailsComponent } from './health-card-details/health-card-details.component';
 import { HealthCardsListComponent } from './health-cards-list/health-cards-list.component';
 import { MapLocationPickerComponent } from '../../components/map-location-picker/map-location-picker.component';
+import { MyLoyaltyCoinsHistory } from './my-loyalty-coins-history/my-loyalty-coins-history.component';
 
 
 @NgModule({
@@ -81,7 +82,8 @@ import { MapLocationPickerComponent } from '../../components/map-location-picker
     RateConsultationComponent,
     HealthCardDetailsComponent,
     HealthCardsListComponent,
-    MapLocationPickerComponent
+    MapLocationPickerComponent,
+    MyLoyaltyCoinsHistory
   ],
   imports: [
     CommonModule,

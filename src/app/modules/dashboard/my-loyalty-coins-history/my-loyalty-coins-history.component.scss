@@ -1,0 +1,429 @@
+* {
+    box-sizing: border-box;
+    font-family: Inter, sans-serif;
+    width: 100%;
+}
+
+.ssbody {
+    display: flex;
+    justify-content: center;
+    align-items: stretch;
+    column-gap: 12px;
+    padding: 10px;
+}
+
+.sidebar {
+    width: 15%;
+    min-width: 250px;
+    min-height: calc(100vh - 145px);
+    flex: 1;
+    background-color: #fff;
+    color: #fff;
+    box-shadow: 0 0 5px #1018281a;
+}
+
+.SSCoins-Block {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 15px;
+}
+
+
+
+
+.Manage-SS {
+    // width: 85%;
+    display: flex;
+    flex-direction: column;
+    min-height: calc(100vh - 145px);
+    background-color: #F4F8FD;
+}
+
+.Manage-SS .header {
+    box-shadow: 0 0 5px #1018281a;
+    background-color: #fff;
+    width: 100%;
+}
+
+.breadcrumbSec {
+    padding: 0;
+    margin: 0;
+    display: inline-block;
+    width: auto;
+}
+
+.breadcrumbSec ul {
+    list-style: none;
+    display: inline-flex;
+    padding: 0;
+    margin: 0;
+}
+
+.breadcrumbSec ul li {
+    color: #667085;
+    font-size: 12px;
+    font-weight: 400;
+}
+
+.breadcrumbSec ul li a {
+    color: #667085;
+    text-decoration: none;
+    outline: none;
+}
+
+.breadcrumbSec ul li::after {
+    content: "\f105";
+    font-family: icomoon !important;
+    padding-left: 8px;
+    margin-right: 8px;
+}
+
+.breadcrumbSec ul li:last-child {
+    color: #344054;
+}
+
+.bannerBlock {
+    background: #4883F4;
+    background: linear-gradient(115deg, rgba(72, 131, 244, 1) 0%, rgba(42, 92, 209, 1) 100%);
+    width: 100%;
+    padding: 20px;
+    border-radius: 20px;
+}
+
+.balance-title {
+    font-size: 13px;
+    font-weight: 500;
+    color: #fff;
+}
+
+.balance-amount {
+    font-size: 50px;
+    font-weight: 700;
+    color: #fff;
+}
+
+.coin-badge {
+    width: 26px;
+    height: 26px;
+}
+
+.currency-equiv {
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: #fff;
+    letter-spacing: 0.01em;
+}
+
+.expiry-pill {
+    background: rgba(255, 255, 255, 0.18);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.22);
+    border-radius: 8px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 5px 12px;
+    font-size: 0.72rem;
+    font-weight: 500;
+    color: #ffffff;
+    transition: background-color 0.2s ease;
+    width: auto;
+}
+
+.stat-card {
+    background: #ffffff;
+    border-radius: 16px;
+    border: 1px solid #eef2f6;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.03);
+    padding: 20px;
+    text-align: center;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.stat-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
+}
+
+.stat-val {
+    font-size: 22px;
+    font-weight: 700;
+    line-height: 1.2;
+    margin-bottom: 3px;
+    letter-spacing: -0.01em;
+}
+
+.val-earned {
+    color: #009650;
+}
+
+.val-redeemed {
+    color: #007AFF;
+}
+
+.val-expired {
+    color: #78828C;
+}
+
+.stat-label {
+    font-size: 13px;
+    color: #78828C;
+}
+
+/*======================*/
+.coins-card {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    padding: 20px 24px;
+    gap: 16px;
+    background: #ffffff;
+    border-radius: 16px;
+    border: 1px solid #eef2f6;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.03);
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    text-decoration: none;
+    color: inherit;
+}
+
+.coins-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
+}
+
+.coins-icon {
+    flex-shrink: 0;
+    width: 26px;
+    font-size: 25px;
+    line-height: 1;
+}
+
+.coins-content {
+    min-width: 0;
+}
+
+.coins-content h3 {
+    margin: 0 0 4px;
+    color: #252d3a;
+    font-size: 15px;
+    font-weight: 700;
+    line-height: 1.2;
+}
+
+.coins-content p {
+    margin: 0;
+    color: #748096;
+    font-size: 13px;
+    font-weight: 400;
+    line-height: 1.3;
+}
+
+.coins-arrow {
+    flex: 1;
+    color: #7b8796;
+    font-size: 28px;
+    line-height: 1;
+}
+
+/*===========Table=============*/
+
+
+.transaction-card {
+    overflow: hidden;
+    background: #fff;
+    border: 1px solid #dfe5eb;
+    border-radius: 11px;
+}
+
+.transaction-card h2 {
+    font-size: 18px;
+    width: auto;
+    float: left;
+}
+
+.filter-tabs {
+    float: right;
+    width: auto;
+}
+
+.filter-tabs .nav-link {
+    padding: 7px 17px;
+    color: #344054;
+    font-size: 14px;
+    border: 1px solid #cfd7e2;
+    border-radius: 22px;
+    line-height: 1.2;
+}
+
+.filter-tabs .nav-link.active {
+    color: #087cff;
+    background: #e8f4ff;
+    border-color: #a9d9ff;
+}
+
+.filter-tabs li {
+    display: inline-block;
+    width: auto;
+}
+
+.transaction-table {
+    min-width: 790px;
+}
+
+.transaction-table thead th {
+    padding: 11px 24px;
+    color: #7b8795;
+    background: #f7f9fc;
+    border-bottom: 1px solid #e8edf2;
+    font-size: 12px;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.transaction-table tbody td {
+    height: 67px;
+    padding: 12px 24px;
+    color: #4a5a72;
+    font-size: 14px;
+    border-color: #e8edf2;
+    white-space: nowrap;
+}
+
+.transaction-table th:first-child,
+.transaction-table td:first-child {
+    min-width: 330px;
+}
+
+.transaction-table th:last-child,
+.transaction-table td:last-child {
+    padding-right: 24px;
+}
+
+.transaction-label {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: #202938;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.transaction-icon {
+    display: inline-flex;
+    flex: 0 0 38px;
+    width: 38px;
+    height: 38px;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    color: white;
+    font-size: 19px;
+    line-height: 1;
+}
+
+.icon-earned {
+    background: #009e59;
+}
+
+.icon-redeemed {
+    background: #087cff;
+}
+
+.icon-bonus {
+    background: #ff9f00;
+}
+
+.icon-refund,
+.icon-expired {
+    background: #7d8792;
+}
+
+.validity-pill {
+    display: inline-block;
+    padding: 5px 9px;
+    color: #4b5a70;
+    background: #f1f3f6;
+    border-radius: 5px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.muted-dash {
+    color: #c2cad4;
+    font-size: 17px;
+}
+
+.coin-value {
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.coin-value.positive {
+    color: #009e59;
+}
+
+.coin-value.negative {
+    color: #202938;
+}
+
+.results-count {
+    color: #7b8795;
+    font-size: 13px;
+}
+
+.pagination .page-link {
+    display: flex;
+    min-width: 35px;
+    height: 35px;
+    align-items: center;
+    justify-content: center;
+    padding: 0 10px;
+    color: #344054;
+    background: #fff;
+    border: 1px solid #cfd7e2;
+    border-radius: 6px !important;
+    font-size: 13px;
+    box-shadow: none;
+}
+
+.pagination .page-item.active .page-link {
+    color: #087cff;
+    background: #e8f4ff;
+    border-color: #a9d9ff;
+}
+
+@media (max-width: 767.98px) {
+    .filter-tabs {
+        gap: 5px !important;
+    }
+
+    .filter-tabs .nav-link {
+        padding: 7px 12px;
+    }
+
+    .transaction-table thead th,
+    .transaction-table tbody td {
+        padding-left: 16px;
+        padding-right: 16px;
+    }
+
+    .transaction-table th:first-child,
+    .transaction-table td:first-child {
+        min-width: 280px;
+    }
+
+    .results-count {
+        font-size: 12px;
+    }
+}
+
+

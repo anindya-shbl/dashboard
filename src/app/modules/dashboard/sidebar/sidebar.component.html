@@ -28,7 +28,7 @@
     <div class="tabSec">
       <h4>Profile</h4>
         <ul>
-          <li *ngIf="authService.ConfigData.LoyaltyPointsEnable == 'Y'" routerLink="loyalty_coins" routerLinkActive="active">
+          <li *ngIf="authService.ConfigData.LoyaltyPointsEnable == 'Y'" routerLink="loyalty_coins_history" routerLinkActive="active">
             <img src="https://stage.sastasundar.com/flutter/assets/assets/icon/ss_coin_logo.svg" style="width:16px" />&nbsp; SS Coins - &#8377;{{ loyaltyBalance}}
           </li>
           <li routerLink="profile" routerLinkActive="active"><i class="fa-regular fa-user"></i> My Profile</li>

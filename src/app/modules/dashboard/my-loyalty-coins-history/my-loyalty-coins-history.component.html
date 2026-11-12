@@ -1,0 +1,238 @@
+<div class="commonngwhite">
+    <div class="p-3 pb-0 mb-0"><app-route-path></app-route-path></div>
+
+    <div class="commonHeadertitleSec border-bottom p-3 pt-0">
+        <div class="custNameSec">
+            <strong>Manage SS Coins</strong>
+        </div>
+    </div>
+
+    <div>
+        <div class="Manage-SS">
+                <div class="p-3">
+                    <div class="SSCoins-Block">
+
+                        <div
+                            class="bannerBlock d-flex align-items-center justify-content-between position-relative z-1">
+                            <div>
+                                <div class="balance-title">SS Coins Balance</div>
+                                <div class="d-inline-flex align-items-center gap-2 w-auto">
+                                    <span class="balance-amount">{{loyaltyBalance}}</span>
+                                    <img src="assets/images/coin.png" alt="" class="coin-badge">
+                                </div>
+                                <div class="currency-equiv mb-2"> </div>
+
+                                <div class="expiry-pill">
+                                    <img src="https://stage.sastasundar.com/flutter/assets/assets/icon/ss_coin_logo.svg"
+                                        style="width: 16px;" alt="">
+                                    <span>{{ expiry_message }}</span>
+                                </div>
+                            </div>
+                            <img src="assets/images/coin-group.png" alt="" style="width: 175px;">
+                        </div>
+
+                        <div style="width: 80%;">
+                            <div class="d-flex align-items-center gap-3 mb-3">
+                                <!-- Earned -->
+                                <div class="stat-card">
+                                    <div class="stat-val val-earned">₹{{ loyaltyCredit | number:'1.2-2' }}</div>
+                                    <div class="stat-label">Earned</div>
+                                </div>
+                                <!-- Redeemed -->
+
+                                <div class="stat-card">
+                                    <div class="stat-val val-redeemed">₹{{ loyaltyDebit | number:'1.2-2' }}</div>
+                                    <div class="stat-label">Redeemed</div>
+                                </div>
+                                <!-- Expired -->
+
+                                <div class="stat-card">
+                                    <div class="stat-val val-expired">₹{{ loyaltyExpired | number:'1.2-2' }}</div>
+                                    <div class="stat-label">Expired</div>
+                                </div>
+                            </div>
+
+                            <a href="" class="coins-card" data-bs-target="#CoinsModalToggle" data-bs-toggle="modal">
+                                <div class="coins-icon"><img src="assets/images/light-bulb.png" alt=""
+                                        style="width: 30px;"></div>
+
+                                <div class="coins-content">
+                                    <h3>How SS Coins work</h3>
+                                    <p>Earn, redeem and save more</p>
+                                </div>
+
+                                <div class="coins-arrow">›</div>
+                            </a>
+                        </div>
+                    </div>
+
+
+
+                    <div class="transaction-card">
+                        <div
+                            class="d-flex align-items-center justify-content-between gap-3 px-4 py-3 border-bottom">
+                            <h2 class="h5 mb-0 fw-bold">Transaction history</h2>
+                            <ul class="nav nav-pills filter-tabs gap-2" aria-label="Transaction filters">
+                                <li class="nav-item"><a class="nav-link active" href="#all"
+                                        aria-current="page">All</a></li>
+                                <li class="nav-item"><a class="nav-link" href="#earned">Earned</a></li>
+                                <li class="nav-item"><a class="nav-link" href="#redeemed">Redeemed</a></li>
+                                <li class="nav-item"><a class="nav-link" href="#expired">Expired</a></li>
+                            </ul>
+                        </div>
+
+                        <div class="table-responsive">
+                            <table class="table transaction-table align-middle mb-0">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">Transaction</th>
+                                        <th scope="col">Order</th>
+                                        <th scope="col">Date</th>
+                                        <th scope="col">Validity</th>
+                                        <th scope="col" class="text-end">Coins</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let r of loyaltyHistory; trackBy: trackByIndex">
+                                        <td>
+                                            <div class="transaction-label">
+                                            <span class="transaction-icon"
+                                                    [ngClass]="r.dr_cr_indicator === 'CR' ? 'icon-earned' : 'icon-redeemed'">
+                                                {{ r.dr_cr_indicator === 'CR' ? '↑' : '↓' }}
+                                            </span>
+                                            <span>{{ r.dr_cr_indicator === 'CR' ? 'Points earned on order' : 'Redeemed on order' }}</span>
+                                            </div>
+                                        </td>
+                                        <td>#{{ r.order_id }}</td>
+                                        <td>{{ r.created_at | date:'d MMM yyyy' }}</td>
+                                        <td>
+                                            <span *ngIf="r.dr_cr_indicator === 'CR' && r.expiry_date; else noExpiry" class="validity-pill">
+                                            ◷ &nbsp;Expires {{ r.expiry_date | date:'d MMM yyyy' }}
+                                            </span>
+                                            <ng-template #noExpiry><span class="muted-dash">—</span></ng-template>
+                                        </td>
+                                        <td class="text-end">
+                                            <span class="coin-value"
+                                                [ngClass]="r.dr_cr_indicator === 'CR' ? 'positive' : 'negative'">
+                                            {{ r.dr_cr_indicator === 'CR' ? '+' : '−' }}{{ r.points }}
+                                            </span>
+                                        </td>
+                                    </tr>
+                                    <!-- <tr>
+                                        <td>
+                                            <div class="transaction-label"><span
+                                                    class="transaction-icon icon-earned">↑</span><span>Switch bonus
+                                                    + points earned</span></div>
+                                        </td>
+                                        <td>#101002970112</td>
+                                        <td>12 Jun 2026</td>
+                                        <td><span class="validity-pill">◷ &nbsp;Expires 20 Dec 2026</span></td>
+                                        <td class="text-end"><span class="coin-value positive">+104</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <div class="transaction-label"><span
+                                                    class="transaction-icon icon-redeemed">↓</span><span>Redeemed on
+                                                    order</span></div>
+                                        </td>
+                                        <td>#101002970112</td>
+                                        <td>12 Jun 2026</td>
+                                        <td><span class="muted-dash">—</span></td>
+                                        <td class="text-end"><span class="coin-value negative">−150</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <div class="transaction-label"><span
+                                                    class="transaction-icon icon-bonus">★</span><span>First-switch
+                                                    bonus</span></div>
+                                        </td>
+                                        <td>#101002968484</td>
+                                        <td>28 May 2026</td>
+                                        <td><span class="validity-pill">◷ &nbsp;Expires 20 Dec 2026</span></td>
+                                        <td class="text-end"><span class="coin-value positive">+100</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <div class="transaction-label"><span
+                                                    class="transaction-icon icon-earned">↑</span><span>Points earned
+                                                    on order</span></div>
+                                        </td>
+                                        <td>#101002951133</td>
+                                        <td>28 May 2026</td>
+                                        <td><span class="validity-pill">◷ &nbsp;Expires 20 Dec 2026</span></td>
+                                        <td class="text-end"><span class="coin-value positive">+12</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <div class="transaction-label"><span
+                                                    class="transaction-icon icon-refund">↻</span><span>Refund
+                                                    credited back as points</span></div>
+                                        </td>
+                                        <td>#101002940021</td>
+                                        <td>22 Apr 2026</td>
+                                        <td><span class="validity-pill">◷ &nbsp;Expires 20 Dec 2026</span></td>
+                                        <td class="text-end"><span class="coin-value positive">+40</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <div class="transaction-label"><span
+                                                    class="transaction-icon icon-expired">◷</span><span>Points
+                                                    expired</span></div>
+                                        </td>
+                                        <td>Unused balance</td>
+                                        <td>01 Apr 2026</td>
+                                        <td><span class="muted-dash">—</span></td>
+                                        <td class="text-end"><span class="coin-value negative">−60</span></td>
+                                    </tr> -->
+                                
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <footer
+                            class="d-flex align-items-center justify-content-between gap-3 px-4 py-3 border-top">
+                            <p class="results-count mb-0 w-auto d-inline-block">Showing {{ totalNoOfDisplayedRecords }} of {{ totalNoOfRecords }} transactions</p>
+                            <nav aria-label="Transaction pagination" style="width: auto;">
+                                <ul class="pagination pagination-sm mb-0 gap-1">
+                                    <li class="page-item" [class.disabled]="currentPage === 1">
+                                        <button type="button" class="page-link" aria-label="Previous page"
+                                            [disabled]="currentPage === 1" (click)="previousPage()">‹</button>
+                                    </li>
+                                    <li class="page-item" *ngFor="let page of pageNumbers"
+                                        [class.active]="page === currentPage" [attr.aria-current]="page === currentPage ? 'page' : null">
+                                        <button type="button" class="page-link" [attr.aria-label]="'Page ' + page"
+                                            [disabled]="page === currentPage" (click)="goToPage(page)">{{ page }}</button>
+                                    </li>
+                                    <li class="page-item" [class.disabled]="currentPage >= totalNoOfPages">
+                                        <button type="button" class="page-link" aria-label="Next page"
+                                            [disabled]="currentPage >= totalNoOfPages" (click)="nextPage()">›</button>
+                                    </li>
+                                </ul>
+                            </nav>
+                        </footer>
+                    </div>
+
+                </div>
+
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="CoinsModalToggle" aria-hidden="true" aria-labelledby="CoinsModalToggleLabel"
+           >
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h2 class="modal-title fs-5" id="CoinsModalToggleLabel">How SS Coins work</h2>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" style="width: auto;"></button>
+                    </div>
+                    <div class="modal-body p-0">
+                        <img src="assets/images/sscoin.png" alt="" class="img-fluid">
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-primary" data-bs-target="#CoinsModalToggle"
+                            data-bs-toggle="modal" (click)="gotoJitoSearch()">Start earning - Order Jito Alternatives</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+<script src="assets/js/bootstrap.bundle.js"></script>
