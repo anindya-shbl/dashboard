@@ -132,6 +132,10 @@
                 <span>Discount(-)</span>
                 <span class="fw-5" >{{orderDetails.ItemDiscount | currency : 'INR'}}</span>
             </div>
+            <div class="d-flex justify-content-between mb-2" [ngClass]="orderDetails.RedeemedPoints>0? 'text-success': ''">
+                <span>Redeemed Points(-)</span>
+                <span class="fw-5" >{{orderDetails.RedeemedPoints | currency : 'INR'}}</span>
+            </div>
             <div class="d-flex justify-content-between mb-2">
                 <span>Round Off Value({{orderDetails.RoundOfSign}})</span>
                 <span class="fw-5">{{orderDetails.RoundOfVal | currency : 'INR'}}</span>

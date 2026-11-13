@@ -27,6 +27,7 @@ export class OrderDetailsComponent implements OnInit {
   CouponDiscount : any = 0;
   CouponPromoDesc : any = 0;
   PromoDiscount : any = 0;
+  RedeemedPoints : any = 0;
   orderInfo : any = '';
   cancelDesc: any = '';
   returnDesc: any = '';
@@ -66,7 +67,7 @@ export class OrderDetailsComponent implements OnInit {
         // this.totalSavings = res['data']['OrderHeaders']['ItemDiscount'] +  res['data']['OrderHeaders']['PromoDiscount'];
         this.ItemDiscount= res['data']['OrderHeaders']['ItemDiscount'] == null ? 0 : res['data']['OrderHeaders']['ItemDiscount'];
         this.CouponDiscount = res['data']['OrderHeaders']['CouponDiscount']== null ? 0 : res['data']['OrderHeaders']['CouponDiscount'];
-        // this.CouponPromoDesc = res['data']['OrderHeaders']['CouponPromoDesc']== null ? 0 : res['data']['OrderHeaders']['CouponPromoDesc'];
+        this.RedeemedPoints = res['data']['OrderHeaders']['RedeemedPoints']== null ? 0 : res['data']['OrderHeaders']['RedeemedPoints'];
         this.PromoDiscount = res['data']['OrderHeaders']['PromoDiscount']== null ? 0 : res['data']['OrderHeaders']['PromoDiscount'];
         if(this.orderInfo['returnButton']['desc'] != undefined && this.orderInfo['returnButton']['desc'] != null && this.orderInfo['returnButton']['desc'] != ''){
           this.returnDesc = this.orderInfo['returnButton']['desc'];
@@ -75,7 +76,7 @@ export class OrderDetailsComponent implements OnInit {
           this.cancelDesc = this.orderInfo['cancelButton']['desc'];
         }
 
-        this.totalSavings = this.ItemDiscount + this.CouponDiscount + this.PromoDiscount;
+        this.totalSavings = this.ItemDiscount + this.CouponDiscount + this.PromoDiscount + this.RedeemedPoints;
         // console.log(this.totalSavings)
         this.spinner.hide();
         this.isloading = false;
